@@ -12,7 +12,7 @@ func AddItem(item models.Item) error {
 }
 
 func GetAllItems() ([]models.Item, error) {
-	rows, err := DB.Query(`SELECT id, upc, name, description, price FROM inventory`)
+	rows, err := DB.Query(`SELECT id, upc, name, description, price FROM inventory ORDER BY upc ASC`)
 	if err != nil {
 		return nil, err
 	}
@@ -29,5 +29,15 @@ func GetAllItems() ([]models.Item, error) {
 
 func DeleteItem(id int) error {
 	_, err := DB.Exec(`DELETE FROM inventory WHERE id = ?`, id)
+	return err
+}
+
+func UpdateItem(id int, item models.Item) error {
+	query := `
+	UPDATE inventory
+	SET upc = ?, name = ?, description = ?, price = ?
+	WHERE id = ?
+	`
+	_, err := DB.Exec(query, item.UPC, item.Name, item.Description, item.Price, id)
 	return err
 }

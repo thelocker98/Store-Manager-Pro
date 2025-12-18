@@ -5,6 +5,7 @@ func createTables() {
 	CREATE TABLE IF NOT EXISTS inventory (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		upc TEXT NOT NULL,
+		vendor TEXT NOT NULL,
 		name TEXT NOT NULL,
 		description TEXT,
 		price REAL NOT NULL,
