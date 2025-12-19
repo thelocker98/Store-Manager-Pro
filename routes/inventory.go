@@ -97,13 +97,13 @@ func ExportCSV(c *gin.Context) {
 	defer writer.Flush()
 
 	// Write header
-	writer.Write([]string{"ID", "UPC", "Name", "Description", "Price"})
+	writer.Write([]string{"UPC", "Brand", "Name", "Description", "Price"})
 
 	// Write rows
 	for _, item := range items {
 		writer.Write([]string{
-			strconv.Itoa(item.ID),
 			item.UPC,
+			item.Brand,
 			item.Name,
 			item.Description,
 			fmt.Sprintf("%.2f", item.Price),
@@ -120,30 +120,35 @@ func ExportPDF(c *gin.Context) {
 	}
 
 	pdf := gofpdf.New("P", "mm", "A4", "")
+	pdf.AliasNbPages("")
+
+	/* Footer with page numbers */
+	pdf.SetFooterFunc(func() {
+		pdf.SetY(-15) // 15mm from bottom
+		pdf.SetFont("Arial", "", 9)
+		pdf.CellFormat(0, 10, fmt.Sprintf("Page %d of {nb}", pdf.PageNo()), "", 0, "C", false, 0, "")
+	})
 	pdf.AddPage()
-	pdf.SetFont("Arial", "B", 14)
+	pdf.SetFont("Arial", "B", 18)
 	pdf.Cell(0, 10, "Inventory List")
 	pdf.Ln(12)
 
 	pdf.SetFont("Arial", "B", 12)
-	pdf.CellFormat(10, 8, "ID", "1", 0, "C", false, 0, "")
-	pdf.CellFormat(30, 8, "UPC", "1", 0, "C", false, 0, "")
-	pdf.CellFormat(40, 8, "Name", "1", 0, "C", false, 0, "")
-	pdf.CellFormat(60, 8, "Description", "1", 0, "C", false, 0, "")
-	pdf.CellFormat(30, 8, "Price", "1", 0, "C", false, 0, "")
+	pdf.CellFormat(25, 8, "UPC", "1", 0, "C", false, 0, "")
+	pdf.CellFormat(40, 8, "Brand", "1", 0, "C", false, 0, "")
+	pdf.CellFormat(55, 8, "Name", "1", 0, "C", false, 0, "")
+	pdf.CellFormat(55, 8, "Description", "1", 0, "C", false, 0, "")
+	pdf.CellFormat(16, 8, "Price", "1", 0, "C", false, 0, "")
 	pdf.Ln(-1)
 
-	pdf.SetFont("Arial", "", 12)
+	pdf.SetFont("Arial", "", 10)
 	for _, item := range items {
-		pdf.CellFormat(10, 8, strconv.Itoa(item.ID), "1", 0, "C", false, 0, "")
-		pdf.CellFormat(30, 8, item.UPC, "1", 0, "C", false, 0, "")
-		pdf.CellFormat(40, 8, item.Name, "1", 0, "", false, 0, "")
-		// MultiCell for description
-		x := pdf.GetX()
-		y := pdf.GetY()
-		pdf.MultiCell(60, 6, item.Description, "1", "", false)
-		pdf.SetXY(x+60, y) // move X to next cell
-		pdf.CellFormat(30, 8, fmt.Sprintf("$%.2f", item.Price), "1", 0, "R", false, 0, "")
+		pdf.CellFormat(25, 8, item.UPC, "1", 0, "L", false, 0, "")
+		pdf.CellFormat(40, 8, item.Brand, "1", 0, "L", false, 0, "")
+		pdf.CellFormat(55, 8, item.Name, "1", 0, "L", false, 0, "")
+		pdf.CellFormat(55, 8, item.Description, "1", 0, "L", false, 0, "")
+		pdf.CellFormat(16, 8, fmt.Sprintf("$%.2f", item.Price), "1", 0, "R", false, 0, "")
+
 		pdf.Ln(-1)
 	}
 
