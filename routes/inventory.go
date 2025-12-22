@@ -30,7 +30,7 @@ func GetItems(c *gin.Context) {
 
 // AddItem adds a new item
 func AddItem(c *gin.Context) {
-	var item models.Item
+	var item models.Inventory
 	if err := c.ShouldBindJSON(&item); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -52,7 +52,7 @@ func UpdateItem(c *gin.Context) {
 		return
 	}
 
-	var item models.Item
+	var item models.Inventory
 	if err := c.ShouldBindJSON(&item); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
