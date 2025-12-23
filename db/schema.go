@@ -27,6 +27,7 @@ func createTables() {
 		vendor_id INTEGER,
 		description TEXT,
 		price REAL NOT NULL,
+		weighed BOOL NOT NULL,
 		count INTEGER,
 		arived_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 		soldout_at DATETIME,

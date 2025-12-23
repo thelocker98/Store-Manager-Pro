@@ -6,7 +6,7 @@ import (
 	"gitea.locker98.com/locker98/Store-Manager-Pro/models"
 )
 
-func AddVendor(vendor models.Vendor) error {
+func AddVendorEntry(vendor models.Vendor) error {
 	query := `
 	INSERT INTO vendors (vendor_name)
 	VALUES (?)
@@ -16,7 +16,7 @@ func AddVendor(vendor models.Vendor) error {
 	return err
 }
 
-func GetAllVendorss() ([]models.Vendor, error) {
+func GetAllVendors() ([]models.Vendor, error) {
 	rows, err := DB.Query(`SELECT vendor_id, vendor_name FROM vendors ORDER BY vendor_name ASC`)
 	if err != nil {
 		return nil, err
@@ -32,12 +32,12 @@ func GetAllVendorss() ([]models.Vendor, error) {
 	return vendors, nil
 }
 
-func DeleteVendor(id int) error {
+func DeleteVendorEntry(id int) error {
 	_, err := DB.Exec(`DELETE FROM vendors WHERE vendor_id = ?`, id)
 	return err
 }
 
-func UpdateVendor(vendor models.Vendor) error {
+func UpdateVendorEntry(vendor models.Vendor) error {
 	query := `
 	UPDATE vendors
 	SET vendor_name = ?

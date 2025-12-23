@@ -27,6 +27,7 @@ func GetAllItems() ([]models.InventoryAll, error) {
 		c.name,
 		i.description,
 		i.price,
+		i.weighed,
 		i.count,
 		i.arived_at,
 		i.soldout_at,
@@ -54,6 +55,7 @@ func GetAllItems() ([]models.InventoryAll, error) {
 			&i.Name,
 			&i.Description,
 			&i.Price,
+			&i.Weighed,
 			&i.Count,
 			&i.ArrivedAt,
 			&i.SoldOutAt,
@@ -75,9 +77,9 @@ func DeleteItem(id int) error {
 func UpdateItem(id int, item models.Inventory) error {
 	query := `
 	UPDATE inventory
-	SET catalog_id = ?, vendor_id = ?, description = ?, price = ?, count = ?, ArrivedAt = ?, SoldAt = ?
+	SET catalog_id = ?, vendor_id = ?, description = ?, price = ?, weighed = ?, count = ?, ArrivedAt = ?, SoldAt = ?
 	WHERE id = ?
 	`
-	_, err := DB.Exec(query, item.CatalogID, item.VendorID, item.Description, item.Price, item.Count, item.ArrivedAt, item.SoldAt, item.ID)
+	_, err := DB.Exec(query, item.CatalogID, item.VendorID, item.Description, item.Price, item.Weighed, item.Count, item.ArrivedAt, item.SoldAt, item.ID)
 	return err
 }
