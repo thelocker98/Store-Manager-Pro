@@ -35,6 +35,9 @@ func GetAllVendors() ([]models.Vendor, error) {
 
 func DeleteVendorEntry(id int) error {
 	s, err := DB.Exec(`DELETE FROM vendors WHERE vendor_id = ?`, id)
+	if err != nil {
+		return err
+	}
 	if r, _ := s.RowsAffected(); r == 0 {
 		return errors.New("vendor id does not exist")
 	}
@@ -48,6 +51,9 @@ func UpdateVendorEntry(vendor models.Vendor) error {
 	WHERE vendor_id = ?
 	`
 	s, err := DB.Exec(query, vendor.VendorName, vendor.VendorID)
+	if err != nil {
+		return err
+	}
 	if r, _ := s.RowsAffected(); r == 0 {
 		return errors.New("vendor entry does not exist")
 	}

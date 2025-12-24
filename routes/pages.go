@@ -15,3 +15,13 @@ func LoadHome(c *gin.Context) {
 func LoadVendor(c *gin.Context) {
 	c.HTML(http.StatusOK, "vendors.html", nil)
 }
+
+// LoadItemEdit serves the HTML page for editing items and creating them
+func LoadItemEdit(c *gin.Context) {
+	c.HTML(http.StatusOK, "edititems.html", nil)
+}
+
+// LoadCatalog serves the HTML page for editing and adding catalog entrys
+func LoadCatalog(c *gin.Context) {
+	c.HTML(http.StatusOK, "catalog.html", nil)
+}

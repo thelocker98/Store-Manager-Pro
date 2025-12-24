@@ -12,6 +12,8 @@ func RegisterRoutes(r *gin.Engine) {
 
 	// Vendors Page
 	r.GET("/vendors", LoadVendor)
+	r.GET("/items", LoadItemEdit)
+	r.GET("/catalog", LoadCatalog)
 
 	// API group
 	api := r.Group("/api")

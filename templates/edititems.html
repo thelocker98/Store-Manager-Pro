@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Add Item</title>
+        <!--<link rel="stylesheet" href="/static/style.css" />-->
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <style>
+            body {
+                font-family: Arial;
+                margin: 20px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th,
+            td {
+                padding: 8px;
+                border: 1px solid #ccc;
+            }
+            th {
+                background-color: #f4f4f4;
+            }
+            input,
+            select {
+                padding: 5px;
+                margin-bottom: 10px;
+                width: 100%;
+            }
+            button {
+                margin-top: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Add Item</h1>
+
+        <!-- Catalog Search -->
+        <input
+            type="text"
+            id="catalogSearch"
+            placeholder="Search catalog..."
+            oninput="searchCatalog()"
+        />
+
+        <!-- Catalog Table -->
+        <table id="catalogTable">
+            <thead>
+                <tr>
+                    <th>UPC</th>
+                    <th>Name</th>
+                    <th>Brand</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <!-- Collapsible Item Details -->
+        <div id="itemDetails" style="display: none; margin-top: 20px">
+            <h3 id="selectedCatalogTitle"></h3>
+
+            <label>Vendor:</label>
+            <select id="vendorSelect" style="width: 150px"></select>
+            <button type="button" onclick="openVendorIframe()">
+                + Add Vendor
+            </button>
+
+            <br />
+            <label>Description</label>
+            <input type="textarea" id="itemDesc" />
+
+            <br />
+
+            <label>Price:</label>
+            <input type="number" id="itemPrice" style="width: 150px" />
+            <label>Weighed Item:</label>
+            <input type="checkbox" id="itemWeighed" style="width: 50px" />
+            <br />
+
+            <br />
+
+            <label>Count:</label>
+            <input type="number" id="itemCount" style="width: 200px" />
+            <br />
+
+            <button onclick="submitItem()">Submit</button>
+            <button onclick="closeItem()">Cancel</button>
+        </div>
+
+        <!-- Vendor iframe modal -->
+        <div
+            id="vendorIframeModal"
+            style="
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.3);
+                z-index: 1000;
+            "
+        >
+            <div
+                style="
+                    position: relative;
+                    margin: 5% auto;
+                    background: white;
+                    width: 60%;
+                    height: 80%;
+                "
+            >
+                <iframe
+                    id="vendorFrame"
+                    src="/vendors"
+                    style="width: 100%; height: 100%; border: 0"
+                ></iframe>
+                <button
+                    style="position: absolute; top: 5px; right: 5px"
+                    onclick="closeVendorIframe()"
+                >
+                    Close
+                </button>
+            </div>
+        </div>
+
+        <script>
+            let selectedCatalogId = null;
+            let allCatalog = [];
+
+            function init() {
+                axios.get("/api/catalog").then((res) => {
+                    allCatalog = res.data;
+                    renderCatalog(allCatalog);
+                });
+                loadVendors();
+            }
+
+            function renderCatalog(list) {
+                const tbody = document.querySelector("#catalogTable tbody");
+                tbody.innerHTML = "";
+                list.forEach((cat) => {
+                    tbody.innerHTML += `
+                    <tr onclick="selectCatalog(${cat.id}, '${cat.name}', '${cat.brand}')">
+                        <td>${cat.upc}</td>
+                        <td>${cat.name}</td>
+                        <td>${cat.brand}</td>
+                    </tr>
+                `;
+                });
+            }
+
+            function searchCatalog() {
+                const q = document
+                    .getElementById("catalogSearch")
+                    .value.toLowerCase();
+                renderCatalog(
+                    allCatalog.filter(
+                        (c) =>
+                            c.name.toLowerCase().includes(q) ||
+                            c.brand.toLowerCase().includes(q) ||
+                            c.upc.includes(q),
+                    ),
+                );
+            }
+
+            function selectCatalog(id, name, brand) {
+                selectedCatalogId = id;
+                document.getElementById("selectedCatalogTitle").innerText =
+                    `${name} (${brand})`;
+                document.getElementById("itemDetails").style.display = "block";
+            }
+
+            function loadVendors() {
+                axios.get("/api/vendors").then((res) => {
+                    const v = document.getElementById("vendorSelect");
+                    v.innerHTML = "";
+                    res.data.forEach((vendor) => {
+                        v.innerHTML += `<option value="${vendor.vendor_id}">${vendor.vendor_name}</option>`;
+                    });
+                });
+            }
+
+            function openVendorIframe() {
+                document.getElementById("vendorIframeModal").style.display =
+                    "block";
+            }
+
+            function closeVendorIframe() {
+                document.getElementById("vendorIframeModal").style.display =
+                    "none";
+                loadVendors();
+            }
+
+            function submitItem() {
+                if (!selectedCatalogId) return alert("Select a catalog item");
+                const payload = {
+                    catalog_id: selectedCatalogId,
+                    vendor_id: document.getElementById("vendorSelect").value,
+                    price: parseFloat(
+                        document.getElementById("itemPrice").value,
+                    ),
+                    count: parseInt(document.getElementById("itemCount").value),
+                    weighed: document.getElementById("itemWeighed").checked,
+                    expiration_date:
+                        document.getElementById("itemExpire").value,
+                    description: document.getElementById("itemDesc").value,
+                };
+                axios.post("/api/items", payload).then(() => {
+                    alert("Item added!");
+                    closeItem();
+                    // Optionally inform parent page to refresh items
+                    if (window.parent && window.parent.loadItems)
+                        window.parent.loadItems();
+                });
+            }
+
+            function closeItem() {
+                window.parent &&
+                    window.parent.closeAddItemIframe &&
+                    window.parent.closeAddItemIframe();
+            }
+
+            init();
+        </script>
+    </body>
+</html>

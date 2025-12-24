@@ -38,6 +38,9 @@ func GetAllCatalog() ([]models.Catalog, error) {
 
 func DeleteCatalog(id int) error {
 	s, err := DB.Exec(`DELETE FROM catalog WHERE catalog_id = ?`, id)
+	if err != nil {
+		return err
+	}
 	if r, _ := s.RowsAffected(); r == 0 {
 		return errors.New("catalog entry does not exist")
 	}
@@ -48,11 +51,14 @@ func UpdateCatalog(catalog models.Catalog) error {
 	query := `
 	UPDATE catalog
 	SET upc = ?, invoice_number = ?, brand = ?, name = ?
-	WHERE id = ?
+	WHERE catalog_id = ?
 	`
 	s, err := DB.Exec(query, catalog.UPC, catalog.InvoiceNumber, catalog.Brand, catalog.Name, catalog.CatalogID)
+	if err != nil {
+		return err
+	}
 	if r, _ := s.RowsAffected(); r == 0 {
 		return errors.New("catalog entry does not exist")
 	}
-	return err
+	return nil
 }
