@@ -12,7 +12,7 @@ type Inventory struct {
 	Price       float64    `json:"price"`
 	Weighed     bool       `json:"weighed" `
 	Count       int        `json:"count"`
-	ArrivedAt   time.Time  `json:"arrived_at"`
+	ArrivedAt   *time.Time `json:"arrived_at"`
 	SoldAt      *time.Time `json:"sold_at,omitempty"`
 }
 
@@ -27,8 +27,8 @@ type InventoryAll struct {
 	Price       float64
 	Weighed     bool
 	Count       int
-	ArrivedAt   time.Time
-	SoldOutAt   time.Time
+	ArrivedAt   *time.Time
+	SoldOutAt   *time.Time
 	VendorName  string
 }
 

@@ -11,7 +11,7 @@ import (
 
 // GetCatalog returns all items in JSON
 func GetCatalog(c *gin.Context) {
-	catalog, err := db.GetAllVendors()
+	catalog, err := db.GetAllCatalog()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

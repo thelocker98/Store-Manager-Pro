@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Store Manager Pro API",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

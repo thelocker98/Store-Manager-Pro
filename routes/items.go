@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -28,6 +29,7 @@ func AddItem(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	fmt.Println(item)
 
 	if err := db.AddItem(item); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

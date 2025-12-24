@@ -1,6 +1,7 @@
 package db
 
 import (
+	"errors"
 	"fmt"
 
 	"gitea.locker98.com/locker98/Store-Manager-Pro/models"
@@ -33,7 +34,10 @@ func GetAllVendors() ([]models.Vendor, error) {
 }
 
 func DeleteVendorEntry(id int) error {
-	_, err := DB.Exec(`DELETE FROM vendors WHERE vendor_id = ?`, id)
+	s, err := DB.Exec(`DELETE FROM vendors WHERE vendor_id = ?`, id)
+	if r, _ := s.RowsAffected(); r == 0 {
+		return errors.New("vendor id does not exist")
+	}
 	return err
 }
 
@@ -43,6 +47,9 @@ func UpdateVendorEntry(vendor models.Vendor) error {
 	SET vendor_name = ?
 	WHERE vendor_id = ?
 	`
-	_, err := DB.Exec(query, vendor.VendorName, vendor.VendorID)
+	s, err := DB.Exec(query, vendor.VendorName, vendor.VendorID)
+	if r, _ := s.RowsAffected(); r == 0 {
+		return errors.New("vendor entry does not exist")
+	}
 	return err
 }

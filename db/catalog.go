@@ -1,6 +1,7 @@
 package db
 
 import (
+	"errors"
 	"fmt"
 
 	"gitea.locker98.com/locker98/Store-Manager-Pro/models"
@@ -17,32 +18,41 @@ func AddCatalog(catalog models.Catalog) error {
 }
 
 func GetAllCatalog() ([]models.Catalog, error) {
-	rows, err := DB.Query(`SELECT id, upc, brand, name, description, price FROM catalog ORDER BY upc ASC`)
+	rows, err := DB.Query(`SELECT catalog_id, upc, invoice_number, brand, name FROM catalog ORDER BY upc ASC`)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
+	fmt.Println(rows)
+
 	var catalog []models.Catalog
 	for rows.Next() {
 		var c models.Catalog
 		rows.Scan(&c.CatalogID, &c.UPC, &c.InvoiceNumber, &c.Brand, &c.Name)
+		fmt.Println(c)
 		catalog = append(catalog, c)
 	}
 	return catalog, nil
 }
 
 func DeleteCatalog(id int) error {
-	_, err := DB.Exec(`DELETE FROM catalog WHERE catalog_id = ?`, id)
+	s, err := DB.Exec(`DELETE FROM catalog WHERE catalog_id = ?`, id)
+	if r, _ := s.RowsAffected(); r == 0 {
+		return errors.New("catalog entry does not exist")
+	}
 	return err
 }
 
 func UpdateCatalog(catalog models.Catalog) error {
 	query := `
 	UPDATE catalog
-	SET upc = ?, invoice_number = ?, brand = ?, name = ?, description = ?, price = ?
+	SET upc = ?, invoice_number = ?, brand = ?, name = ?
 	WHERE id = ?
 	`
-	_, err := DB.Exec(query, catalog.UPC, catalog.InvoiceNumber, catalog.Brand, catalog.Name, catalog.CatalogID)
+	s, err := DB.Exec(query, catalog.UPC, catalog.InvoiceNumber, catalog.Brand, catalog.Name, catalog.CatalogID)
+	if r, _ := s.RowsAffected(); r == 0 {
+		return errors.New("catalog entry does not exist")
+	}
 	return err
 }

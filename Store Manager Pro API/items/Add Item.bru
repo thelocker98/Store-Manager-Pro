@@ -1,0 +1,27 @@
+meta {
+  name: Add Item
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:8080/api/items
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "catalog_id": 2,
+    "vendor_id": 6,
+    "description": "Pecans from Kendra",
+    "price": 1.29,
+    "weighed": true,
+    "count": 100
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

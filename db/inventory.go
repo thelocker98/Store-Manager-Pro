@@ -8,10 +8,10 @@ import (
 
 func AddItem(item models.Inventory) error {
 	query := `
-	INSERT INTO inventory (catalog_id, vendor_id, description, price, count)
-	VALUES (?, ?, ?, ?, ?)
+	INSERT INTO inventory (catalog_id, vendor_id, description, price, weighed, count)
+	VALUES (?, ?, ?, ?, ?, ?)
 	`
-	_, err := DB.Exec(query, item.CatalogID, item.VendorID, item.Description, item.Price, item.Count)
+	_, err := DB.Exec(query, item.CatalogID, item.VendorID, item.Description, item.Price, item.Weighed, item.Count)
 	fmt.Println(err)
 	return err
 }
