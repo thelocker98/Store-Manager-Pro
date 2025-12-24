@@ -10,7 +10,7 @@ type Inventory struct {
 	VendorID    int        `json:"vendor_id"`
 	Description string     `json:"description"`
 	Price       float64    `json:"price"`
-	Weighed     bool       `json:"weighed"`
+	Weighed     bool       `json:"weighed" `
 	Count       int        `json:"count"`
 	ArrivedAt   time.Time  `json:"arrived_at"`
 	SoldAt      *time.Time `json:"sold_at,omitempty"`

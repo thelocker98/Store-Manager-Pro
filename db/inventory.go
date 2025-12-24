@@ -20,8 +20,8 @@ func GetAllItems() ([]models.InventoryAll, error) {
 	rows, err := DB.Query(`
 	SELECT
 		i.id,
-		c.catalog_id
-		v.vendor_id
+		c.catalog_id,
+		v.vendor_id,
 		c.upc,
 		c.brand,
 		c.name,
@@ -39,6 +39,7 @@ func GetAllItems() ([]models.InventoryAll, error) {
 	`)
 
 	if err != nil {
+		fmt.Println("first", err)
 		return nil, err
 	}
 	defer rows.Close()
