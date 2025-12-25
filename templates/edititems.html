@@ -31,6 +31,11 @@
             button {
                 margin-top: 10px;
             }
+
+            /* Highlight row on hover */
+            #catalogTable tbody tr:hover {
+                background-color: #e0e0e0;
+            }
         </style>
     </head>
     <body>
@@ -49,6 +54,7 @@
             <thead>
                 <tr>
                     <th>UPC</th>
+                    <th>Invoice Number</th>
                     <th>Name</th>
                     <th>Brand</th>
                 </tr>
@@ -137,12 +143,13 @@
             function renderCatalog(list) {
                 const tbody = document.querySelector("#catalogTable tbody");
                 tbody.innerHTML = "";
-                list.forEach((cat) => {
+                list.forEach((catalogEntry) => {
                     tbody.innerHTML += `
-                    <tr onclick="selectCatalog(${cat.id}, '${cat.name}', '${cat.brand}')">
-                        <td>${cat.upc}</td>
-                        <td>${cat.name}</td>
-                        <td>${cat.brand}</td>
+                    <tr onclick="selectCatalog(${catalogEntry.catalog_id}, '${catalogEntry.name}', '${catalogEntry.brand}')">
+                        <td>${catalogEntry.upc}</td>
+                        <td>${catalogEntry.invoice_number}</td>
+                        <td>${catalogEntry.name}</td>
+                        <td>${catalogEntry.brand}</td>
                     </tr>
                 `;
                 });
@@ -194,18 +201,17 @@
                 if (!selectedCatalogId) return alert("Select a catalog item");
                 const payload = {
                     catalog_id: selectedCatalogId,
-                    vendor_id: document.getElementById("vendorSelect").value,
+                    vendor_id: parseInt(
+                        document.getElementById("vendorSelect").value,
+                    ),
                     price: parseFloat(
                         document.getElementById("itemPrice").value,
                     ),
                     count: parseInt(document.getElementById("itemCount").value),
                     weighed: document.getElementById("itemWeighed").checked,
-                    expiration_date:
-                        document.getElementById("itemExpire").value,
                     description: document.getElementById("itemDesc").value,
                 };
                 axios.post("/api/items", payload).then(() => {
-                    alert("Item added!");
                     closeItem();
                     // Optionally inform parent page to refresh items
                     if (window.parent && window.parent.loadItems)

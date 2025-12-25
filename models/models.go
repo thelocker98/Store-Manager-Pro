@@ -17,19 +17,20 @@ type Inventory struct {
 }
 
 type InventoryAll struct {
-	ID          int
-	CatalogID   int
-	VendorID    int
-	UPC         string
-	Brand       string
-	Name        string
-	Description string
-	Price       float64
-	Weighed     bool
-	Count       int
-	ArrivedAt   *time.Time
-	SoldOutAt   *time.Time
-	VendorName  string
+	ID            int        `json:"item_id"`
+	CatalogID     int        `json:"catalog_id"`
+	VendorID      int        `json:"vendor_id"`
+	UPC           string     `json:"upc"`
+	InvoiceNumber string     `json:"invoice_number"`
+	Brand         string     `json:"brand"`
+	Name          string     `json:"name"`
+	Description   string     `json:"description"`
+	Price         float64    `json:"price"`
+	Weighed       bool       `json:"weighed"`
+	Count         int        `json:"count"`
+	ArrivedAt     *time.Time `json:"arrived_at"`
+	SoldOutAt     *time.Time `json:"sold_out_at"`
+	VendorName    string     `json:"vendor_name"`
 }
 
 type Catalog struct {

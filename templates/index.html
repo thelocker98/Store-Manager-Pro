@@ -5,6 +5,7 @@
         <title>Inventory</title>
         <!--<link rel="stylesheet" href="/static/style.css" />-->
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -33,6 +34,11 @@
 
             input {
                 padding: 5px;
+            }
+
+            /* Highlight row on hover */
+            #itemsTable tbody tr:hover {
+                background-color: #e0e0e0;
             }
         </style>
     </head>
@@ -225,17 +231,15 @@
                     const tbody = document.querySelector("#itemsTable tbody");
                     tbody.innerHTML = "";
                     res.data.forEach((item) => {
-                        console.log(item);
-
                         tbody.innerHTML += `
-                        <tr onclick="openInfo(${item.id})" style="cursor:pointer">
-                            <td>${item.UPC}</td>
-                            <td>${item.Brand}</td>
-                            <td>${item.VendorName}</td>
-                            <td>${item.Name}</td>
-                            <td>${item.Description}</td>
-                            <td>${formatPrice(item.Price)}</td>
-                            <td>${formatDate(item.ArrivedAt)}</td>
+                        <tr onclick="openInfo(${item.item_id})" style="cursor:pointer">
+                            <td>${item.upc}</td>
+                            <td>${item.brand}</td>
+                            <td>${item.vendor_name}</td>
+                            <td>${item.name}</td>
+                            <td>${item.description}</td>
+                            <td>${formatPrice(item.price)}</td>
+                            <td>${formatDate(item.arrived_at)}</td>
                         </tr>
                         `;
                     });
@@ -282,13 +286,13 @@
                     filtered.forEach((item) => {
                         tbody.innerHTML += `
                         <tr>
-                            <td>${item.UPC}</td>
-                            <td>${item.Brand}</td>
-                            <td>${item.VendorName}</td>
-                            <td>${item.Name}</td>
-                            <td>${item.Description}</td>
-                            <td>${formatPrice(item.Price, item.Weighed)}</td>
-                            <td>${formatDate(item.ArrivedAt)}</td>
+                            <td>${item.upc}</td>
+                            <td>${item.brand}</td>
+                            <td>${item.vendor_name}</td>
+                            <td>${item.name}</td>
+                            <td>${item.description}</td>
+                            <td>${formatPrice(item.price, item.weighed)}</td>
+                            <td>${formatDate(item.arrived_at)}</td>
                         </tr>
                     `;
                     });
@@ -301,10 +305,10 @@
             // Open the edit popup and fill fields
             function editItem(id) {
                 axios.get("/api/items").then((res) => {
-                    const item = res.data.find((i) => i.id === id);
+                    const item = res.data.find((i) => i.item_id === id);
                     if (!item) return;
 
-                    document.getElementById("editId").value = item.id;
+                    document.getElementById("editId").value = item.item_id;
                     document.getElementById("editUpc").value = item.upc;
                     document.getElementById("editBrand").value = item.brand;
                     document.getElementById("editName").value = item.name;
@@ -319,30 +323,40 @@
                 });
             }
 
-            let currentInfoItem = null;
-
             function openInfo(id) {
                 axios.get("/api/items").then((res) => {
-                    const item = res.data.find((i) => i.id === id);
+                    const item = res.data.find((i) => i.item_id === id);
                     if (!item) return;
 
-                    currentInfoItem = item;
+                    console.log(item);
+                    let html = "";
+                    if (item.upc != "") {
+                        html = `<strong>UPC:</strong> ${item.upc}<br />`;
+                    }
+                    if (item.invoice_number != "") {
+                        html += `<strong>Invoice Number:</strong> ${item.invoice_number}<br />`;
+                    }
 
-                    document.getElementById("infoContent").innerHTML = `
-                        <strong>UPC:</strong> ${item.UPC}<br />
-                        <strong>Brand:</strong> ${item.Brand}<br />
-                        <strong>Vendor:</strong> ${item.VendorName}<br />
-                        <strong>Name:</strong> ${item.Name}<br />
-                        <strong>Description:</strong> ${item.Description}<br />
-                        <strong>Count:</strong> ${item.Count}<br />
-                        <strong>Price:</strong> ${formatPrice(item.Price, item.Weighed)}<br />
-                        <strong>Bought:</strong> ${formatDate(item.ArrivedAt)}
+                    html += `
+                        <strong>Vendor:</strong> ${item.vendor_name}
+                        <br /><br />
+
+                        <strong>Brand:</strong> ${item.brand}
+                        <strong>Name:</strong> ${item.name}<br />
+                        <strong>Description:</strong> ${item.description}<br />
+                        <strong>Price:</strong> ${formatPrice(item.price, item.weighed)}<br />
+                        <strong>Count:</strong> ${item.Count}<br /><br />
+
+                        <strong>Bought:</strong> ${formatDate(item.arrived_at)}
+                        &nbsp;&nbsp;<strong>Sold:</strong> ${formatDate(item.sold_out_at)}
                     `;
 
+                    document.getElementById("infoContent").innerHTML = html;
+
                     document.getElementById("infoEditBtn").onclick = () =>
-                        editItem(item.id);
+                        editItem(item.item_id);
                     document.getElementById("infoDeleteBtn").onclick = () =>
-                        deleteItem(item.id);
+                        deleteItem(item.item_id);
 
                     document.getElementById("infoPopup").style.display =
                         "block";
@@ -400,9 +414,15 @@
             }
 
             function openAddItemIframe() {
-                document.getElementById("addItemIframeModal").style.display =
-                    "block";
+                const modal = document.getElementById("addItemIframeModal");
+                const iframe = modal.querySelector("iframe");
+
+                // Reset the iframe src to force reload
+                iframe.src = "/items";
+
+                modal.style.display = "block";
             }
+
             function closeAddItemIframe() {
                 document.getElementById("addItemIframeModal").style.display =
                     "none";

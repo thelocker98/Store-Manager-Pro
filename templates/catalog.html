@@ -33,38 +33,104 @@
             input {
                 padding: 5px;
             }
+
+            /* Highlight row on hover */
+            #catalogTable tbody tr:hover {
+                background-color: #e0e0e0;
+            }
         </style>
     </head>
 
     <body>
         <h1>Catalog Editor</h1>
+        <input
+            type="text"
+            id="searchCatalog"
+            placeholder="Search catalog..."
+            oninput="searchCatalogEntries()"
+            style="margin-bottom: 10px; padding: 5px; width: 300px"
+        />
+        <button onclick="resetSearch()">Reset Search</button>
 
-        <!-- Add Vendor Form -->
-        <h2>Add Catalog Entry</h2>
-        <form id="addCatalogEntryForm" onsubmit="addCatalogEntry(event)">
-            <input type="text" id="catalog_upc" placeholder="UPC" />
-            <input
-                type="text"
-                id="catalog_invoicenumber"
-                placeholder="Invoice Number"
-            />
-            <input
-                type="text"
-                id="catalog_name"
-                placeholder="Product Name"
-                required
-            />
-            <input
-                type="text"
-                id="catalog_brand"
-                placeholder="Product Brand"
-                required
-            />
-            <button type="submit">Add</button>
-        </form>
+        <!-- Add Catalog Popup -->
+        <div
+            id="addCatalogPopup"
+            style="
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                border: 1px solid #ccc;
+                padding: 20px;
+                z-index: 1000;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+                min-width: 300px;
+            "
+        >
+            <h2>Add Catalog Entry</h2>
+            <form
+                id="addCatalogEntryFormPopup"
+                onsubmit="addCatalogEntryPopup(event)"
+            >
+                <label for="popup_catalog_upc">UPC:</label><br />
+                <input
+                    type="text"
+                    id="popup_catalog_upc"
+                    placeholder="UPC"
+                /><br /><br />
+
+                <label for="popup_catalog_invoicenumber">Invoice Number:</label
+                ><br />
+                <input
+                    type="text"
+                    id="popup_catalog_invoicenumber"
+                    placeholder="Invoice Number"
+                /><br /><br />
+
+                <label for="popup_catalog_name">Product Name:</label><br />
+                <input
+                    type="text"
+                    id="popup_catalog_name"
+                    placeholder="Product Name"
+                    required
+                /><br /><br />
+
+                <label for="popup_catalog_brand">Product Brand:</label><br />
+                <input
+                    type="text"
+                    id="popup_catalog_brand"
+                    placeholder="Product Brand"
+                    required
+                /><br /><br />
+
+                <button type="submit">Add</button>
+                <button type="button" onclick="closeAddCatalogPopup()">
+                    Cancel
+                </button>
+            </form>
+        </div>
+
+        <!-- Overlay -->
+        <div
+            id="addCatalogOverlay"
+            style="
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.3);
+                z-index: 999;
+            "
+            onclick="closeAddCatalogPopup()"
+        ></div>
 
         <!-- Catalog Table -->
         <h2>Catalog Items</h2>
+        <button onclick="openAddCatalogPopup()">Add Catalog Entry</button>
         <table id="catalogTable">
             <thead>
                 <tr>
@@ -72,11 +138,37 @@
                     <th>Invoice Number</th>
                     <th>Name</th>
                     <th>Brand</th>
-                    <th>Action</th>
                 </tr>
             </thead>
             <tbody></tbody>
         </table>
+
+        <!-- Item Info Popup -->
+        <div
+            id="infoPopup"
+            style="
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                border: 1px solid #ccc;
+                padding: 20px;
+                z-index: 1000;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+                min-width: 300px;
+            "
+        >
+            <h2>Item Details</h2>
+
+            <div id="infoContent"></div>
+
+            <br />
+            <button id="infoEditBtn">Edit</button>
+            <button id="infoDeleteBtn">Delete</button>
+            <button onclick="closeInfo()">Close</button>
+        </div>
 
         <!-- Edit Vendor Popup -->
         <div
@@ -96,28 +188,37 @@
             "
         >
             <h2>Edit Catalog Entry</h2>
+
             <form
                 id="editCatalogEntryForm"
                 onsubmit="submitCatalogEntryEdit(event)"
             >
                 <input type="hidden" id="editCatalogId" />
 
+                <label for="editCatalogUPC">UPC:</label><br />
                 <input
                     type="text"
                     id="editCatalogUPC"
                     placeholder="UPC"
                 /><br /><br />
+
+                <label for="editCatalogInvoiceNumber">Invoice Number:</label
+                ><br />
                 <input
                     type="text"
                     id="editCatalogInvoiceNumber"
                     placeholder="Invoice Number"
                 /><br /><br />
+
+                <label for="editCatalogName">Product Name:</label><br />
                 <input
                     type="text"
                     id="editCatalogName"
                     placeholder="Product Name"
                     required
                 /><br /><br />
+
+                <label for="editCatalogBrand">Product Brand:</label><br />
                 <input
                     type="text"
                     id="editCatalogBrand"
@@ -131,6 +232,22 @@
                 </button>
             </form>
         </div>
+
+        <!-- Optional overlay for background -->
+        <div
+            id="infooverlay"
+            style="
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.3);
+                z-index: 999;
+            "
+            onclick="closeInfo()"
+        ></div>
 
         <!-- Optional overlay for background -->
         <div
@@ -156,15 +273,11 @@
                     tbody.innerHTML = "";
                     res.data.forEach((catalog) => {
                         tbody.innerHTML += `
-                                <tr>
+                        <tr onclick="openInfo(${catalog.catalog_id})" style="cursor:pointer">
                                     <td>${catalog.upc}</td>
                                     <td>${catalog.invoice_number}</td>
                                     <td>${catalog.name}</td>
                                     <td>${catalog.brand}</td>
-                                    <td>
-                                        <button onclick="editCatalogEntry(${catalog.catalog_id})">Edit</button>
-                                        <button onclick="deleteCatalogEntry(${catalog.catalog_id})">Delete</button>
-                                    </td>
                                 </tr>
                             `;
                     });
@@ -197,10 +310,18 @@
                 ) {
                     axios
                         .delete(`/api/catalog/${id}`)
-                        .then(() => loadCatalog());
+                        .then(() => {
+                            loadCatalog();
+                            closeInfo();
+                        })
+                        .catch((err) => {
+                            console.error(
+                                "Failed to delete catalog entry:",
+                                err,
+                            );
+                        });
                 }
             }
-
             // Initial load
             loadCatalog();
 
@@ -231,6 +352,43 @@
                 });
             }
 
+            let currentInfoItem = null;
+
+            function openInfo(id) {
+                axios.get("/api/catalog").then((res) => {
+                    const catalogEntry = res.data.find(
+                        (i) => i.catalog_id === id,
+                    );
+                    if (!catalogEntry) return;
+                    console.log(catalogEntry);
+
+                    currentInfoItem = catalogEntry;
+
+                    document.getElementById("infoContent").innerHTML = `
+                        <strong>UPC:</strong> ${catalogEntry.upc}<br />
+                        <strong>Invoice Number:</strong> ${catalogEntry.invoice_number}<br /><br />
+
+                        <strong>Brand:</strong> ${catalogEntry.brand}<br />
+                        <strong>Name:</strong> ${catalogEntry.name}<br />
+                    `;
+
+                    document.getElementById("infoEditBtn").onclick = () =>
+                        editCatalogEntry(catalogEntry.catalog_id);
+                    document.getElementById("infoDeleteBtn").onclick = () =>
+                        deleteCatalogEntry(catalogEntry.catalog_id);
+
+                    document.getElementById("infoPopup").style.display =
+                        "block";
+                    document.getElementById("infooverlay").style.display =
+                        "block";
+                });
+            }
+
+            function closeInfo() {
+                document.getElementById("infoPopup").style.display = "none";
+                document.getElementById("infooverlay").style.display = "none";
+            }
+
             // Close the popup
             function closeCatalogEntryEdit() {
                 document.getElementById("editCatalogEntryPopup").style.display =
@@ -253,8 +411,76 @@
 
                 axios.put(`/api/catalog/${id}`, catalogEntry).then(() => {
                     closeCatalogEntryEdit();
+                    closeInfo();
                     loadCatalog();
                 });
+            }
+
+            // Open the Add Catalog Popup
+            function openAddCatalogPopup() {
+                document.getElementById("addCatalogPopup").style.display =
+                    "block";
+                document.getElementById("addCatalogOverlay").style.display =
+                    "block";
+            }
+
+            // Close the Add Catalog Popup
+            function closeAddCatalogPopup() {
+                document.getElementById("addCatalogPopup").style.display =
+                    "none";
+                document.getElementById("addCatalogOverlay").style.display =
+                    "none";
+            }
+
+            // Add Catalog Entry from Popup
+            function addCatalogEntryPopup(e) {
+                e.preventDefault();
+                const catalogEntry = {
+                    upc: document.getElementById("popup_catalog_upc").value,
+                    invoice_number: document.getElementById(
+                        "popup_catalog_invoicenumber",
+                    ).value,
+                    name: document.getElementById("popup_catalog_name").value,
+                    brand: document.getElementById("popup_catalog_brand").value,
+                };
+                axios.post("/api/catalog", catalogEntry).then(() => {
+                    loadCatalog();
+                    document.getElementById("addCatalogEntryFormPopup").reset();
+                    closeAddCatalogPopup();
+                });
+            }
+
+            // Search catalog client-side
+            function searchCatalogEntries() {
+                const query = document
+                    .getElementById("searchCatalog")
+                    .value.toLowerCase();
+                axios.get("/api/catalog").then((res) => {
+                    const filtered = res.data.filter(
+                        (item) =>
+                            item.name.toLowerCase().includes(query) ||
+                            item.brand.toLowerCase().includes(query) ||
+                            item.upc.includes(query) ||
+                            item.invoice_number.includes(query),
+                    );
+                    const tbody = document.querySelector("#catalogTable tbody");
+                    tbody.innerHTML = "";
+                    filtered.forEach((catalog) => {
+                        tbody.innerHTML += `
+                        <tr onclick="openInfo(${catalog.catalog_id})" style="cursor:pointer">
+                            <td>${catalog.upc}</td>
+                            <td>${catalog.invoice_number}</td>
+                            <td>${catalog.name}</td>
+                            <td>${catalog.brand}</td>
+                        </tr>
+                    `;
+                    });
+                });
+            }
+
+            function resetSearch() {
+                document.getElementById("searchCatalog").value = "";
+                loadCatalog();
             }
         </script>
     </body>
