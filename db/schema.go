@@ -29,7 +29,7 @@ func createTables() {
 		price REAL NOT NULL,
 		weighed BOOL NOT NULL,
 		count INTEGER,
-		arived_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		arrived_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 		soldout_at DATETIME,
 		FOREIGN KEY(catalog_id) REFERENCES catalog(catalog_id),
 		FOREIGN KEY(vendor_id) REFERENCES vendors(vendor_id)

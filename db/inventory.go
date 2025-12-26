@@ -30,7 +30,7 @@ func GetAllItems() ([]models.InventoryAll, error) {
 		i.price,
 		i.weighed,
 		i.count,
-		i.arived_at,
+		i.arrived_at,
 		i.soldout_at,
 		v.vendor_name
 	FROM inventory i

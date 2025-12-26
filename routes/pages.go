@@ -8,7 +8,7 @@ import (
 
 // LoadHome serves the HTML page
 func LoadHome(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.html", nil)
+	c.HTML(http.StatusOK, "mainpage.html", nil)
 }
 
 // LoadVendor serves the HTML page
