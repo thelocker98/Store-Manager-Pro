@@ -42,6 +42,92 @@
             #itemsTable tbody tr:hover {
                 background-color: #e0e0e0;
             }
+
+            #editPopup {
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 600px; /* ~4:3 feel */
+                max-width: 90vw;
+                height: 450px;
+                max-height: 90vh;
+                background: #ffffff;
+                border-radius: 8px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+                z-index: 1000;
+                padding: 20px 24px;
+                box-sizing: border-box;
+                font-family: Arial, sans-serif;
+            }
+
+            #editPopup h2 {
+                margin-top: 0;
+                margin-bottom: 16px;
+                text-align: center;
+            }
+
+            #editForm {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px 16px;
+                height: calc(100% - 60px);
+            }
+
+            #editForm label {
+                font-size: 0.9rem;
+                font-weight: bold;
+            }
+
+            #editForm input,
+            #editForm textarea {
+                width: 100%;
+                padding: 6px 8px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                font-size: 0.95rem;
+                box-sizing: border-box;
+            }
+
+            #editDescription {
+                resize: vertical;
+                min-height: 80px;
+            }
+
+            /* Make description span full width */
+            .full-width {
+                grid-column: 1 / -1;
+            }
+
+            .form-actions {
+                grid-column: 1 / -1;
+                display: flex;
+                justify-content: flex-end;
+                gap: 10px;
+                margin-top: auto;
+            }
+
+            .form-actions button {
+                padding: 8px 14px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 0.95rem;
+            }
+
+            .form-actions button[type="submit"] {
+                background: #007bff;
+                color: white;
+            }
+
+            .form-actions button[type="button"] {
+                background: #e0e0e0;
+            }
+
+            .form-actions button:hover {
+                opacity: 0.9;
+            }
         </style>
     </head>
 
@@ -50,6 +136,14 @@
 
         <!-- Add Item Button -->
         <button onclick="openAddItemIframe()">Add Item</button>
+
+        <!-- Add Navigation Button -->
+        <button type="button" onclick="window.location.href='/vendors'">
+            Go to Vendors
+        </button>
+        <button type="button" onclick="window.location.href='/catalog'">
+            Go to Catalog
+        </button>
 
         <!-- Modal for iframe -->
         <div
@@ -126,69 +220,44 @@
             <button onclick="closeInfo()">Close</button>
         </div>
 
-        <!-- Edit Item Popup -->
-        <div
-            id="editPopup"
-            style="
-                display: none;
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: white;
-                border: 1px solid #ccc;
-                padding: 20px;
-                z-index: 1000;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-                min-width: 300px;
-            "
-        >
+        <div id="editPopup">
             <h2>Edit Item</h2>
+
             <form id="editForm" onsubmit="submitEdit(event)">
                 <input type="hidden" id="editId" />
 
-                <label for="editUpc">UPC:</label><br />
-                <input
-                    type="text"
-                    id="editUpc"
-                    placeholder="UPC"
-                    required
-                /><br /><br />
+                <div>
+                    <label for="editUpc">UPC</label>
+                    <input type="text" id="editUpc" required />
+                </div>
 
-                <label for="editBrand">Brand:</label><br />
-                <input
-                    type="text"
-                    id="editBrand"
-                    placeholder="Brand"
-                    required
-                /><br /><br />
+                <div>
+                    <label for="editBrand">Brand</label>
+                    <input type="text" id="editBrand" required />
+                </div>
 
-                <label for="editName">Name:</label><br />
-                <input
-                    type="text"
-                    id="editName"
-                    placeholder="Name"
-                    required
-                /><br /><br />
+                <div>
+                    <label for="editName">Name</label>
+                    <input type="text" id="editName" required />
+                </div>
 
-                <label for="editDescription">Description:</label><br />
-                <input
-                    type="text"
-                    id="editDescription"
-                    placeholder="Description"
-                /><br /><br />
+                <div>
+                    <label for="editPrice">Price</label>
+                    <input type="number" step="0.01" id="editPrice" required />
+                </div>
 
-                <label for="editPrice">Price:</label><br />
-                <input
-                    type="number"
-                    step="0.01"
-                    id="editPrice"
-                    placeholder="Price"
-                    required
-                /><br /><br />
+                <div class="full-width">
+                    <label for="editDescription">Description</label>
+                    <textarea
+                        id="editDescription"
+                        placeholder="Enter item description..."
+                    ></textarea>
+                </div>
 
-                <button type="submit">Save</button>
-                <button type="button" onclick="closeEdit()">Cancel</button>
+                <div class="form-actions">
+                    <button type="button" onclick="closeEdit()">Cancel</button>
+                    <button type="submit">Save</button>
+                </div>
             </form>
         </div>
 

@@ -5,14 +5,10 @@ function loadVendors() {
     tbody.innerHTML = "";
     res.data.forEach((vendors) => {
       tbody.innerHTML += `
-                                <tr>
-                                    <td>${vendors.vendor_name}</td>
-                                    <td>
-                                        <button onclick="editVendor(${vendors.vendor_id})">Edit</button>
-                                        <button onclick="deleteVendor(${vendors.vendor_id})">Delete</button>
-                                    </td>
-                                </tr>
-                            `;
+          <tr onclick="editVendor(${vendors.vendor_id})">
+              <td>${vendors.vendor_name}</td>
+          </tr>
+      `;
     });
   });
 }
@@ -47,6 +43,9 @@ function editVendor(id) {
 
     document.getElementById("editVendorId").value = vendor.vendor_id;
     document.getElementById("editVendorName").value = vendor.vendor_name;
+    document.getElementById("vendorDeleteButton").onclick = deleteVendor(
+      vendor.vendor_id,
+    );
 
     document.getElementById("editVendorPopup").style.display = "block";
     document.getElementById("overlay").style.display = "block";

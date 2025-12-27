@@ -3,44 +3,48 @@
     <head>
         <meta charset="UTF-8" />
         <title>Inventory</title>
-        <!--<link rel="stylesheet" href="/static/style.css" />-->
+
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="/static/javascript/general.js"></script>
         <script src="/static/javascript/vendor/vendor.js"></script>
+
         <style>
             body {
-                font-family: Arial, sans-serif;
-                margin: 40px;
+                font-family: Arial;
+                margin: 20px;
             }
-
             table {
                 width: 100%;
                 border-collapse: collapse;
             }
-
             th,
             td {
-                padding: 10px;
+                padding: 8px;
                 border: 1px solid #ccc;
-                text-align: left;
             }
-
             th {
                 background-color: #f4f4f4;
             }
-
+            input,
+            select {
+                padding: 5px;
+                margin-bottom: 10px;
+                width: 100%;
+            }
             button {
-                margin-right: 5px;
+                margin-top: 10px;
             }
 
-            input {
-                padding: 5px;
+            /* Highlight row on hover */
+            #vendorsTable tbody tr:hover {
+                background-color: #e0e0e0;
             }
         </style>
     </head>
 
     <body>
         <h1>Inventory</h1>
+        <button type="button" onclick="window.location.href='/'">Home</button>
 
         <!-- Add Vendor Form -->
         <h2>Add Vendor</h2>
@@ -59,8 +63,7 @@
         <table id="vendorsTable">
             <thead>
                 <tr>
-                    <th>Vendors</th>
-                    <th>Actions</th>
+                    <th>Vendor</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -88,21 +91,17 @@
                 <input type="hidden" id="editVendorId" />
 
                 <label for="editVendorName">Vendor:</label><br />
-                <input
-                    type="text"
-                    id="editVendorName"
-                    placeholder="Vendor Name"
-                    required
-                /><br /><br />
+                <input type="text" id="editVendorName" required /><br /><br />
 
-                <button type="submit">Save</button>
                 <button type="button" onclick="closeVendorEdit()">
                     Cancel
                 </button>
+                <button id="vendorDeleteButton" type="button">Delete</button>
+                <button type="submit">Save</button>
             </form>
         </div>
 
-        <!-- Optional overlay for background -->
+        <!-- Overlay -->
         <div
             id="overlay"
             style="
