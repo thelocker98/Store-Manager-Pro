@@ -3,43 +3,12 @@
     <head>
         <meta charset="UTF-8" />
         <title>Inventory</title>
+        <link rel="stylesheet" href="/static/css/general.css" />
+        <link rel="stylesheet" href="/static/css/vendor.css" />
 
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="/static/javascript/general.js"></script>
         <script src="/static/javascript/vendor/vendor.js"></script>
-
-        <style>
-            body {
-                font-family: Arial;
-                margin: 20px;
-            }
-            table {
-                width: 100%;
-                border-collapse: collapse;
-            }
-            th,
-            td {
-                padding: 8px;
-                border: 1px solid #ccc;
-            }
-            th {
-                background-color: #f4f4f4;
-            }
-            input,
-            select {
-                padding: 5px;
-                margin-bottom: 10px;
-                width: 100%;
-            }
-            button {
-                margin-top: 10px;
-            }
-
-            /* Highlight row on hover */
-            #vendorsTable tbody tr:hover {
-                background-color: #e0e0e0;
-            }
-        </style>
     </head>
 
     <body>
@@ -98,6 +67,7 @@
                 </button>
                 <button id="vendorDeleteButton" type="button">Delete</button>
                 <button type="submit">Save</button>
+                <p id="editVendorError"></p>
             </form>
         </div>
 

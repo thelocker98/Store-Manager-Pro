@@ -26,6 +26,7 @@ function openAddCatalogPopup() {
   document.getElementById("catalogPopupHeader").textContent =
     "Add Catalog Entry";
 
+  document.getElementById("catalogEntrySubmitButton").textContent = "Add";
   document.getElementById("catalogEntryFormPopup").onsubmit = () =>
     submitAddCatalogEntryPopup(event);
   document.getElementById("catalogPopup").style.display = "block";
