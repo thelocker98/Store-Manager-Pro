@@ -11,7 +11,7 @@ function loadItems() {
                             <td>${item.vendor_name}</td>
                             <td>${item.name}</td>
                             <td>${item.description}</td>
-                            <td>${formatPrice(item.price)}</td>
+                            <td>${formatPrice(item.price, item.weighed)}</td>
                             <td>${formatDate(item.arrived_at)}</td>
                         </tr>
                         `;

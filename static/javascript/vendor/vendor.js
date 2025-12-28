@@ -21,14 +21,17 @@ function addVendor(e) {
   };
   axios.post("/api/vendors", vendors).then(() => {
     loadVendors();
-    document.getElementById("addForm").reset();
+    document.getElementById("addVendorForm").reset();
   });
 }
 
 // Delete Vendors
 function deleteVendor(id) {
   if (confirm("Are you sure you want to delete this Vendor?")) {
-    axios.delete(`/api/vendors/${id}`).then(() => loadVendors());
+    axios.delete(`/api/vendors/${id}`).then(() => {
+      closeVendorEdit();
+      loadVendors();
+    });
   }
 }
 
@@ -43,9 +46,9 @@ function editVendor(id) {
 
     document.getElementById("editVendorId").value = vendor.vendor_id;
     document.getElementById("editVendorName").value = vendor.vendor_name;
-    document.getElementById("vendorDeleteButton").onclick = deleteVendor(
-      vendor.vendor_id,
-    );
+    document.getElementById("vendorDeleteButton").onclick = () => {
+      deleteVendor(vendor.vendor_id);
+    };
 
     document.getElementById("editVendorPopup").style.display = "block";
     document.getElementById("overlay").style.display = "block";
@@ -68,6 +71,7 @@ function submitVendorEdit(e) {
 
   axios.put(`/api/vendors/${id}`, vendor).then(() => {
     closeVendorEdit();
+    document.getElementById("addVendorForm").reset();
     loadVendors();
   });
 }

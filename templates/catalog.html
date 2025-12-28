@@ -56,82 +56,6 @@
         />
         <button onclick="resetSearch()">Reset Search</button>
 
-        <!-- Add Catalog Popup -->
-        <div
-            id="addCatalogPopup"
-            style="
-                display: none;
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: white;
-                border: 1px solid #ccc;
-                padding: 20px;
-                z-index: 1000;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-                min-width: 300px;
-            "
-        >
-            <h2>Add Catalog Entry</h2>
-            <form
-                id="addCatalogEntryFormPopup"
-                onsubmit="addCatalogEntryPopup(event)"
-            >
-                <label for="popup_catalog_upc">UPC:</label><br />
-                <input
-                    type="text"
-                    id="popup_catalog_upc"
-                    placeholder="UPC"
-                /><br /><br />
-
-                <label for="popup_catalog_invoicenumber">Invoice Number:</label
-                ><br />
-                <input
-                    type="text"
-                    id="popup_catalog_invoicenumber"
-                    placeholder="Invoice Number"
-                /><br /><br />
-
-                <label for="popup_catalog_name">Product Name:</label><br />
-                <input
-                    type="text"
-                    id="popup_catalog_name"
-                    placeholder="Product Name"
-                    required
-                /><br /><br />
-
-                <label for="popup_catalog_brand">Product Brand:</label><br />
-                <input
-                    type="text"
-                    id="popup_catalog_brand"
-                    placeholder="Product Brand"
-                    required
-                /><br /><br />
-
-                <button type="submit">Add</button>
-                <button type="button" onclick="closeAddCatalogPopup()">
-                    Cancel
-                </button>
-            </form>
-        </div>
-
-        <!-- Overlay -->
-        <div
-            id="addCatalogOverlay"
-            style="
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.3);
-                z-index: 999;
-            "
-            onclick="closeAddCatalogPopup()"
-        ></div>
-
         <!-- Catalog Table -->
         <h2>Catalog Items</h2>
         <button onclick="openAddCatalogPopup()">Add Catalog Entry</button>
@@ -174,70 +98,7 @@
             <button onclick="closeInfo()">Close</button>
         </div>
 
-        <!-- Edit Vendor Popup -->
-        <div
-            id="editCatalogEntryPopup"
-            style="
-                display: none;
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: white;
-                border: 1px solid #ccc;
-                padding: 20px;
-                z-index: 1000;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-                min-width: 300px;
-            "
-        >
-            <h2>Edit Catalog Entry</h2>
-
-            <form
-                id="editCatalogEntryForm"
-                onsubmit="submitCatalogEntryEdit(event)"
-            >
-                <input type="hidden" id="editCatalogId" />
-
-                <label for="editCatalogUPC">UPC:</label><br />
-                <input
-                    type="text"
-                    id="editCatalogUPC"
-                    placeholder="UPC"
-                /><br /><br />
-
-                <label for="editCatalogInvoiceNumber">Invoice Number:</label
-                ><br />
-                <input
-                    type="text"
-                    id="editCatalogInvoiceNumber"
-                    placeholder="Invoice Number"
-                /><br /><br />
-
-                <label for="editCatalogName">Product Name:</label><br />
-                <input
-                    type="text"
-                    id="editCatalogName"
-                    placeholder="Product Name"
-                    required
-                /><br /><br />
-
-                <label for="editCatalogBrand">Product Brand:</label><br />
-                <input
-                    type="text"
-                    id="editCatalogBrand"
-                    placeholder="Product Brand"
-                    required
-                /><br /><br />
-
-                <button type="submit">Save</button>
-                <button type="button" onclick="closeCatalogEntryEdit()">
-                    Cancel
-                </button>
-            </form>
-        </div>
-
-        <!-- Optional overlay for background -->
+        <!-- Info overlay -->
         <div
             id="infooverlay"
             style="
@@ -253,9 +114,59 @@
             onclick="closeInfo()"
         ></div>
 
-        <!-- Optional overlay for background -->
+
+        <!-- CatalogPopup -->
         <div
-            id="overlayEditor"
+            id="catalogPopup"
+            style="
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                border: 1px solid #ccc;
+                padding: 20px;
+                z-index: 1000;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+                min-width: 300px;
+            "
+        >
+            <h2 id="catalogPopupHeader"></h2>
+
+            <form id="catalogEntryFormPopup">
+                <input type="hidden" id="popup_catalog_id" />
+
+                <div>
+                    <label for="popup_catalog_upc">UPC</label>
+                    <input type="text" id="popup_catalog_upc" />
+                </div>
+
+                <div>
+                    <label for="popup_catalog_invoicenumber">Invoice Number</label>
+                    <input type="text" id="popup_catalog_invoicenumber" />
+                </div>
+
+                <div>
+                    <label for="popup_catalog_name">Name</label>
+                    <input type="text" id="popup_catalog_name" required />
+                </div>
+
+                <div>
+                    <label for="popup_catalog_brand">Brand</label>
+                    <input type="text" id="popup_catalog_brand" required />
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" onclick="closeCatalogPopup()">Cancel</button>
+                    <button id="catalogEntrySubmitButton" type="submit">Add</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Catalog Overlay -->
+        <div
+            id="catalogOverlay"
             style="
                 display: none;
                 position: fixed;
@@ -266,6 +177,7 @@
                 background: rgba(0, 0, 0, 0.3);
                 z-index: 999;
             "
-            onclick="closeCatalogEntryEdit()"
+            onclick="closeCatalogPopup()"
         ></div>
+
 </html>
