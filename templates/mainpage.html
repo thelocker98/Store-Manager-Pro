@@ -65,6 +65,7 @@
             <button id="infoEditBtn">Edit</button>
             <button id="infoDeleteBtn">Delete</button>
             <button onclick="closeInfo()">Close</button>
+            <p id="infoError" class="errorText"></p>
         </div>
 
         <!-- itemsPopup -->
@@ -123,36 +124,42 @@
 
                 <div>
                     <label for="popup_items_description">Description</label>
-                    <textarea id="popup_items_description" required></textarea>
+                    <textarea id="popup_items_description"></textarea>
                 </div>
 
                 <div>
                     <label for="popup_items_price">Price</label>
-                    <input type="text" id="popup_items_price" required />
+                    <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        id="popup_items_price"
+                        required
+                    />
                 </div>
 
                 <div>
                     <label for="popup_items_weighed">Weighed</label>
-                    <input type="checkbox" id="popup_items_weighed" required />
+                    <input type="checkbox" id="popup_items_weighed" />
                 </div>
 
                 <div>
                     <label for="popup_items_count">Count</label>
-                    <input type="number" id="popup_items_count" required />
+                    <input type="number" id="popup_items_count" />
                 </div>
 
                 <div id="popup_div_items_arrived">
                     <label for="popup_items_arrivedat">Arrived</label>
-                    <input type="date" id="popup_items_arrived" required />
+                    <input type="date" id="popup_items_arrived" />
                 </div>
 
                 <div id="popup_div_items_soldout">
                     <label for="popup_items_soldout">Sold Out</label>
-                    <input type="date" id="popup_items_soldout" required />
+                    <input type="date" id="popup_items_soldout" />
                 </div>
 
                 <div class="form-actions">
-                    <button type="button" onclick="closeitemsPopup()">
+                    <button type="button" onclick="closeItemsPopup()">
                         Cancel
                     </button>
                     <button id="itemsEntrySubmitButton" type="submit">
@@ -160,6 +167,7 @@
                     </button>
                 </div>
             </form>
+            <p id="editError" class="errorText"></p>
         </div>
 
         <!-- Vendor iframe modal -->
@@ -225,7 +233,7 @@
                 background: rgba(0, 0, 0, 0.3);
                 z-index: 199;
             "
-            onclick="closeitemsPopup()"
+            onclick="closeItemsPopup()"
         ></div>
     </body>
 </html>

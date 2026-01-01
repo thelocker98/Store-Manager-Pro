@@ -27,26 +27,37 @@ function loadItems() {
   });
 }
 
+// Initial load
+loadItems();
+
 // Delete Item
 function deleteItem(id) {
   axios.delete(`/api/items/${id}`).then(() => loadItems());
   closeInfo();
-  closeitemsPopup();
+  closeItemsPopup();
 }
 // Restore Item
 function restoreItem(id) {
   axios.get(`/api/items/restore/${id}`).then(() => loadItems());
   closeInfo();
-  closeitemsPopup();
+  closeItemsPopup();
 }
 // Delete Permanently Item
 function deleteItemPermanent(id) {
   if (confirm("Are you sure you want to permanently delete this item?")) {
     axios.delete(`/api/items/permanent/${id}`).then(() => loadItems());
     closeInfo();
-    closeitemsPopup();
+    closeItemsPopup();
   }
 }
 
-// Initial load
-loadItems();
+// Open the Vendor Iframe popup
+function openVendorIframe() {
+  document.getElementById("vendorIframeModal").style.display = "block";
+}
+
+// Close the Vendor Iframe popup
+function closeVendorIframe() {
+  document.getElementById("vendorIframeModal").style.display = "none";
+  loadVendors();
+}

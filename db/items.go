@@ -71,12 +71,14 @@ func GetAllItems() ([]models.InventoryAll, error) {
 }
 
 func UpdateItem(id int, item models.Inventory) error {
+	fmt.Println(id)
+	fmt.Println(item)
 	query := `
 	UPDATE inventory
 	SET vendor_id = ?, upc = ?, invoice_number = ?, brand = ?, name = ?, description = ?, price = ?, weighed = ?, count = ?, deleted = ?, arrived_at = ?, soldout_at = ?
 	WHERE id = ?
 	`
-	_, err := DB.Exec(query, item.VendorID, item.UPC, item.InvoiceNumber, item.Brand, item.Name, item.Description, item.Price, item.Weighed, item.Count, item.Deleted, item.ArrivedAt, item.SoldOutAt, item.ID)
+	_, err := DB.Exec(query, item.VendorID, item.UPC, item.InvoiceNumber, item.Brand, item.Name, item.Description, item.Price, item.Weighed, item.Count, item.Deleted, item.ArrivedAt, item.SoldOutAt, id)
 	return err
 }
 

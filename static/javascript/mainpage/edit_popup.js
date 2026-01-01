@@ -11,11 +11,16 @@ function openAdditemsPopup() {
     submitAdditemsEntryPopup(event);
 
   // Set Content
-  document.getElementById("popup_items_id").value = "";
+  document.getElementById("popup_items_id").value = 0;
   document.getElementById("popup_items_upc").value = "";
   document.getElementById("popup_items_invoicenumber").value = "";
+  document.getElementById("popup_items_vendorselector").value = -1;
   document.getElementById("popup_items_name").value = "";
   document.getElementById("popup_items_brand").value = "";
+  document.getElementById("popup_items_description").value = "";
+  document.getElementById("popup_items_price").value = 0;
+  document.getElementById("popup_items_weighed").value = false;
+  document.getElementById("popup_items_count").value = 0;
 
   // Set layers
   document.getElementById("popup_div_items_arrived").style.display = "none";
@@ -25,9 +30,9 @@ function openAdditemsPopup() {
 }
 
 // Open the edit popup and fill fields
-function openEdititemsEntry(id) {
+async function openEdititemsEntry(id) {
   // Load vendor selector
-  loadVendors();
+  await loadVendors();
 
   // Check that entry exists in database
   axios.get("/api/items").then((res) => {
@@ -44,7 +49,7 @@ function openEdititemsEntry(id) {
       submitEdititemsEntry(event);
 
     // Set Content
-    document.getElementById("popup_items_id").value = itemsEntry.items_id;
+    document.getElementById("popup_items_id").value = itemsEntry.item_id;
     document.getElementById("popup_items_upc").value = itemsEntry.upc;
     document.getElementById("popup_items_invoicenumber").value =
       itemsEntry.invoice_number;
@@ -52,6 +57,14 @@ function openEdititemsEntry(id) {
       itemsEntry.vendor_id;
     document.getElementById("popup_items_name").value = itemsEntry.name;
     document.getElementById("popup_items_brand").value = itemsEntry.brand;
+    document.getElementById("popup_items_description").value =
+      itemsEntry.description;
+    document.getElementById("popup_items_price").value = itemsEntry.price;
+    document.getElementById("popup_items_weighed").value = itemsEntry.weighed;
+    document.getElementById("popup_items_count").value = itemsEntry.count;
+    document.getElementById("popup_items_arrived").value = formatDateForInput(
+      itemsEntry.arrived_at,
+    );
 
     // Set layers
     document.getElementById("popup_div_items_arrived").style.display = "block";
@@ -62,6 +75,7 @@ function openEdititemsEntry(id) {
     } else {
       document.getElementById("popup_div_items_soldout").style.display = "none";
     }
+
     document.getElementById("itemsPopup").style.display = "block";
     document.getElementById("itemsOverlay").style.display = "block";
   });
@@ -75,15 +89,39 @@ function submitAdditemsEntryPopup(e) {
     invoice_number: document.getElementById("popup_items_invoicenumber").value,
     vendor_id: parseInt(
       document.getElementById("popup_items_vendorselector").value,
+      10,
     ),
     name: document.getElementById("popup_items_name").value,
     brand: document.getElementById("popup_items_brand").value,
+    description: document.getElementById("popup_items_description").value,
+    price: parseFloat(document.getElementById("popup_items_price").value),
+    weighed: document.getElementById("popup_items_weighed").checked,
+    count: parseInt(document.getElementById("popup_items_count").value, 10),
   };
-  axios.post("/api/items", itemsEntry).then(() => {
-    loaditems();
-    document.getElementById("itemsEntryFormPopup").reset();
-    closeitemsPopup();
-  });
+
+  if (itemsEntry.price == 0) {
+    document.getElementById("editError").style.display = "block";
+    document.getElementById("editError").textContent = "Invalid Price";
+    return;
+  }
+
+  axios
+    .post("/api/items", itemsEntry)
+    .then(() => {
+      loadItems();
+      closeInfo();
+      closeItemsPopup();
+      document.getElementById("itemsEntryFormPopup").reset();
+    })
+    .catch((err) => {
+      document.getElementById("editError").style.display = "block";
+      if (itemsEntry.vendor_id == -1) {
+        document.getElementById("editError").textContent = "Invalid Vendor";
+      } else {
+        document.getElementById("editError").textContent =
+          "Error Processing Your Request";
+      }
+    });
 }
 
 // Submit edit form
@@ -95,42 +133,57 @@ function submitEdititemsEntry(e) {
     invoice_number: document.getElementById("popup_items_invoicenumber").value,
     vendor_id: parseInt(
       document.getElementById("popup_items_vendorselector").value,
+      10,
     ),
     brand: document.getElementById("popup_items_brand").value,
     name: document.getElementById("popup_items_name").value,
+    description: document.getElementById("popup_items_description").value,
+    price: parseFloat(document.getElementById("popup_items_price").value),
+    weighed: document.getElementById("popup_items_weighed").checked,
+    count: parseInt(document.getElementById("popup_items_count").value),
+    arrived_at: formatDateForSQL(
+      document.getElementById("popup_items_arrived").value,
+    ),
   };
 
-  axios.put(`/api/items/${id}`, itemsEntry).then(() => {
-    closeitemsPopup();
-    closeInfo();
-    loaditems();
-  });
+  axios
+    .put(`/api/items/${id}`, itemsEntry)
+    .then(() => {
+      closeItemsPopup();
+      closeInfo();
+      loadItems();
+      document.getElementById("itemsEntryFormPopup").reset();
+    })
+    .catch((err) => {
+      document.getElementById("editError").style.display = "block";
+      if (itemsEntry.vendor_id == -1) {
+        document.getElementById("editError").textContent = "Invalid Vendor";
+      } else {
+        document.getElementById("editError").textContent =
+          "Error Processing Your Request";
+      }
+    });
 }
 
 // Close the Add items Popup
-function closeitemsPopup() {
+function closeItemsPopup() {
+  document.getElementById("editError").style.display = "none";
+  document.getElementById("editError").textContent = "";
   document.getElementById("itemsPopup").style.display = "none";
   document.getElementById("itemsOverlay").style.display = "none";
 }
 
 // Populate Vendors selector
 function loadVendors() {
-  axios.get("/api/vendors").then((res) => {
-    const v = document.getElementById("popup_items_vendorselector");
-    v.innerHTML = "";
-    res.data.forEach((vendor) => {
-      v.innerHTML += `<option value="${vendor.vendor_id}">${vendor.vendor_name}</option>`;
+  return axios.get("/api/vendors").then((res) => {
+    const select = document.getElementById("popup_items_vendorselector");
+    select.innerHTML = "";
+
+    res.data.forEach((v) => {
+      const opt = document.createElement("option");
+      opt.value = v.vendor_id;
+      opt.text = v.vendor_name;
+      select.appendChild(opt);
     });
   });
-}
-
-// Open the Vendor Iframe popup
-function openVendorIframe() {
-  document.getElementById("vendorIframeModal").style.display = "block";
-}
-
-// Close the Vendor Iframe popup
-function closeVendorIframe() {
-  document.getElementById("vendorIframeModal").style.display = "none";
-  loadVendors();
 }

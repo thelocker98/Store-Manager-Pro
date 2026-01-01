@@ -59,6 +59,8 @@ function openInfo(id) {
 }
 
 function closeInfo() {
+  document.getElementById("editError").style.display = "none";
+  document.getElementById("editError").textContent = "";
   document.getElementById("infoPopup").style.display = "none";
   document.getElementById("infooverlay").style.display = "none";
 }
