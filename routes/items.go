@@ -76,3 +76,35 @@ func DeleteItem(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Item deleted"})
 }
+
+// DeleteItem deletes an item by ID
+func RestoreItem(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+		return
+	}
+
+	if err := db.RestoreItem(id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Item restored"})
+}
+
+// DeleteItem deletes an item by ID
+func DeleteItemPermanent(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+		return
+	}
+
+	if err := db.DeleteItemPermanent(id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Item deleted permanently"})
+}

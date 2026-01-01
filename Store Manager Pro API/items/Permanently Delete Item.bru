@@ -1,0 +1,16 @@
+meta {
+  name: Permanently Delete Item
+  type: http
+  seq: 4
+}
+
+delete {
+  url: http://localhost:8080/api/items/permanent/2
+  body: json
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

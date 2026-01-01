@@ -17,4 +17,5 @@ func main() {
 	routes.RegisterRoutes(r)
 
 	r.Run(":8080")
+
 }

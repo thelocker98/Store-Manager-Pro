@@ -9,57 +9,24 @@
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="/static/javascript/general.js"></script>
         <script src="/static/javascript/mainpage/mainpage.js"></script>
+        <script src="/static/javascript/mainpage/edit_popup.js"></script>
+        <script src="/static/javascript/mainpage/info_popup.js"></script>
     </head>
 
     <body>
         <h1>Inventory</h1>
 
-        <!-- Add Item Button -->
-        <button onclick="openAddItemIframe()">Add Item</button>
-
         <!-- Add Navigation Button -->
         <button type="button" onclick="window.location.href='/vendors'">
             Go to Vendors
         </button>
-        <button type="button" onclick="window.location.href='/catalog'">
-            Go to Catalog
+        <button type="button" onclick="window.location.href='/barcode'">
+            Barcode Mode
         </button>
-
-        <!-- Modal for iframe -->
-        <div
-            id="addItemIframeModal"
-            style="
-                display: none;
-                position: fixed;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.3);
-                z-index: 1000;
-            "
-        >
-            <div
-                style="
-                    position: relative;
-                    margin: 5% auto;
-                    width: 90%;
-                    height: 90%;
-                    background: white;
-                "
-            >
-                <iframe
-                    src="/items"
-                    style="width: 100%; height: 100%; border: 0"
-                ></iframe>
-                <button
-                    style="position: absolute; top: 5px; right: 5px"
-                    onclick="closeAddItemIframe()"
-                >
-                    Close
-                </button>
-            </div>
-        </div>
 
         <!-- Items Table -->
         <h2>Items</h2>
+        <button onclick="openAdditemsPopup()">Add Item</button>
         <table id="itemsTable">
             <thead>
                 <tr>
@@ -87,7 +54,7 @@
                 background: white;
                 border: 1px solid #ccc;
                 padding: 20px;
-                z-index: 1000;
+                z-index: 100;
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
                 min-width: 300px;
             "
@@ -100,45 +67,133 @@
             <button onclick="closeInfo()">Close</button>
         </div>
 
-        <div id="editPopup">
-            <h2>Edit Item</h2>
+        <!-- itemsPopup -->
+        <div
+            id="itemsPopup"
+            style="
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                border: 1px solid #ccc;
+                padding: 20px;
+                z-index: 200;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+                min-width: 300px;
+            "
+        >
+            <h2 id="itemsPopupHeader"></h2>
 
-            <form id="editForm" onsubmit="submitEdit(event)">
-                <input type="hidden" id="editId" />
+            <form id="itemsEntryFormPopup">
+                <input type="hidden" id="popup_items_id" />
 
                 <div>
-                    <label for="editUpc">UPC</label>
-                    <input type="text" id="editUpc" required />
+                    <label for="popup_items_upc">UPC</label>
+                    <input type="text" id="popup_items_upc" />
                 </div>
 
                 <div>
-                    <label for="editBrand">Brand</label>
-                    <input type="text" id="editBrand" required />
+                    <label for="popup_items_invoicenumber"
+                        >Invoice Number</label
+                    >
+                    <input type="text" id="popup_items_invoicenumber" />
                 </div>
 
                 <div>
-                    <label for="editName">Name</label>
-                    <input type="text" id="editName" required />
+                    <select
+                        id="popup_items_vendorselector"
+                        style="width: 150px"
+                    ></select>
+                    <button type="button" onclick="openVendorIframe()">
+                        + Add Vendor
+                    </button>
                 </div>
 
                 <div>
-                    <label for="editPrice">Price</label>
-                    <input type="number" step="0.01" id="editPrice" required />
+                    <label for="popup_items_brand">Brand</label>
+                    <input type="text" id="popup_items_brand" required />
                 </div>
 
-                <div class="full-width">
-                    <label for="editDescription">Description</label>
-                    <textarea
-                        id="editDescription"
-                        placeholder="Enter item description..."
-                    ></textarea>
+                <div>
+                    <label for="popup_items_name">Name</label>
+                    <input type="text" id="popup_items_name" required />
+                </div>
+
+                <div>
+                    <label for="popup_items_description">Description</label>
+                    <textarea id="popup_items_description" required></textarea>
+                </div>
+
+                <div>
+                    <label for="popup_items_price">Price</label>
+                    <input type="text" id="popup_items_price" required />
+                </div>
+
+                <div>
+                    <label for="popup_items_weighed">Weighed</label>
+                    <input type="checkbox" id="popup_items_weighed" required />
+                </div>
+
+                <div>
+                    <label for="popup_items_count">Count</label>
+                    <input type="number" id="popup_items_count" required />
+                </div>
+
+                <div id="popup_div_items_arrived">
+                    <label for="popup_items_arrivedat">Arrived</label>
+                    <input type="date" id="popup_items_arrived" required />
+                </div>
+
+                <div id="popup_div_items_soldout">
+                    <label for="popup_items_soldout">Sold Out</label>
+                    <input type="date" id="popup_items_soldout" required />
                 </div>
 
                 <div class="form-actions">
-                    <button type="button" onclick="closeEdit()">Cancel</button>
-                    <button type="submit">Save</button>
+                    <button type="button" onclick="closeitemsPopup()">
+                        Cancel
+                    </button>
+                    <button id="itemsEntrySubmitButton" type="submit">
+                        Add
+                    </button>
                 </div>
             </form>
+        </div>
+
+        <!-- Vendor iframe modal -->
+        <div
+            id="vendorIframeModal"
+            style="
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.3);
+                z-index: 1000;
+            "
+        >
+            <div
+                style="
+                    position: relative;
+                    margin: 5% auto;
+                    background: white;
+                    width: 60%;
+                    height: 80%;
+                "
+            >
+                <iframe
+                    id="vendorFrame"
+                    src="/vendors"
+                    style="width: 100%; height: 100%; border: 0"
+                ></iframe>
+                <button
+                    style="position: absolute; top: 5px; right: 5px"
+                    onclick="closeVendorIframe()"
+                >
+                    Close
+                </button>
+            </div>
         </div>
 
         <!-- Optional overlay for background -->
@@ -152,14 +207,14 @@
                 width: 100%;
                 height: 100%;
                 background: rgba(0, 0, 0, 0.3);
-                z-index: 999;
+                z-index: 99;
             "
             onclick="closeInfo()"
         ></div>
 
-        <!-- Optional overlay for background -->
+        <!-- items Overlay -->
         <div
-            id="editoverlay"
+            id="itemsOverlay"
             style="
                 display: none;
                 position: fixed;
@@ -168,9 +223,9 @@
                 width: 100%;
                 height: 100%;
                 background: rgba(0, 0, 0, 0.3);
-                z-index: 999;
+                z-index: 199;
             "
-            onclick="closeEdit()"
+            onclick="closeitemsPopup()"
         ></div>
     </body>
 </html>
