@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"strings"
 
 	"gitea.locker98.com/locker98/Store-Manager-Pro/models"
 )
@@ -9,14 +10,22 @@ import (
 func AddItem(item models.Inventory) error {
 	query := `
 	INSERT INTO inventory (vendor_id, upc, invoice_number, name, brand, description, price, weighed, count)
-	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
 	`
 	_, err := DB.Exec(query, item.VendorID, item.UPC, item.InvoiceNumber, item.Name, item.Brand, item.Description, item.Price, item.Weighed, item.Count)
 	return err
 }
 
-func GetAllItems() ([]models.InventoryAll, error) {
-	rows, err := DB.Query(`
+func GetAllItems(page int, pageSize int) ([]models.InventoryAll, error) {
+	if page < 1 {
+		page = 1
+	}
+	if pageSize < 1 {
+		pageSize = 50
+	}
+	offset := (page - 1) * pageSize
+
+	query := `
 	SELECT
 		i.id,
 		v.vendor_id,
@@ -34,8 +43,10 @@ func GetAllItems() ([]models.InventoryAll, error) {
 		i.soldout_at
 	FROM inventory i
 	JOIN vendors v ON i.vendor_id = v.vendor_id
-	ORDER BY i.upc ASC;
-	`)
+	ORDER BY i.upc ASC
+	LIMIT ? OFFSET ?;
+	`
+	rows, err := DB.Query(query, pageSize, offset)
 
 	if err != nil {
 		fmt.Println("first", err)
@@ -70,13 +81,79 @@ func GetAllItems() ([]models.InventoryAll, error) {
 	return items, nil
 }
 
+func CountAllItems(countDeleted bool) (int, error) {
+	query := `
+	SELECT COUNT(id)
+	FROM inventory
+	`
+	if !countDeleted {
+		query += " WHERE deleted = 0;"
+	}
+
+	var count int
+	err := DB.QueryRow(query).Scan(&count)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
+func GetItemById(id int) (models.InventoryAll, error) {
+	query := `
+	SELECT
+		i.id,
+		v.vendor_id,
+		v.vendor_name,
+		i.upc,
+		i.invoice_number,
+		i.brand,
+		i.name,
+		i.description,
+		i.price,
+		i.weighed,
+		i.count,
+		i.deleted,
+		i.arrived_at,
+		i.soldout_at
+	FROM inventory i
+	JOIN vendors v ON i.vendor_id = v.vendor_id
+	WHERE i.id = ?;
+	`
+
+	var item models.InventoryAll
+	err := DB.QueryRow(query, id).Scan(
+		&item.ID,
+		&item.VendorID,
+		&item.VendorName,
+		&item.UPC,
+		&item.InvoiceNumber,
+		&item.Brand,
+		&item.Name,
+		&item.Description,
+		&item.Price,
+		&item.Weighed,
+		&item.Count,
+		&item.Deleted,
+		&item.ArrivedAt,
+		&item.SoldOutAt,
+	)
+
+	if err != nil {
+		return item, err
+	}
+
+	return item, nil
+}
+
 func UpdateItem(id int, item models.Inventory) error {
 	fmt.Println(id)
 	fmt.Println(item)
 	query := `
 	UPDATE inventory
 	SET vendor_id = ?, upc = ?, invoice_number = ?, brand = ?, name = ?, description = ?, price = ?, weighed = ?, count = ?, deleted = ?, arrived_at = ?, soldout_at = ?
-	WHERE id = ?
+	WHERE id = ?;
 	`
 	_, err := DB.Exec(query, item.VendorID, item.UPC, item.InvoiceNumber, item.Brand, item.Name, item.Description, item.Price, item.Weighed, item.Count, item.Deleted, item.ArrivedAt, item.SoldOutAt, id)
 	return err
@@ -86,7 +163,7 @@ func DeleteItem(id int) error {
 	query := `
 	UPDATE inventory
 	SET deleted = true, soldout_at = CURRENT_TIMESTAMP
-	WHERE id = ?
+	WHERE id = ?;
 	`
 	_, err := DB.Exec(query, id)
 	return err
@@ -96,13 +173,103 @@ func RestoreItem(id int) error {
 	query := `
 	UPDATE inventory
 	SET deleted = false, soldout_at = NULL
-	WHERE id = ?
+	WHERE id = ?;
 	`
 	_, err := DB.Exec(query, id)
 	return err
 }
 
 func DeleteItemPermanent(id int) error {
-	_, err := DB.Exec(`DELETE FROM inventory WHERE id = ?`, id)
+	_, err := DB.Exec(`DELETE FROM inventory WHERE id = ?;`, id)
 	return err
+}
+
+func SearchItems(search string, order string, showdeleted bool, page int, pageSize int) ([]models.InventoryAll, error) {
+	// Calculate pages
+	if page < 1 {
+		page = 1
+	}
+	if pageSize < 1 {
+		pageSize = 50
+	}
+	offset := (page - 1) * pageSize
+
+	// Search String
+	search = "%" + strings.ToLower(search) + "%"
+
+	query := `
+		SELECT
+			i.id,
+			v.vendor_id,
+			v.vendor_name,
+			i.upc,
+			i.invoice_number,
+			i.brand,
+			i.name,
+			i.description,
+			i.price,
+			i.weighed,
+			i.count,
+			i.deleted,
+			i.arrived_at,
+			i.soldout_at
+		FROM inventory i
+		JOIN vendors v ON i.vendor_id = v.vendor_id
+		WHERE
+			(LOWER(i.name)        LIKE ?
+		 OR LOWER(i.brand)       LIKE ?
+		 OR LOWER(i.description) LIKE ?
+		 OR LOWER(v.vendor_name) LIKE ?
+		 OR LOWER(i.upc) LIKE ?
+	     OR LOWER(i.invoice_number) LIKE ?)
+	`
+	// Don't show deleted items
+	if !showdeleted {
+		query += `AND i.deleted = 0
+			`
+	}
+
+	// sort
+	switch strings.ToLower(order) {
+	case "date":
+		query += `ORDER BY i.arrived_at ASC;`
+	case "name":
+		query += `ORDER BY i.name ASC`
+	default:
+		query += `ORDER BY i.upc ASC`
+	}
+
+	query += ` LIMIT ? OFFSET ?;`
+
+	rows, err := DB.Query(query, search, search, search, search, search, search, pageSize, offset)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var items []models.InventoryAll
+	for rows.Next() {
+		var i models.InventoryAll
+		if err := rows.Scan(
+			&i.ID,
+			&i.VendorID,
+			&i.VendorName,
+			&i.UPC,
+			&i.InvoiceNumber,
+			&i.Brand,
+			&i.Name,
+			&i.Description,
+			&i.Price,
+			&i.Weighed,
+			&i.Count,
+			&i.Deleted,
+			&i.ArrivedAt,
+			&i.SoldOutAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	return items, nil
 }

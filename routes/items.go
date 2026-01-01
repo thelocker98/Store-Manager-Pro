@@ -14,9 +14,38 @@ import (
 
 // GetItems returns all items in JSON
 func GetItems(c *gin.Context) {
-	items, err := db.GetAllItems()
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	pageSize, _ := strconv.Atoi(c.DefaultQuery("pagesize", "50"))
+
+	items, err := db.GetAllItems(page, pageSize)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, items)
+}
+
+// GetItems returns all items in JSON
+func CountItems(c *gin.Context) {
+	showDeleted, _ := strconv.ParseBool(c.DefaultQuery("countdeleted", "false")) // default to false
+	count, err := db.CountAllItems(showDeleted)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, `{"count":`+fmt.Sprint(count)+`}`)
+}
+
+// Get Single Item
+func GetItemById(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "invalid item ID"})
+		return
+	}
+	items, err := db.GetItemById(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "no rows found"})
 		return
 	}
 	c.JSON(http.StatusOK, items)

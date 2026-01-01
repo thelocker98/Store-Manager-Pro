@@ -35,8 +35,8 @@ async function openEdititemsEntry(id) {
   await loadVendors();
 
   // Check that entry exists in database
-  axios.get("/api/items").then((res) => {
-    const itemsEntry = res.data.find((i) => i.item_id === id);
+  axios.get(`/api/items/${id}`).then((res) => {
+    const itemsEntry = res.data;
     if (!itemsEntry) return;
 
     // Set Title
@@ -171,19 +171,4 @@ function closeItemsPopup() {
   document.getElementById("editError").textContent = "";
   document.getElementById("itemsPopup").style.display = "none";
   document.getElementById("itemsOverlay").style.display = "none";
-}
-
-// Populate Vendors selector
-function loadVendors() {
-  return axios.get("/api/vendors").then((res) => {
-    const select = document.getElementById("popup_items_vendorselector");
-    select.innerHTML = "";
-
-    res.data.forEach((v) => {
-      const opt = document.createElement("option");
-      opt.value = v.vendor_id;
-      opt.text = v.vendor_name;
-      select.appendChild(opt);
-    });
-  });
 }

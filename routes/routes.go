@@ -19,6 +19,8 @@ func RegisterRoutes(r *gin.Engine) {
 	{
 		// Items
 		api.GET("/items", GetItems)                             // List all items
+		api.GET("/items/count", CountItems)                     // Count of all items
+		api.GET("/items/:id", GetItemById)                      // Get item by id
 		api.POST("/items", AddItem)                             // Add a new item
 		api.PUT("/items/:id", UpdateItem)                       // Update an item
 		api.DELETE("/items/:id", DeleteItem)                    // Delete an item
@@ -30,6 +32,9 @@ func RegisterRoutes(r *gin.Engine) {
 		api.POST("/vendors", AddVendor)          // Add a new vendor
 		api.PUT("/vendors/:id", UpdateVendor)    // Update an vendor
 		api.DELETE("/vendors/:id", DeleteVendor) // Delete an vendor
+
+		// Search
+		api.GET("/search/:q", SearchItems)
 
 		// Export
 		api.GET("/export/csv", ExportCSV)

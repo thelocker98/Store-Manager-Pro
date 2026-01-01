@@ -1,7 +1,7 @@
 // Info Popup
 function openInfo(id) {
-  axios.get("/api/items").then((res) => {
-    const item = res.data.find((i) => i.item_id === id);
+  axios.get(`/api/items/${id}`).then((res) => {
+    const item = res.data;
     if (!item) return;
 
     let html = `<h2>${item.name} (${item.brand})</h2>`;

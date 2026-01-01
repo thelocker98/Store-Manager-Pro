@@ -1,6 +1,6 @@
 // Load all items
 function loadItems() {
-  axios.get("/api/items").then((res) => {
+  axios.get(`/api/items`).then((res) => {
     const tbody = document.querySelector("#itemsTable tbody");
 
     tbody.innerHTML = "";
@@ -60,4 +60,24 @@ function openVendorIframe() {
 function closeVendorIframe() {
   document.getElementById("vendorIframeModal").style.display = "none";
   loadVendors();
+}
+
+// Populate Vendors selector
+function loadVendors() {
+  return axios.get("/api/vendors").then((res) => {
+    const select = document.getElementById("popup_items_vendorselector");
+    select.innerHTML = "";
+
+    const opt = document.createElement("option");
+    opt.value = -1;
+    opt.text = "Select Vendor";
+    select.appendChild(opt);
+
+    res.data.forEach((v) => {
+      const opt = document.createElement("option");
+      opt.value = v.vendor_id;
+      opt.text = v.vendor_name;
+      select.appendChild(opt);
+    });
+  });
 }
