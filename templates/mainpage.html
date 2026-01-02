@@ -11,6 +11,7 @@
         <script src="/static/javascript/mainpage/mainpage.js"></script>
         <script src="/static/javascript/mainpage/edit_popup.js"></script>
         <script src="/static/javascript/mainpage/info_popup.js"></script>
+        <script src="/static/javascript/mainpage/search.js"></script>
     </head>
 
     <body>
@@ -23,6 +24,23 @@
         <button type="button" onclick="window.location.href='/barcode'">
             Barcode Mode
         </button>
+
+        <div id="searchDiv">
+            <input type="text" id="searchInput" placeholder="Search items..." />
+            <button onclick="searchItems()">Search</button>
+            <button onclick="resetSearch()">Reset</button>
+
+            <select id="sortBySelect">
+                <option value="date">Sort by Arrived Date</option>
+                <option value="upc">Sort by UPC</option>
+                <option value="name">Sort by Name</option>
+            </select>
+
+            <label>
+                <input type="checkbox" id="showDeletedCheckbox" />
+                Show Deleted
+            </label>
+        </div>
 
         <!-- Items Table -->
         <h2>Items</h2>
@@ -41,6 +59,11 @@
             </thead>
             <tbody></tbody>
         </table>
+
+        <!-- Spot for add item button when no result is found for search -->
+        <div id="noResultsContainer" style="margin-top: 10px; display: none">
+            <button onclick="openAdditemsPopup()">Add Item</button>
+        </div>
 
         <!-- Item Info Popup -->
         <div

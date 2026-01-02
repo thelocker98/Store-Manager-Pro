@@ -2,7 +2,6 @@ package db
 
 import (
 	"errors"
-	"fmt"
 
 	"gitea.locker98.com/locker98/Store-Manager-Pro/models"
 )
@@ -13,7 +12,6 @@ func AddVendorEntry(vendor models.Vendor) error {
 	VALUES (?)
 	`
 	_, err := DB.Exec(query, vendor.VendorName)
-	fmt.Println(err)
 	return err
 }
 

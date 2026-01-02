@@ -1,7 +1,6 @@
 package db
 
 import (
-	"fmt"
 	"strings"
 
 	"gitea.locker98.com/locker98/Store-Manager-Pro/models"
@@ -49,7 +48,6 @@ func GetAllItems(page int, pageSize int) ([]models.InventoryAll, error) {
 	rows, err := DB.Query(query, pageSize, offset)
 
 	if err != nil {
-		fmt.Println("first", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -148,8 +146,6 @@ func GetItemById(id int) (models.InventoryAll, error) {
 }
 
 func UpdateItem(id int, item models.Inventory) error {
-	fmt.Println(id)
-	fmt.Println(item)
 	query := `
 	UPDATE inventory
 	SET vendor_id = ?, upc = ?, invoice_number = ?, brand = ?, name = ?, description = ?, price = ?, weighed = ?, count = ?, deleted = ?, arrived_at = ?, soldout_at = ?
@@ -232,11 +228,11 @@ func SearchItems(search string, order string, showdeleted bool, page int, pageSi
 	// sort
 	switch strings.ToLower(order) {
 	case "date":
-		query += `ORDER BY i.arrived_at ASC;`
+		query += `ORDER BY i.arrived_at DESC`
 	case "name":
-		query += `ORDER BY i.name ASC`
+		query += `ORDER BY i.name DESC`
 	default:
-		query += `ORDER BY i.upc ASC`
+		query += `ORDER BY i.upc DESC`
 	}
 
 	query += ` LIMIT ? OFFSET ?;`
