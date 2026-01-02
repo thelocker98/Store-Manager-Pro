@@ -15,7 +15,7 @@ func AddItem(item models.Inventory) error {
 	return err
 }
 
-func GetAllItems(page int, pageSize int) ([]models.InventoryAll, error) {
+func GetAllItems(page int, pageSize int, showDeleted bool) ([]models.InventoryAll, error) {
 	if page < 1 {
 		page = 1
 	}
@@ -42,9 +42,15 @@ func GetAllItems(page int, pageSize int) ([]models.InventoryAll, error) {
 		i.soldout_at
 	FROM inventory i
 	JOIN vendors v ON i.vendor_id = v.vendor_id
-	ORDER BY i.upc ASC
-	LIMIT ? OFFSET ?;
 	`
+	if !showDeleted {
+		query += ` WHERE i.deleted = 0 `
+	}
+	query += `
+		ORDER BY i.upc ASC
+		LIMIT ? OFFSET ?;
+	`
+
 	rows, err := DB.Query(query, pageSize, offset)
 
 	if err != nil {

@@ -12,7 +12,7 @@ import (
 
 // ExportCSV downloads all items as CSV
 func ExportCSV(c *gin.Context) {
-	items, err := db.GetAllItems(1, 5)
+	items, err := db.GetAllItems(1, 5, false)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -41,7 +41,7 @@ func ExportCSV(c *gin.Context) {
 
 // ExportPDF downloads all items as PDF
 func ExportPDF(c *gin.Context) {
-	items, err := db.GetAllItems(1,5)
+	items, err := db.GetAllItems(1, 5, false)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

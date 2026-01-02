@@ -70,8 +70,9 @@ function resetSearch() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  const noResultsContainer = document.getElementById("noResultsContainer");
   const searchInput = document.getElementById("searchInput");
+  const showDeletedSearchInput = document.getElementById("showDeletedCheckbox");
+  const sortBySearchInput = document.getElementById("sortBySelect");
 
   if (searchInput) {
     searchInput.addEventListener("keypress", function (e) {
@@ -80,4 +81,16 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
+
+  showDeletedSearchInput.addEventListener("change", (e) => {
+    if (searchInput.value != "") {
+      searchItems();
+    }
+  });
+
+  sortBySearchInput.addEventListener("change", (e) => {
+    if (searchInput.value != "") {
+      searchItems();
+    }
+  });
 });

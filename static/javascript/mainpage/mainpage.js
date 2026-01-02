@@ -1,19 +1,29 @@
+// variables
+var pageSize = 2;
+var page = 1;
+var numberOfPages;
+var showDeletedItems = false;
+
 // Load all items
 function loadItems() {
-  axios.get(`/api/items`).then((res) => {
-    const tbody = document.querySelector("#itemsTable tbody");
+  axios
+    .get(
+      `/api/items?page=${page}&pagesize=${pageSize}&showdeleted=${showDeletedItems}`,
+    )
+    .then((res) => {
+      const tbody = document.querySelector("#itemsTable tbody");
 
-    tbody.innerHTML = "";
+      tbody.innerHTML = "";
 
-    res.data.forEach((item) => {
-      var class_val = "";
+      res.data.forEach((item) => {
+        var class_val = "";
 
-      if (item.deleted) {
-        class_val = "deleted";
-      } else {
-        class_val = "avalible";
-      }
-      tbody.innerHTML += `<tr onclick="openInfo(${item.item_id})" style="cursor:pointer" class="${class_val}">
+        if (item.deleted) {
+          class_val = "deleted";
+        } else {
+          class_val = "avalible";
+        }
+        tbody.innerHTML += `<tr onclick="openInfo(${item.item_id})" style="cursor:pointer" class="${class_val}">
                             <td>${item.upc}</td>
                             <td>${item.brand}</td>
                             <td>${item.vendor_name}</td>
@@ -23,8 +33,8 @@ function loadItems() {
                             <td>${formatDate(item.arrived_at)}</td>
                           </tr>
                           `;
+      });
     });
-  });
 }
 
 // Initial load
@@ -80,4 +90,56 @@ function loadVendors() {
       select.appendChild(opt);
     });
   });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  changePage(0);
+  const pagesPerScreenSelector = document.getElementById(
+    "pagePerScreenSelector",
+  );
+  const showDeletedItemsDOM = document.getElementById("showDeletedItems");
+
+  pagesPerScreenSelector.addEventListener("change", (e) => {
+    pageSize = e.target.value;
+    changePage(0);
+    loadItems();
+  });
+
+  showDeletedItemsDOM.addEventListener("change", (e) => {
+    showDeletedItems = showDeletedItemsDOM.checked;
+    changePage(0);
+    loadItems();
+  });
+});
+
+async function changePage(changePageBy) {
+  page += changePageBy;
+
+  // Clamp page to minimum of 1
+  if (page < 1) page = 1;
+
+  // Get total count
+  const res = await axios.get(
+    `/api/items/count?countdeleted=${showDeletedItems}`,
+  );
+
+  let data = res.data;
+  if (typeof data === "string") {
+    data = JSON.parse(data);
+  }
+
+  numberOfPages = Math.ceil(data.count / pageSize);
+
+  // Clamp page to max
+  if (page > numberOfPages) page = numberOfPages;
+
+  // Update buttons
+  document.getElementById("prevPageBtn").disabled = page <= 1;
+  document.getElementById("nextPageBtn").disabled = page >= numberOfPages;
+
+  // Update indicator
+  document.getElementById("pageIndicator").textContent =
+    `Page ${page} of ${numberOfPages}`;
+
+  loadItems();
 }

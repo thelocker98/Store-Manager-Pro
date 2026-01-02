@@ -16,8 +16,9 @@ import (
 func GetItems(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	pageSize, _ := strconv.Atoi(c.DefaultQuery("pagesize", "50"))
+	showDeleted, _ := strconv.ParseBool(c.DefaultQuery("showdeleted", "false"))
 
-	items, err := db.GetAllItems(page, pageSize)
+	items, err := db.GetAllItems(page, pageSize, showDeleted)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

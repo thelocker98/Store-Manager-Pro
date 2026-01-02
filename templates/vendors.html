@@ -12,11 +12,17 @@
     </head>
 
     <body>
-        <h1>Inventory</h1>
-        <button type="button" onclick="window.location.href='/'">Home</button>
+        <h1>Store Manager Pro</h1>
+        <button
+            id="homeButton"
+            type="button"
+            onclick="window.location.href='/'"
+        >
+            Home
+        </button>
 
         <!-- Add Vendor Form -->
-        <h2>Add Vendor</h2>
+        <h2>Vendors</h2>
         <form id="addVendorForm" onsubmit="addVendor(event)">
             <input
                 type="text"
@@ -87,5 +93,13 @@
             "
             onclick="closeVendorEdit()"
         ></div>
+
+        <script>
+            const params = new URLSearchParams(window.location.search);
+            const iframeEnabled = params.get("iframe");
+            if (iframeEnabled) {
+                document.getElementById("homeButton").style.display = "none";
+            }
+        </script>
     </body>
 </html>
