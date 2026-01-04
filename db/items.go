@@ -39,7 +39,8 @@ func GetAllItems(page int, pageSize int, showDeleted bool) ([]models.InventoryAl
 		i.count,
 		i.deleted,
 		i.arrived_at,
-		i.soldout_at
+		i.soldout_at,
+		COUNT(*) OVER() AS entry_count
 	FROM inventory i
 	JOIN vendors v ON i.vendor_id = v.vendor_id
 	`
@@ -76,6 +77,7 @@ func GetAllItems(page int, pageSize int, showDeleted bool) ([]models.InventoryAl
 			&i.Deleted,
 			&i.ArrivedAt,
 			&i.SoldOutAt,
+			&i.Entry_Count,
 		)
 		if err != nil {
 			return nil, err
@@ -214,7 +216,8 @@ func SearchItems(search string, order string, showdeleted bool, page int, pageSi
 			i.count,
 			i.deleted,
 			i.arrived_at,
-			i.soldout_at
+			i.soldout_at,
+			COUNT(*) OVER() AS entry_count
 		FROM inventory i
 		JOIN vendors v ON i.vendor_id = v.vendor_id
 		WHERE
@@ -268,6 +271,7 @@ func SearchItems(search string, order string, showdeleted bool, page int, pageSi
 			&i.Deleted,
 			&i.ArrivedAt,
 			&i.SoldOutAt,
+			&i.Entry_Count,
 		); err != nil {
 			return nil, err
 		}

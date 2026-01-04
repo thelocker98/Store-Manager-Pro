@@ -26,45 +26,45 @@
             Barcode Mode
         </button>
 
+        <!-- Items Table -->
+        <h2>Items</h2>
+
         <div id="searchDiv">
             <input type="text" id="searchInput" placeholder="Search items..." />
-            <button onclick="searchItems()">Search</button>
+            <button onclick="reloadData()">Search</button>
             <button onclick="resetSearch()">Reset</button>
+        </div>
+        <br />
 
+        <div id="paginationControls" style="margin-top: 15px">
+            <!-- Sortby Selector -->
             <select id="sortBySelect">
                 <option value="date">Sort by Arrived Date</option>
                 <option value="upc">Sort by UPC</option>
                 <option value="name">Sort by Name</option>
             </select>
 
-            <label>
-                <input type="checkbox" id="showDeletedCheckbox" />
-                Show Deleted
-            </label>
-        </div>
+            <!-- Show Deleted Items Check Box -->
+            <label for="showDeletedCheckbox">Show Deleted</label>
+            <input type="checkbox" id="showDeletedCheckbox" />
 
-        <!-- Items Table -->
-        <h2>Items</h2>
-        <button onclick="openAdditemsPopup()">Add Item</button>
-        <br />
-
-        <div id="paginationControls" style="margin-top: 15px">
-            <button id="prevPageBtn" onclick="changePage(-1)" disabled>
+            <!-- Next and Previous buttons for Pages -->
+            <button id="prevPageBtn" onclick="prevPage()" disabled>
                 Previous
             </button>
+            <span id="pageIndicator">Page 1/1</span>
+            <button id="nextPageBtn" onclick="nextPage()">Next</button>
 
-            <span id="pageIndicator">Page 1</span>
+            <span id="searchingText">Search Results:</span>
 
-            <button id="nextPageBtn" onclick="changePage(1)">Next</button>
-            <span id="pagePerScreenText">Pages Per Screen:</span>
-            <select id="pagePerScreenSelector">
+            <!-- Items Per Page Selector -->
+            <span id="itemsPerPageText">View:</span>
+            <select id="itemsPerPageSelector">
                 <option value="2">2</option>
                 <option value="10">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
             </select>
-            <span>show deleted items:</span>
-            <input id="showDeletedItems" type="checkbox" />
         </div>
 
         <table id="itemsTable">
@@ -87,6 +87,8 @@
             <button onclick="openAdditemsPopup()">Add Item</button>
             <p id="noResultsText">No Results Found for this search.</p>
         </div>
+
+        <button onclick="openAdditemsPopup()">Add Item</button>
 
         <!-- Item Info Popup -->
         <div
