@@ -46,31 +46,34 @@ async function loadItems() {
 function deleteItem(id) {
   axios.delete(`/api/items/${id}`).then(() => loadItems());
   closeInfo();
-  closeItemsPopup();
+  closeItemPopup();
 }
 // Restore Item
 function restoreItem(id) {
   axios.get(`/api/items/restore/${id}`).then(() => loadItems());
   closeInfo();
-  closeItemsPopup();
+  closeItemPopup();
 }
 // Delete Permanently Item
 function deleteItemPermanent(id) {
   if (confirm("Are you sure you want to permanently delete this item?")) {
     axios.delete(`/api/items/permanent/${id}`).then(() => loadItems());
     closeInfo();
-    closeItemsPopup();
+    closeItemPopup();
   }
 }
 
 // Open the Vendor Iframe popup
 function openVendorIframe() {
   document.getElementById("vendorIframeModal").style.display = "block";
+  document.getElementById("iframeOverlay").style.display = "block";
 }
 
 // Close the Vendor Iframe popup
 function closeVendorIframe() {
   document.getElementById("vendorIframeModal").style.display = "none";
+  document.getElementById("iframeOverlay").style.display = "none";
+
   loadVendors();
 }
 
@@ -108,6 +111,23 @@ document.addEventListener("DOMContentLoaded", function () {
     showDeletedItems = showDeletedItemsDOM.checked;
     // reload data and refresh page buttons
     reloadData(page);
+  });
+
+  // Price decimal conversion
+  const priceInput = document.getElementById("popup_items_price");
+
+  priceInput.addEventListener("input", () => {
+    // Remove anything that's not a digit
+    let raw = priceInput.value.replace(/\D/g, "");
+
+    if (raw === "") {
+      priceInput.value = "";
+      return;
+    }
+
+    // Convert to cents → dollars
+    const value = (parseInt(raw, 10) / 100).toFixed(2);
+    priceInput.value = value;
   });
 
   // Load Inital Data

@@ -3,102 +3,126 @@
     <head>
         <meta charset="UTF-8" />
         <title>Inventory</title>
-        <link rel="stylesheet" href="/static/css/general.css" />
         <link rel="stylesheet" href="/static/css/vendor.css" />
+        <link rel="stylesheet" href="/static/css/general.css" />
 
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="/static/javascript/axios.min.js"></script>
         <script src="/static/javascript/general.js"></script>
         <script src="/static/javascript/vendor/vendor.js"></script>
     </head>
 
     <body>
-        <h1>Store Manager Pro</h1>
-        <button
-            id="homeButton"
-            type="button"
-            onclick="window.location.href='/'"
-        >
-            Home
-        </button>
+        <header class="app-header">
+            <div class="header-left">
+                <span class="logo">Store Manager Pro</span>
+            </div>
 
-        <!-- Add Vendor Form -->
-        <h2>Vendors</h2>
-        <form id="addVendorForm" onsubmit="addVendor(event)">
-            <input
-                type="text"
-                id="vendor_name"
-                placeholder="Vendor Name"
-                required
-            />
-            <button type="submit">Add</button>
-            <p id="vendoraddError" class="errorText"></p>
-        </form>
+            <nav class="header-nav">
+                <a href="/" class="nav-link">Inventory</a>
+                <a href="/vendors" class="nav-link">Vendors</a>
+                <a href="/barcode" class="nav-link">Barcode</a>
+            </nav>
+        </header>
 
-        <!-- Vendors Table -->
-        <h2>Vendors</h2>
-        <table id="vendorsTable">
-            <thead>
-                <tr>
-                    <th>Vendor</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-
-        <!-- Edit Vendor Popup -->
-        <div
-            id="editVendorPopup"
-            style="
-                display: none;
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: white;
-                border: 1px solid #ccc;
-                padding: 20px;
-                z-index: 1000;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-                min-width: 300px;
-            "
-        >
-            <h2>Edit Vendor</h2>
-            <form id="editVendorForm" onsubmit="submitVendorEdit(event)">
-                <input type="hidden" id="editVendorId" />
-
-                <label for="editVendorName">Vendor:</label><br />
-                <input type="text" id="editVendorName" required /><br /><br />
-
-                <button type="button" onclick="closeVendorEdit()">
-                    Cancel
-                </button>
-                <button id="vendorDeleteButton" type="button">Delete</button>
-                <button type="submit">Save</button>
-                <p id="vendorinfoError" class="errorText"></p>
+        <main id="main">
+            <!-- Add Vendor Form -->
+            <h2>Vendors</h2>
+            <form id="addVendorForm" onsubmit="addVendor(event)">
+                <input
+                    type="text"
+                    id="vendor_name"
+                    placeholder="Vendor Name"
+                    required
+                />
+                <button type="submit">Add</button>
+                <p id="vendoraddError" class="errorText"></p>
             </form>
-        </div>
 
-        <!-- Overlay -->
-        <div
-            id="overlay"
-            style="
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.3);
-                z-index: 999;
-            "
-            onclick="closeVendorEdit()"
-        ></div>
+            <!-- Vendors Table -->
+            <h2>Vendors</h2>
+            <table id="vendorsTable" style="min-width: 325px">
+                <thead>
+                    <tr>
+                        <th>Vendor</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <!-- Edit Vendor Popup -->
+            <div
+                id="editVendorPopup"
+                style="
+                    display: none;
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: white;
+                    border: 1px solid #ccc;
+                    padding: 20px;
+                    z-index: 1000;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+                    min-width: 300px;
+                "
+            >
+                <h2>Edit Vendor</h2>
+                <form id="editVendorForm" onsubmit="submitVendorEdit(event)">
+                    <input type="hidden" id="editVendorId" />
+
+                    <label for="editVendorName">Vendor</label><br />
+                    <input
+                        type="text"
+                        id="editVendorName"
+                        required
+                    /><br /><br />
+
+                    <button type="button" onclick="closeVendorEdit()">
+                        Cancel
+                    </button>
+                    <button id="vendorDeleteButton" type="button">
+                        Delete
+                    </button>
+                    <button type="submit">Save</button>
+                    <p id="vendorinfoError" class="errorText"></p>
+                </form>
+            </div>
+
+            <!-- Overlay -->
+            <div
+                id="overlay"
+                style="
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.3);
+                    z-index: 999;
+                "
+                onclick="closeVendorEdit()"
+            ></div>
+        </main>
 
         <script>
+            // Get URL parameters
             const params = new URLSearchParams(window.location.search);
             const iframeEnabled = params.get("iframe");
-            if (iframeEnabled) {
-                document.getElementById("homeButton").style.display = "none";
+            const header = document.getElementsByClassName("app-header")[0];
+            const main = document.getElementById("main");
+
+            if (header) {
+                if (iframeEnabled) {
+                    // Select the first element with class "app-header"
+
+                    // Hide the header
+                    header.style.display = "none";
+                } else {
+                    // Remove padding
+                    main.classList.add("app-container");
+                    console.log(main);
+                }
             }
         </script>
     </body>

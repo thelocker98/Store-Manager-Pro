@@ -5,7 +5,7 @@ function loadVendors() {
     tbody.innerHTML = "";
     res.data.forEach((vendors) => {
       tbody.innerHTML += `
-          <tr onclick="editVendor(${vendors.vendor_id})">
+          <tr onclick="editVendor(${vendors.vendor_id})" class="avalible">
               <td>${vendors.vendor_name}</td>
           </tr>
       `;

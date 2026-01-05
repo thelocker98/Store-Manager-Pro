@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="/static/css/general.css" />
         <link rel="stylesheet" href="/static/css/mainpage.css" />
 
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="/static/javascript/axios.min.js"></script>
         <script src="/static/javascript/general.js"></script>
         <script src="/static/javascript/mainpage/mainpage.js"></script>
         <script src="/static/javascript/mainpage/edit_popup.js"></script>
@@ -16,228 +16,269 @@
     </head>
 
     <body>
-        <h1>Inventory</h1>
+        <header class="app-header">
+            <div class="header-left">
+                <span class="logo">Store Manager Pro</span>
+            </div>
 
-        <!-- Add Navigation Button -->
-        <button type="button" onclick="window.location.href='/vendors'">
-            Go to Vendors
-        </button>
-        <button type="button" onclick="window.location.href='/barcode'">
-            Barcode Mode
-        </button>
+            <nav class="header-nav">
+                <a href="/" class="nav-link">Inventory</a>
+                <a href="/vendors" class="nav-link">Vendors</a>
+                <a href="/barcode" class="nav-link">Barcode</a>
+            </nav>
+        </header>
 
-        <!-- Items Table -->
-        <h2>Items</h2>
+        <main class="app-container">
+            <!-- Items Table -->
+            <div class="page-header">
+                <h2>Items</h2>
 
-        <div id="searchDiv">
-            <input type="text" id="searchInput" placeholder="Search items..." />
-            <button onclick="reloadData()">Search</button>
-            <button onclick="resetSearch()">Reset</button>
-        </div>
-        <br />
-
-        <div id="paginationControls" style="margin-top: 15px">
-            <!-- Sortby Selector -->
-            <select id="sortBySelect">
-                <option value="date">Sort by Arrived Date</option>
-                <option value="upc">Sort by UPC</option>
-                <option value="name">Sort by Name</option>
-            </select>
-
-            <!-- Show Deleted Items Check Box -->
-            <label for="showDeletedCheckbox">Show Deleted</label>
-            <input type="checkbox" id="showDeletedCheckbox" />
-
-            <!-- Next and Previous buttons for Pages -->
-            <button id="prevPageBtn" onclick="prevPage()" disabled>
-                Previous
-            </button>
-            <span id="pageIndicator">Page 1/1</span>
-            <button id="nextPageBtn" onclick="nextPage()">Next</button>
-
-            <span id="searchingText">Search Results:</span>
-
-            <!-- Items Per Page Selector -->
-            <span id="itemsPerPageText">View:</span>
-            <select id="itemsPerPageSelector">
-                <option value="2">2</option>
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-            </select>
-        </div>
-
-        <table id="itemsTable">
-            <thead>
-                <tr>
-                    <th>UPC</th>
-                    <th>Brand</th>
-                    <th>Vendor</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Price</th>
-                    <th>Bought</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-
-        <!-- Spot for add item button when no result is found for search -->
-        <div id="noResultsContainer" style="margin-top: 10px; display: none">
-            <button onclick="openAdditemsPopup()">Add Item</button>
-            <p id="noResultsText">No Results Found for this search.</p>
-        </div>
-
-        <button onclick="openAdditemsPopup()">Add Item</button>
-
-        <!-- Item Info Popup -->
-        <div
-            id="infoPopup"
-            style="
-                display: none;
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: white;
-                border: 1px solid #ccc;
-                padding: 20px;
-                z-index: 100;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-                min-width: 300px;
-            "
-        >
-            <div id="infoContent"></div>
-
-            <br />
-            <button id="infoEditBtn">Edit</button>
-            <button id="infoDeleteBtn">Delete</button>
-            <button onclick="closeInfo()">Close</button>
-            <p id="infoError" class="errorText"></p>
-        </div>
-
-        <!-- itemsPopup -->
-        <div
-            id="itemsPopup"
-            style="
-                display: none;
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: white;
-                border: 1px solid #ccc;
-                padding: 20px;
-                z-index: 200;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-                min-width: 300px;
-            "
-        >
-            <h2 id="itemsPopupHeader"></h2>
-
-            <form id="itemsEntryFormPopup">
-                <input type="hidden" id="popup_items_id" />
-
-                <div>
-                    <label for="popup_items_upc">UPC</label>
-                    <input type="text" id="popup_items_upc" />
-                </div>
-
-                <div>
-                    <label for="popup_items_invoicenumber"
-                        >Invoice Number</label
+                <div class="search">
+                    <span
+                        class="material-symbol searchButton"
+                        onclick="reloadData()"
+                        >&#xE8B6;</span
                     >
-                    <input type="text" id="popup_items_invoicenumber" />
-                </div>
-
-                <div>
-                    <select
-                        id="popup_items_vendorselector"
-                        style="width: 150px"
-                    ></select>
-                    <button type="button" onclick="openVendorIframe()">
-                        + Add Vendor
-                    </button>
-                </div>
-
-                <div>
-                    <label for="popup_items_brand">Brand</label>
-                    <input type="text" id="popup_items_brand" required />
-                </div>
-
-                <div>
-                    <label for="popup_items_name">Name</label>
-                    <input type="text" id="popup_items_name" required />
-                </div>
-
-                <div>
-                    <label for="popup_items_description">Description</label>
-                    <textarea id="popup_items_description"></textarea>
-                </div>
-
-                <div>
-                    <label for="popup_items_price">Price</label>
                     <input
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        id="popup_items_price"
-                        required
+                        id="searchInput"
+                        type="search"
+                        placeholder="Search"
                     />
+                    <span onclick="resetSearch()" style="cursor: pointer"
+                        >X
+                    </span>
                 </div>
+            </div>
 
-                <div>
-                    <label for="popup_items_weighed">Weighed</label>
-                    <input type="checkbox" id="popup_items_weighed" />
-                </div>
-
-                <div>
-                    <label for="popup_items_count">Count</label>
-                    <input type="number" id="popup_items_count" />
-                </div>
-
-                <div id="popup_div_items_arrived">
-                    <label for="popup_items_arrivedat">Arrived</label>
-                    <input type="date" id="popup_items_arrived" />
-                </div>
-
-                <div id="popup_div_items_soldout">
-                    <label for="popup_items_soldout">Sold Out</label>
-                    <input type="date" id="popup_items_soldout" />
-                </div>
-
-                <div class="form-actions">
-                    <button type="button" onclick="closeItemsPopup()">
-                        Cancel
-                    </button>
-                    <button id="itemsEntrySubmitButton" type="submit">
-                        Add
-                    </button>
-                </div>
-            </form>
-            <p id="editError" class="errorText"></p>
-        </div>
-
-        <!-- Vendor iframe modal -->
-        <div
-            id="vendorIframeModal"
-            style="
-                display: none;
-                position: fixed;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.3);
-                z-index: 1000;
-            "
-        >
             <div
+                id="paginationControls"
                 style="
-                    position: relative;
-                    margin: 5% auto;
-                    background: white;
-                    width: 60%;
-                    height: 80%;
+                    margin-top: 15px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
                 "
             >
+                <div>
+                    <!-- Sortby Selector -->
+                    <select id="sortBySelect">
+                        <option value="date">Sort by Arrived Date</option>
+                        <option value="upc">Sort by UPC</option>
+                        <option value="name">Sort by Name</option>
+                    </select>
+
+                    <!-- Show Deleted Items Check Box -->
+                    <div class="checkbox-group">
+                        <label
+                            style="padding-left: 10px; font-size: 20px"
+                            for="showDeletedCheckbox"
+                            >Show Deleted</label
+                        >
+                        <input type="checkbox" id="showDeletedCheckbox" />
+                    </div>
+                </div>
+
+                <div>
+                    <button onclick="openAdditemPopup()" class="addItem">
+                        Add Item
+                    </button>
+                </div>
+
+                <div>
+                    <!-- Next and Previous buttons for Pages -->
+                    <button id="prevPageBtn" onclick="prevPage()" disabled>
+                        Previous
+                    </button>
+                    <span id="pageIndicator">Page 1/1</span>
+                    <button id="nextPageBtn" onclick="nextPage()">Next</button>
+
+                    <!-- Items Per Page Selector -->
+                    <span id="itemsPerPageText">View:</span>
+                    <select id="itemsPerPageSelector">
+                        <option value="2">2</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+            </div>
+
+            <table id="itemsTable">
+                <thead>
+                    <tr>
+                        <th>UPC</th>
+                        <th>Brand</th>
+                        <th>Vendor</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Bought</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <!-- Spot for add item button when no result is found for search -->
+            <div
+                id="noResultsContainer"
+                style="margin-top: 10px; display: none"
+            >
+                <p id="noResultsText">No Results Found for this search.</p>
+            </div>
+
+            <button onclick="openAdditemPopup()" class="addItem">
+                Add Item
+            </button>
+
+            <!-- Item Info Popup -->
+            <div id="infoPopup" class="infoPopup">
+                <div id="infoContent"></div>
+
+                <br />
+                <div>
+                    <button id="infoEditBtn">Edit</button>
+                    <button id="infoDeleteBtn">Delete</button>
+                    <button onclick="closeInfo()">Close</button>
+                </div>
+                <p id="infoError" class="errorText"></p>
+            </div>
+
+            <!-- itemPopup -->
+            <div id="itemPopup" class="itemPopup">
+                <h2 id="itemPopupHeader"></h2>
+
+                <form id="itemEntryFormPopup">
+                    <input type="hidden" id="popup_items_id" />
+
+                    <div class="container">
+                        <div style="display: flex">
+                            <label for="popup_items_brand">Brand:</label>
+                            <input
+                                type="text"
+                                id="popup_items_brand"
+                                required
+                            />
+                        </div>
+
+                        <div style="display: flex">
+                            <label for="popup_items_name">Name:</label>
+                            <input type="text" id="popup_items_name" required />
+                        </div>
+                    </div>
+
+                    <div class="container">
+                        <div style="display: flex">
+                            <label for="popup_items_upc">UPC:</label>
+                            <input type="text" id="popup_items_upc" />
+                        </div>
+
+                        <div style="display: flex">
+                            <label for="popup_items_invoicenumber"
+                                >Invoice Number:</label
+                            >
+                            <input type="text" id="popup_items_invoicenumber" />
+                        </div>
+                    </div>
+
+                    <div style="display: flex; padding: 5px">
+                        <div style="padding-right: 20px">
+                            <label for="popup_items_vendorselector"
+                                >Vendor:</label
+                            >
+                            <select
+                                id="popup_items_vendorselector"
+                                style="
+                                    width: 150px;
+                                    padding: 5px;
+                                    overflow: hidden;
+                                    border-radius: 10px;
+                                "
+                            ></select>
+                        </div>
+                        <button type="button" onclick="openVendorIframe()">
+                            + Add Vendor
+                        </button>
+                    </div>
+
+                    <div style="display: flex; padding: 5px">
+                        <label for="popup_items_description"
+                            >Description:</label
+                        >
+                        <textarea
+                            id="popup_items_description"
+                            style="
+                                width: 750px;
+                                height: 100px;
+                                padding: 10px;
+                                overflow: hidden;
+                                display: flex;
+                                border-radius: 10px;
+                                font-size: 20px;
+                                box-shadow: 0 2px rgba(0, 0, 0, 0.3);
+                            "
+                        ></textarea>
+                    </div>
+
+                    <div class="container">
+                        <div class="form-row">
+                            <label for="popup_items_price">Price:</label>
+
+                            <div class="currency-input">
+                                <span class="currency-symbol">$</span>
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    id="popup_items_price"
+                                    required
+                                />
+                            </div>
+
+                            <div style="display: flex">
+                                <input
+                                    type="checkbox"
+                                    id="popup_items_weighed"
+                                />
+                                <label for="popup_items_weighed">Weighed</label>
+                            </div>
+                        </div>
+
+                        <div style="display: flex">
+                            <label for="popup_items_count">Count:</label>
+                            <input
+                                type="number"
+                                id="popup_items_count"
+                                style="width: 100px; font-size: 20px"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="container">
+                        <div id="popup_div_items_arrived" style="display: flex">
+                            <label for="popup_items_arrivedat">Arrived:</label>
+                            <input type="date" id="popup_items_arrived" />
+                        </div>
+
+                        <div id="popup_div_items_soldout">
+                            <label for="popup_items_soldout">Sold Out:</label>
+                            <input type="date" id="popup_items_soldout" />
+                        </div>
+                    </div>
+
+                    <div class="form-actions container">
+                        <button type="button" onclick="closeItemPopup()">
+                            Cancel
+                        </button>
+                        <button id="itemsEntrySubmitButton" type="submit">
+                            Add
+                        </button>
+                    </div>
+                </form>
+                <p id="editError" class="errorText"></p>
+            </div>
+
+            <!-- Vendor iframe modal -->
+            <div id="vendorIframeModal">
                 <iframe
                     id="vendorFrame"
                     src="/vendors?iframe=true"
@@ -250,38 +291,54 @@
                     Close
                 </button>
             </div>
-        </div>
 
-        <!-- Optional overlay for background -->
-        <div
-            id="infooverlay"
-            style="
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.3);
-                z-index: 99;
-            "
-            onclick="closeInfo()"
-        ></div>
+            <!-- Optional overlay for background -->
+            <div
+                id="infooverlay"
+                style="
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.3);
+                    z-index: 99;
+                "
+                onclick="closeInfo()"
+            ></div>
 
-        <!-- items Overlay -->
-        <div
-            id="itemsOverlay"
-            style="
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.3);
-                z-index: 199;
-            "
-            onclick="closeItemsPopup()"
-        ></div>
+            <!-- items Overlay -->
+            <div
+                id="itemsOverlay"
+                style="
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.3);
+                    z-index: 199;
+                "
+                onclick="closeItemPopup()"
+            ></div>
+
+            <!-- Iframe Overlay -->
+            <div
+                id="iframeOverlay"
+                style="
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.3);
+                    z-index: 999;
+                "
+                onclick="closeVendorIframe()"
+            ></div>
+        </main>
     </body>
 </html>

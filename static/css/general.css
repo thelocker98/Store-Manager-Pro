@@ -1,3 +1,152 @@
+/* ===== CSS VARIABLES (THEME) ===== */
+:root {
+    --bg: #fff;
+    --text: #1f2937;
+    --card: #eeeeee;
+    --muted: #94a3b8;
+    --border: #e5e7eb;
+    --danger: #dc2626;
+    --tableaccent: #009879;
+    --radius: 10px;
+
+    /* Buttons */
+    --buttoncolor: #009879; /* main teal (matches table accent) */
+    --buttonaccent: #007961; /* slightly darker for hover */
+}
+
+/* Fonts */
+@font-face {
+    font-family: "MaterialSymbols";
+    src: url("/static/fonts/Material\ Symbols.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+.material-symbol {
+    font-family: "MaterialSymbols";
+    font-size: 20px;
+    line-height: 1;
+    display: inline-block;
+
+    font-variation-settings:
+        "FILL" 0,
+        "wght" 400,
+        "GRAD" 0,
+        "opsz" 24;
+}
+
+/* ===== HEADER ===== */
+.app-header {
+    height: 64px;
+    padding: 0 28px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.header-nav {
+    display: flex;
+    gap: 16px;
+}
+
+.nav-link {
+    padding: 8px 14px;
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    background: var(--bg);
+}
+
+.nav-link.active {
+    background: var(--primary);
+    color: white;
+}
+
+/* ===== LAYOUT ===== */
 .errorText {
-    color: #f00;
+    color: var(--danger);
+}
+
+body {
+    font-family: sans-serif;
+    font-size: 20px;
+    margin: 20px;
+    background-color: var(--bg);
+}
+
+/* Tables */
+table {
+    border-radius: var(--radius);
+    overflow: hidden;
+
+    width: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-family: sans-serif;
+    min-width: 600px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+thead tr {
+    /* Style Header */
+    background-color: var(--tableaccent);
+    color: var(--bg);
+    text-align: left;
+}
+
+th,
+td {
+    padding: 10px 15px;
+    text-align: left;
+}
+
+/* Style every other row */
+tbody tr {
+    border-bottom: 1px solid #ccc;
+}
+tbody tr:nth-of-type(even) {
+    background-color: #eee;
+}
+tbody tr:last-of-type {
+    border-bottom: 2px solid var(--tableaccent);
+}
+
+/* Show deleted items with a strike through and gray */
+tr.deleted {
+    color: #888;
+    text-decoration: line-through;
+}
+/* On hover change */
+tbody tr:hover {
+    background-color: #aaa;
+}
+
+button {
+    background-color: var(--buttoncolor);
+    font-size: 20px;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+button:hover {
+    background-color: var(--buttonaccent);
+}
+button:disabled {
+    background-color: var(--muted);
+    cursor: not-allowed;
 }

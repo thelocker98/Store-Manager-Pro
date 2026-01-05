@@ -9,7 +9,7 @@ async function searchItems() {
 
   try {
     const res = await axios.get(
-      `http://localhost:8080/api/search/${encodeURIComponent(query)}?showdeleted=${showDeleted}&sortby=${sortBy}&page=${page}&pagesize=${pageSize}`,
+      `/api/search/${encodeURIComponent(query)}?showdeleted=${showDeleted}&sortby=${sortBy}&page=${page}&pagesize=${pageSize}`,
     );
 
     const items = res.data; // assuming API returns an array of items

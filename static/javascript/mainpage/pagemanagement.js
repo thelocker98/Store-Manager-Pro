@@ -16,16 +16,13 @@ function prevPage() {
 async function reloadData() {
   // Variables
   const searchBox = document.getElementById("searchInput").value;
-  const searchingText = document.getElementById("searchingText");
   var entryCount;
 
   // Do Search or Data Load
   if (searchBox != "") {
     entryCount = await searchItems();
-    searchingText.style.display = "block";
   } else {
     entryCount = await loadItems();
-    searchingText.style.display = "none";
   }
 
   // Find out number of pages for result

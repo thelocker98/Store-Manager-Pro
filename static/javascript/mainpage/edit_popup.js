@@ -1,13 +1,13 @@
 // Open the Add items Popup
-function openAdditemsPopup() {
+function openAdditemPopup() {
   // Load vendor selector
   loadVendors();
   // Set Title
-  document.getElementById("itemsPopupHeader").textContent = "Add items Entry";
+  document.getElementById("itemPopupHeader").textContent = "Add items Entry";
 
   // Set Buttons
   document.getElementById("itemsEntrySubmitButton").textContent = "Add";
-  document.getElementById("itemsEntryFormPopup").onsubmit = () =>
+  document.getElementById("itemEntryFormPopup").onsubmit = () =>
     submitAdditemsEntryPopup(event);
 
   // Set Content
@@ -25,7 +25,7 @@ function openAdditemsPopup() {
   // Set layers
   document.getElementById("popup_div_items_arrived").style.display = "none";
   document.getElementById("popup_div_items_soldout").style.display = "none";
-  document.getElementById("itemsPopup").style.display = "block";
+  document.getElementById("itemPopup").style.display = "block";
   document.getElementById("itemsOverlay").style.display = "block";
 }
 
@@ -40,12 +40,11 @@ async function openEdititemsEntry(id) {
     if (!itemsEntry) return;
 
     // Set Title
-    document.getElementById("itemsPopupHeader").textContent =
-      "Edit items Entry";
+    document.getElementById("itemPopupHeader").textContent = "Edit Item Entry";
 
     // Set buttons
     document.getElementById("itemsEntrySubmitButton").textContent = "Save";
-    document.getElementById("itemsEntryFormPopup").onsubmit = () =>
+    document.getElementById("itemEntryFormPopup").onsubmit = () =>
       submitEdititemsEntry(event);
 
     // Set Content
@@ -76,7 +75,7 @@ async function openEdititemsEntry(id) {
       document.getElementById("popup_div_items_soldout").style.display = "none";
     }
 
-    document.getElementById("itemsPopup").style.display = "block";
+    document.getElementById("itemPopup").style.display = "block";
     document.getElementById("itemsOverlay").style.display = "block";
   });
 }
@@ -110,8 +109,8 @@ function submitAdditemsEntryPopup(e) {
     .then(() => {
       loadItems();
       closeInfo();
-      closeItemsPopup();
-      document.getElementById("itemsEntryFormPopup").reset();
+      closeItemPopup();
+      document.getElementById("itemEntryFormPopup").reset();
     })
     .catch((err) => {
       document.getElementById("editError").style.display = "block";
@@ -149,10 +148,10 @@ function submitEdititemsEntry(e) {
   axios
     .put(`/api/items/${id}`, itemsEntry)
     .then(() => {
-      closeItemsPopup();
+      closeItemPopup();
       closeInfo();
       loadItems();
-      document.getElementById("itemsEntryFormPopup").reset();
+      document.getElementById("itemEntryFormPopup").reset();
     })
     .catch((err) => {
       document.getElementById("editError").style.display = "block";
@@ -166,9 +165,9 @@ function submitEdititemsEntry(e) {
 }
 
 // Close the Add items Popup
-function closeItemsPopup() {
+function closeItemPopup() {
   document.getElementById("editError").style.display = "none";
   document.getElementById("editError").textContent = "";
-  document.getElementById("itemsPopup").style.display = "none";
+  document.getElementById("itemPopup").style.display = "none";
   document.getElementById("itemsOverlay").style.display = "none";
 }
