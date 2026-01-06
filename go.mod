@@ -3,8 +3,8 @@ module gitea.locker98.com/locker98/Store-Manager-Pro
 go 1.25.5
 
 require (
+	codeberg.org/go-pdf/fpdf v0.11.1
 	github.com/gin-gonic/gin v1.11.0
-	github.com/jung-kurt/gofpdf v1.16.2
 	github.com/mattn/go-sqlite3 v1.14.32
 	go.bug.st/serial v1.6.4
 )

@@ -7,12 +7,10 @@ import (
 // Import the handler functions from the same package
 // We will implement these in routes/inventory.go
 func RegisterRoutes(r *gin.Engine) {
-	// Home page
-	r.GET("/", LoadHome)
-
-	// Vendors Page
-	r.GET("/vendors", LoadVendor)
-	r.GET("/items", LoadItemEdit)
+	// Page
+	r.GET("/", LoadHome)          // Home page
+	r.GET("/vendors", LoadVendor) // Vendors Page
+	r.GET("/export", LoadExport)  // Export Page
 
 	// API group
 	api := r.Group("/api")

@@ -16,7 +16,7 @@ func LoadVendor(c *gin.Context) {
 	c.HTML(http.StatusOK, "vendors.html", nil)
 }
 
-// LoadItemEdit serves the HTML page for editing items and creating them
-func LoadItemEdit(c *gin.Context) {
-	c.HTML(http.StatusOK, "items.html", nil)
+// LoadVendor serves the HTML page
+func LoadExport(c *gin.Context) {
+	c.HTML(http.StatusOK, "export.html", nil)
 }

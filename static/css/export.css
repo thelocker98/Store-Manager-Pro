@@ -1,0 +1,7 @@
+/* Export CSS */
+
+.app-container {
+    padding: 28px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
