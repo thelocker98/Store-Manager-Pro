@@ -2,6 +2,7 @@ package main
 
 import (
 	"gitea.locker98.com/locker98/Store-Manager-Pro/db"
+	"gitea.locker98.com/locker98/Store-Manager-Pro/devices"
 	"gitea.locker98.com/locker98/Store-Manager-Pro/routes"
 
 	"github.com/gin-gonic/gin"
@@ -16,6 +17,7 @@ func main() {
 
 	routes.RegisterRoutes(r)
 
-	r.Run(":8080")
+	go devices.Devices()
 
+	r.Run(":8080")
 }

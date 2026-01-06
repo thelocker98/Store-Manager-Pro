@@ -6,4 +6,7 @@
 12-24-25        7 Hours
 12-26-25        2 Hours
 1-1-26          10 Hours
-1-3-26           5 Hours
+1-3-26          5 Hours
+1-4-26          5 Hours
+1-5-26          2 Hours
+1-6-26          6 Hours

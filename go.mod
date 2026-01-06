@@ -5,6 +5,7 @@ go 1.25.5
 require (
 	codeberg.org/go-pdf/fpdf v0.11.1
 	github.com/gin-gonic/gin v1.11.0
+	github.com/gorilla/websocket v1.5.3
 	github.com/mattn/go-sqlite3 v1.14.32
 	go.bug.st/serial v1.6.4
 )
