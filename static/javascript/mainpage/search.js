@@ -42,8 +42,8 @@ async function searchItems() {
 
       row.innerHTML = `
                 <td>${item.upc || ""}</td>
-                <td>${item.brand || ""}</td>
                 <td>${item.vendor_name || ""}</td>
+                <td>${item.brand || ""}</td>
                 <td>${item.name || ""}</td>
                 <td>${item.description || ""}</td>
                 <td>${formatPrice(item.price, item.weighed) || ""}</td>

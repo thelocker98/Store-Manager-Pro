@@ -1,7 +1,7 @@
 // Variables
 var page = 1;
 var numberOfPages = 1;
-var pageSize = 2;
+var pageSize = 25;
 
 function nextPage() {
   page++;

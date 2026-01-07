@@ -10,9 +10,27 @@ function openAdditemPopup() {
   document.getElementById("itemEntryFormPopup").onsubmit = () =>
     submitAdditemsEntryPopup(event);
 
+  // This chunk of code checks if the search feild has only numbers and
+  // if their is no result found and it this is true it will automatically
+  // fill in the upc field on the create item popup
+  searchupc = document.getElementById("searchInput").value;
+  if (
+    !(
+      /^\d+$/.test(searchupc) &&
+      document.getElementById("noResultsContainer").style.display == "block"
+    )
+  ) {
+    searchupc = "";
+  }
+
   // Set Content
   document.getElementById("popup_items_id").value = 0;
-  document.getElementById("popup_items_upc").value = "";
+  // Check if searchupc has text
+  if (searchupc == "") {
+    document.getElementById("popup_items_upc").value = "";
+  } else {
+    document.getElementById("popup_items_upc").value = searchupc;
+  }
   document.getElementById("popup_items_invoicenumber").value = "";
   document.getElementById("popup_items_vendorselector").value = -1;
   document.getElementById("popup_items_name").value = "";

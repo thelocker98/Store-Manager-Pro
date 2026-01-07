@@ -13,6 +13,7 @@
         <script src="/static/javascript/mainpage/info_popup.js"></script>
         <script src="/static/javascript/mainpage/pagemanagement.js"></script>
         <script src="/static/javascript/mainpage/search.js"></script>
+        <script src="/static/javascript/mainpage/barcode.js"></script>
     </head>
 
     <body>
@@ -25,7 +26,7 @@
                 <a href="/" class="nav-link">Inventory</a>
                 <a href="/vendors" class="nav-link">Vendors</a>
                 <a href="/lists" class="nav-link">Lists</a>
-                <a href="/barcode" class="nav-link">Barcode</a>
+                <a href="/barcode" class="nav-link" id="barcodeLink">Barcode</a>
                 <a href="/export" class="nav-link">Export</a>
             </nav>
         </header>
@@ -99,8 +100,9 @@
                     <select id="itemsPerPageSelector">
                         <option value="2">2</option>
                         <option value="10">10</option>
-                        <option value="25">25</option>
+                        <option selected="selected" value="25">25</option>
                         <option value="50">50</option>
+                        <option value="100">100</option>
                     </select>
                 </div>
             </div>
@@ -109,8 +111,8 @@
                 <thead>
                     <tr>
                         <th>UPC</th>
-                        <th>Brand</th>
                         <th>Vendor</th>
+                        <th>Brand</th>
                         <th>Name</th>
                         <th>Description</th>
                         <th>Price</th>
