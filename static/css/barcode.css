@@ -1,0 +1,17 @@
+#status {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+#messages {
+    background: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    height: 300px;
+    overflow-y: auto;
+}
+
+.message {
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+}

@@ -65,4 +65,35 @@ func createTables() {
 	if err != nil {
 		panic(err)
 	}
+
+	// Main List Table
+	query = `
+		CREATE TABLE IF NOT EXISTS lists (
+			list_id INTEGER PRIMARY KEY AUTOINCREMENT,
+			list_name TEXT NOT NULL UNIQUE,
+			deleted BOOL DEFAULT FALSE,
+			created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		);
+		`
+
+	_, err = DB.Exec(query)
+	if err != nil {
+		panic(err)
+	}
+
+	// List Data Table
+	query = `
+		CREATE TABLE IF NOT EXISTS list_data (
+			list_entry_id INTEGER PRIMARY KEY AUTOINCREMENT,
+			list_id INTEGER,
+			item_id INTEGER,
+			FOREIGN KEY(list_id) REFERENCES lists(list_id),
+			FOREIGN KEY(item_id) REFERENCES inventory(id)
+		);
+		`
+
+	_, err = DB.Exec(query)
+	if err != nil {
+		panic(err)
+	}
 }
