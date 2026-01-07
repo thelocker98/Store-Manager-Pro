@@ -1,7 +1,8 @@
 // Open the Add items Popup
 function openAdditemPopup() {
-  // Load vendor selector
+  // Load vendor and location selector
   loadVendors();
+  loadLocations();
   // Set Title
   document.getElementById("itemPopupHeader").textContent = "Add items Entry";
 
@@ -33,6 +34,7 @@ function openAdditemPopup() {
   }
   document.getElementById("popup_items_invoicenumber").value = "";
   document.getElementById("popup_items_vendorselector").value = -1;
+  document.getElementById("popup_items_locationselector").value = 1;
   document.getElementById("popup_items_name").value = "";
   document.getElementById("popup_items_brand").value = "";
   document.getElementById("popup_items_description").value = "";
@@ -51,6 +53,7 @@ function openAdditemPopup() {
 async function openEdititemsEntry(id) {
   // Load vendor selector
   await loadVendors();
+  await loadLocations();
 
   // Check that entry exists in database
   axios.get(`/api/items/${id}`).then((res) => {
@@ -72,6 +75,9 @@ async function openEdititemsEntry(id) {
       itemsEntry.invoice_number;
     document.getElementById("popup_items_vendorselector").value =
       itemsEntry.vendor_id;
+
+    document.getElementById("popup_items_locationselector").value =
+      itemsEntry.location_id;
     document.getElementById("popup_items_name").value = itemsEntry.name;
     document.getElementById("popup_items_brand").value = itemsEntry.brand;
     document.getElementById("popup_items_description").value =
@@ -106,6 +112,10 @@ function submitAdditemsEntryPopup(e) {
     invoice_number: document.getElementById("popup_items_invoicenumber").value,
     vendor_id: parseInt(
       document.getElementById("popup_items_vendorselector").value,
+      10,
+    ),
+    location_id: parseInt(
+      document.getElementById("popup_items_locationselector").value,
       10,
     ),
     name: document.getElementById("popup_items_name").value,
@@ -150,6 +160,10 @@ function submitEdititemsEntry(e) {
     invoice_number: document.getElementById("popup_items_invoicenumber").value,
     vendor_id: parseInt(
       document.getElementById("popup_items_vendorselector").value,
+      10,
+    ),
+    Location_id: parseInt(
+      document.getElementById("popup_items_locationselector").value,
       10,
     ),
     brand: document.getElementById("popup_items_brand").value,

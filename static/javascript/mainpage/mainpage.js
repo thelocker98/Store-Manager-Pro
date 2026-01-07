@@ -63,18 +63,30 @@ function deleteItemPermanent(id) {
   }
 }
 
-// Open the Vendor Iframe popup
-function openVendorIframe() {
-  document.getElementById("vendorIframeModal").style.display = "block";
+// Open the iframe popup
+function openIframe(page) {
+  document.getElementById("iframeModal").style.display = "block";
   document.getElementById("iframeOverlay").style.display = "block";
+
+  if (page == "vendor") {
+    document.getElementById("popupiFrame").src = "/vendors?iframe=true";
+  } else if (page == "location") {
+    document.getElementById("popupiFrame").src = "/locations?iframe=true";
+  }
 }
 
-// Close the Vendor Iframe popup
-function closeVendorIframe() {
-  document.getElementById("vendorIframeModal").style.display = "none";
+// Close the iframe popup
+function closeIframe() {
+  document.getElementById("iframeModal").style.display = "none";
   document.getElementById("iframeOverlay").style.display = "none";
 
-  loadVendors();
+  const src = document.getElementById("popupiFrame").src;
+
+  if (src.includes("vendor")) {
+    loadVendors();
+  } else if (src.includes("location")) {
+    loadLocations();
+  }
 }
 
 // Populate Vendors selector
@@ -92,6 +104,26 @@ function loadVendors() {
       const opt = document.createElement("option");
       opt.value = v.vendor_id;
       opt.text = v.vendor_name;
+      select.appendChild(opt);
+    });
+  });
+}
+
+// Populate Vendors selector
+function loadLocations() {
+  return axios.get("/api/locations").then((res) => {
+    const select = document.getElementById("popup_items_locationselector");
+    select.innerHTML = "";
+
+    const opt = document.createElement("option");
+    opt.value = 1;
+    opt.text = "N/A";
+    select.appendChild(opt);
+
+    res.data.forEach((v) => {
+      const opt = document.createElement("option");
+      opt.value = v.location_id;
+      opt.text = v.location_name;
       select.appendChild(opt);
     });
   });

@@ -16,6 +16,11 @@ func LoadVendor(c *gin.Context) {
 	c.HTML(http.StatusOK, "vendors.html", nil)
 }
 
+// LoadLocation serves the HTML page
+func LoadLocation(c *gin.Context) {
+	c.HTML(http.StatusOK, "locations.html", nil)
+}
+
 // LoadExport serves the HTML page
 func LoadExport(c *gin.Context) {
 	c.HTML(http.StatusOK, "export.html", nil)

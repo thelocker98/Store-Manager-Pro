@@ -25,6 +25,7 @@
             <nav class="header-nav">
                 <a href="/" class="nav-link">Inventory</a>
                 <a href="/vendors" class="nav-link">Vendors</a>
+                <a href="/locations" class="nav-link">Locations</a>
                 <a href="/lists" class="nav-link">Lists</a>
                 <a href="/barcode" class="nav-link" id="barcodeLink">Barcode</a>
                 <a href="/export" class="nav-link">Export</a>
@@ -185,6 +186,7 @@
                     </div>
 
                     <div style="display: flex; padding: 5px">
+                        <!-- Vendor Selector -->
                         <div style="padding-right: 20px">
                             <label for="popup_items_vendorselector"
                                 >Vendor:</label
@@ -199,8 +201,27 @@
                                 "
                             ></select>
                         </div>
-                        <button type="button" onclick="openVendorIframe()">
+                        <button type="button" onclick="openIframe('vendor')">
                             + Add Vendor
+                        </button>
+
+                        <!-- Location Box -->
+                        <div style="padding-right: 20px">
+                            <label for="popup_items_locationselector"
+                                >Location:</label
+                            >
+                            <select
+                                id="popup_items_locationselector"
+                                style="
+                                    width: 200px;
+                                    padding: 5px;
+                                    overflow: hidden;
+                                    border-radius: 10px;
+                                "
+                            ></select>
+                        </div>
+                        <button type="button" onclick="openIframe('location')">
+                            + Add Location
                         </button>
                     </div>
 
@@ -259,7 +280,7 @@
 
                     <div class="container">
                         <div id="popup_div_items_arrived" style="display: flex">
-                            <label for="popup_items_arrivedat">Arrived:</label>
+                            <label for="popup_items_arrived">Arrived:</label>
                             <input type="date" id="popup_items_arrived" />
                         </div>
 
@@ -281,16 +302,16 @@
                 <p id="editError" class="errorText"></p>
             </div>
 
-            <!-- Vendor iframe modal -->
-            <div id="vendorIframeModal">
+            <!-- iframe modal -->
+            <div id="iframeModal">
                 <iframe
-                    id="vendorFrame"
+                    id="popupiFrame"
                     src="/vendors?iframe=true"
                     style="width: 100%; height: 100%; border: 0"
                 ></iframe>
                 <button
                     style="position: absolute; top: 5px; right: 5px"
-                    onclick="closeVendorIframe()"
+                    onclick="closeIframe()"
                 >
                     Close
                 </button>
@@ -341,7 +362,7 @@
                     background: rgba(0, 0, 0, 0.3);
                     z-index: 999;
                 "
-                onclick="closeVendorIframe()"
+                onclick="closeIframe()"
             ></div>
         </main>
     </body>

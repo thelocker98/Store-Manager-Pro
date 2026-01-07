@@ -4,26 +4,12 @@ func createTables() {
 	// barcode Table
 	DB.Exec("PRAGMA foreign_keys = ON;")
 
-	// query := `
-	// CREATE TABLE IF NOT EXISTS catalog (
-	// 	catalog_id INTEGER PRIMARY KEY AUTOINCREMENT,
-	// 	upc TEXT,
-	// 	invoice_number TEXT,
-	// 	brand TEXT,
-	// 	name TEXT
-	// );
-	// `
-
-	// _, err := DB.Exec(query)
-	// if err != nil {
-	// 	panic(err)
-	// }
-
 	// Inventory Table
 	query := `
 	CREATE TABLE IF NOT EXISTS inventory (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		vendor_id INTEGER,
+		location_id INTEGER,
 		upc TEXT,
 		invoice_number TEXT,
 		name TEXT,
@@ -35,7 +21,8 @@ func createTables() {
 		arrived_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 		soldout_at DATETIME,
 		deleted BOOL DEFAULT FALSE,
-		FOREIGN KEY(vendor_id) REFERENCES vendors(vendor_id)
+		FOREIGN KEY(vendor_id) REFERENCES vendors(vendor_id),
+		FOREIGN KEY(location_id) REFERENCES locations(location_id)
 	);
 	`
 
@@ -48,8 +35,30 @@ func createTables() {
 	query = `
 	CREATE TABLE IF NOT EXISTS vendors (
 		vendor_id INTEGER PRIMARY KEY AUTOINCREMENT,
-		vendor_name TEXT NOT NULL
+		vendor_name TEXT NOT NULL UNIQUE
 	);
+	`
+
+	_, err = DB.Exec(query)
+	if err != nil {
+		panic(err)
+	}
+
+	// Location Table
+	query = `
+	CREATE TABLE IF NOT EXISTS locations (
+		location_id INTEGER PRIMARY KEY AUTOINCREMENT,
+		location_name TEXT NOT NULL UNIQUE
+	);
+	`
+	_, err = DB.Exec(query)
+	if err != nil {
+		panic(err)
+	}
+
+	query = `
+	INSERT OR IGNORE INTO locations (location_id, location_name)
+	VALUES (1, 'N/A');
 	`
 
 	_, err = DB.Exec(query)

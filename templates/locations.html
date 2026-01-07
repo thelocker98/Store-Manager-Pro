@@ -3,12 +3,12 @@
     <head>
         <meta charset="UTF-8" />
         <title>Inventory</title>
-        <link rel="stylesheet" href="/static/css/vendor.css" />
+        <link rel="stylesheet" href="/static/css/location.css" />
         <link rel="stylesheet" href="/static/css/general.css" />
 
         <script src="/static/javascript/axios.min.js"></script>
         <script src="/static/javascript/general.js"></script>
-        <script src="/static/javascript/vendor/vendor.js"></script>
+        <script src="/static/javascript/location/location.js"></script>
     </head>
 
     <body>
@@ -28,33 +28,33 @@
         </header>
 
         <main id="main">
-            <!-- Add Vendor Form -->
-            <h2>Vendors</h2>
-            <form id="addVendorForm" onsubmit="addVendor(event)">
+            <!-- Add Location Form -->
+            <h2>Locations</h2>
+            <form id="addLocationForm" onsubmit="addLocation(event)">
                 <input
                     type="text"
-                    id="vendor_name"
-                    placeholder="Vendor Name"
+                    id="location_name"
+                    placeholder="Location Name"
                     required
                 />
                 <button type="submit">Add</button>
-                <p id="vendoraddError" class="errorText"></p>
+                <p id="locationaddError" class="errorText"></p>
             </form>
 
-            <!-- Vendors Table -->
-            <h2>Vendors</h2>
-            <table id="vendorsTable" style="min-width: 325px">
+            <!-- Locations Table -->
+            <h2>Locations</h2>
+            <table id="locationsTable" style="min-width: 325px">
                 <thead>
                     <tr>
-                        <th>Vendor</th>
+                        <th>Location</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
             </table>
 
-            <!-- Edit Vendor Popup -->
+            <!-- Edit Location Popup -->
             <div
-                id="editVendorPopup"
+                id="editLocationPopup"
                 style="
                     display: none;
                     position: fixed;
@@ -69,25 +69,28 @@
                     min-width: 300px;
                 "
             >
-                <h2>Edit Vendor</h2>
-                <form id="editVendorForm" onsubmit="submitVendorEdit(event)">
-                    <input type="hidden" id="editVendorId" />
+                <h2>Edit Location</h2>
+                <form
+                    id="editLocationForm"
+                    onsubmit="submitLocationEdit(event)"
+                >
+                    <input type="hidden" id="editLocationId" />
 
-                    <label for="editVendorName">Vendor</label><br />
+                    <label for="editLocationName">Location</label><br />
                     <input
                         type="text"
-                        id="editVendorName"
+                        id="editLocationName"
                         required
                     /><br /><br />
 
-                    <button type="button" onclick="closeVendorEdit()">
+                    <button type="button" onclick="closeLocationEdit()">
                         Cancel
                     </button>
-                    <button id="vendorDeleteButton" type="button">
+                    <button id="locationDeleteButton" type="button">
                         Delete
                     </button>
                     <button type="submit">Save</button>
-                    <p id="vendorinfoError" class="errorText"></p>
+                    <p id="locationinfoError" class="errorText"></p>
                 </form>
             </div>
 
@@ -104,7 +107,7 @@
                     background: rgba(0, 0, 0, 0.3);
                     z-index: 999;
                 "
-                onclick="closeVendorEdit()"
+                onclick="closeLocationEdit()"
             ></div>
         </main>
 

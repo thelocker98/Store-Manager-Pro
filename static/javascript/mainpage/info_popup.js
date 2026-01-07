@@ -12,8 +12,14 @@ function openInfo(id) {
     if (item.invoice_number != "") {
       html += `<strong>Invoice Number:</strong> ${item.invoice_number}<br />`;
     }
+    html += "<br />";
 
-    html += `<strong>Description:</strong><br/> ${item.description}
+    if (item.location_id != 1) {
+      html += `<strong>Location:</strong> ${item.location_name}<br />`;
+    }
+
+    html += `<strong>Vendor:</strong> ${item.vendor_name}<br /><br />
+              <strong>Description:</strong><br/> ${item.description}
               <br />
               <br />
               <strong>Price:</strong> ${formatPrice(item.price, item.weighed)}

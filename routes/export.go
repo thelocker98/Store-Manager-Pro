@@ -99,26 +99,23 @@ func ExportPDF(c *gin.Context) {
 
 	pdf.SetFont("Arial", "", 10)
 
-	for i := 0; i < 50; i++ {
-		fmt.Println(i)
-		for _, item := range items {
-			var price string
-			if item.Weighed {
-				price = fmt.Sprintf("$%.2f/lb", item.Price)
-			} else {
-				price = fmt.Sprintf("$%.2f", item.Price)
-			}
-
-			if item.Deleted {
-				pdf.SetTextColor(150, 150, 150)
-			} else {
-				pdf.SetTextColor(0, 0, 0)
-			}
-
-			TableRow(pdf, item, price, widths)
-
-			pdf.Ln(-1)
+	for _, item := range items {
+		var price string
+		if item.Weighed {
+			price = fmt.Sprintf("$%.2f/lb", item.Price)
+		} else {
+			price = fmt.Sprintf("$%.2f", item.Price)
 		}
+
+		if item.Deleted {
+			pdf.SetTextColor(150, 150, 150)
+		} else {
+			pdf.SetTextColor(0, 0, 0)
+		}
+
+		TableRow(pdf, item, price, widths)
+
+		pdf.Ln(-1)
 	}
 
 	c.Header("Content-Disposition", "attachment; filename=inventory.pdf")

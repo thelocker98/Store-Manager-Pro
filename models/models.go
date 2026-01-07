@@ -7,6 +7,7 @@ import (
 type Inventory struct {
 	ID            int        `json:"item_id"`
 	VendorID      int        `json:"vendor_id"`
+	LocationID    int        `json:"location_id"`
 	UPC           string     `json:"upc"`
 	InvoiceNumber string     `json:"invoice_number"`
 	Brand         string     `json:"brand"`
@@ -24,6 +25,8 @@ type InventoryAll struct {
 	ID            int        `json:"item_id"`
 	VendorID      int        `json:"vendor_id"`
 	VendorName    string     `json:"vendor_name"`
+	LocationID    int        `json:"location_id"`
+	LocationName  string     `json:"location_name"`
 	UPC           string     `json:"upc"`
 	InvoiceNumber string     `json:"invoice_number"`
 	Brand         string     `json:"brand"`
@@ -41,4 +44,9 @@ type InventoryAll struct {
 type Vendor struct {
 	VendorID   int    `json:"vendor_id"`
 	VendorName string `json:"vendor_name"`
+}
+
+type Location struct {
+	LocationID   int    `json:"location_id"`
+	LocationName string `json:"location_name"`
 }

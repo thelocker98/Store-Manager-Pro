@@ -8,10 +8,11 @@ import (
 // We will implement these in routes/inventory.go
 func RegisterRoutes(r *gin.Engine) {
 	// Page
-	r.GET("/", LoadHome)           // Home page
-	r.GET("/vendors", LoadVendor)  // Vendors Page
-	r.GET("/export", LoadExport)   // Export Page
-	r.GET("/barcode", LoadBarcode) // Barcode Page
+	r.GET("/", LoadHome)              // Home page
+	r.GET("/vendors", LoadVendor)     // Vendors Page
+	r.GET("/locations", LoadLocation) // Locations Page
+	r.GET("/export", LoadExport)      // Export Page
+	r.GET("/barcode", LoadBarcode)    // Barcode Page
 
 	// API group
 	api := r.Group("/api")
@@ -31,6 +32,12 @@ func RegisterRoutes(r *gin.Engine) {
 		api.POST("/vendors", AddVendor)          // Add a new vendor
 		api.PUT("/vendors/:id", UpdateVendor)    // Update an vendor
 		api.DELETE("/vendors/:id", DeleteVendor) // Delete an vendor
+
+		// Locations
+		api.GET("/locations", GetLocations)          // List all locations
+		api.POST("/locations", AddLocation)          // Add a new location
+		api.PUT("/locations/:id", UpdateLocation)    // Update an location
+		api.DELETE("/locations/:id", DeleteLocation) // Delete an location
 
 		// Search
 		api.GET("/search/:q", SearchItems)

@@ -8,10 +8,10 @@ import (
 
 func AddItem(item models.Inventory) error {
 	query := `
-	INSERT INTO inventory (vendor_id, upc, invoice_number, name, brand, description, price, weighed, count)
-	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+	INSERT INTO inventory (vendor_id, location_id, upc, invoice_number, name, brand, description, price, weighed, count)
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 	`
-	_, err := DB.Exec(query, item.VendorID, item.UPC, item.InvoiceNumber, item.Name, item.Brand, item.Description, item.Price, item.Weighed, item.Count)
+	_, err := DB.Exec(query, item.VendorID, item.LocationID, item.UPC, item.InvoiceNumber, item.Name, item.Brand, item.Description, item.Price, item.Weighed, item.Count)
 	return err
 }
 
@@ -29,6 +29,8 @@ func GetAllItems(page int, pageSize int, showDeleted bool) ([]models.InventoryAl
 		i.id,
 		v.vendor_id,
 		v.vendor_name,
+		l.location_id,
+		l.location_name,
 		i.upc,
 		i.invoice_number,
 		i.brand,
@@ -43,6 +45,7 @@ func GetAllItems(page int, pageSize int, showDeleted bool) ([]models.InventoryAl
 		COUNT(*) OVER() AS entry_count
 	FROM inventory i
 	JOIN vendors v ON i.vendor_id = v.vendor_id
+	JOIN locations l ON i.location_id = l.location_id
 	`
 	if !showDeleted {
 		query += ` WHERE i.deleted = 0 `
@@ -66,6 +69,8 @@ func GetAllItems(page int, pageSize int, showDeleted bool) ([]models.InventoryAl
 			&i.ID,
 			&i.VendorID,
 			&i.VendorName,
+			&i.LocationID,
+			&i.LocationName,
 			&i.UPC,
 			&i.InvoiceNumber,
 			&i.Brand,
@@ -112,6 +117,8 @@ func GetItemById(id int) (models.InventoryAll, error) {
 		i.id,
 		v.vendor_id,
 		v.vendor_name,
+		l.location_id,
+		l.location_name,
 		i.upc,
 		i.invoice_number,
 		i.brand,
@@ -125,6 +132,7 @@ func GetItemById(id int) (models.InventoryAll, error) {
 		i.soldout_at
 	FROM inventory i
 	JOIN vendors v ON i.vendor_id = v.vendor_id
+	JOIN locations l ON i.location_id = l.location_id
 	WHERE i.id = ?;
 	`
 
@@ -133,6 +141,8 @@ func GetItemById(id int) (models.InventoryAll, error) {
 		&item.ID,
 		&item.VendorID,
 		&item.VendorName,
+		&item.LocationID,
+		&item.LocationName,
 		&item.UPC,
 		&item.InvoiceNumber,
 		&item.Brand,
@@ -156,10 +166,10 @@ func GetItemById(id int) (models.InventoryAll, error) {
 func UpdateItem(id int, item models.Inventory) error {
 	query := `
 	UPDATE inventory
-	SET vendor_id = ?, upc = ?, invoice_number = ?, brand = ?, name = ?, description = ?, price = ?, weighed = ?, count = ?, deleted = ?, arrived_at = ?, soldout_at = ?
+	SET vendor_id = ?, location_id = ?, upc = ?, invoice_number = ?, brand = ?, name = ?, description = ?, price = ?, weighed = ?, count = ?, deleted = ?, arrived_at = ?, soldout_at = ?
 	WHERE id = ?;
 	`
-	_, err := DB.Exec(query, item.VendorID, item.UPC, item.InvoiceNumber, item.Brand, item.Name, item.Description, item.Price, item.Weighed, item.Count, item.Deleted, item.ArrivedAt, item.SoldOutAt, id)
+	_, err := DB.Exec(query, item.VendorID, item.LocationID, item.UPC, item.InvoiceNumber, item.Brand, item.Name, item.Description, item.Price, item.Weighed, item.Count, item.Deleted, item.ArrivedAt, item.SoldOutAt, id)
 	return err
 }
 
