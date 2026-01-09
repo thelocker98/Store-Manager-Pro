@@ -8,17 +8,16 @@ async function loadItems() {
   );
   const items = res.data;
 
+  const tbody = document.querySelector("#itemsTable tbody");
+  tbody.innerHTML = "";
+
   if (!items) {
-    if (page != 0) {
+    if (page != 1) {
       page--;
       reloadData();
     }
     return;
   }
-
-  const tbody = document.querySelector("#itemsTable tbody");
-
-  tbody.innerHTML = "";
 
   res.data.forEach((item) => {
     var class_val = "";
@@ -44,20 +43,20 @@ async function loadItems() {
 
 // Delete Item
 function deleteItem(id) {
-  axios.delete(`/api/items/${id}`).then(() => loadItems());
+  axios.delete(`/api/items/${id}`).then(() => reloadData());
   closeInfo();
   closeItemPopup();
 }
 // Restore Item
 function restoreItem(id) {
-  axios.get(`/api/items/restore/${id}`).then(() => loadItems());
+  axios.get(`/api/items/restore/${id}`).then(() => reloadData());
   closeInfo();
   closeItemPopup();
 }
 // Delete Permanently Item
 function deleteItemPermanent(id) {
   if (confirm("Are you sure you want to permanently delete this item?")) {
-    axios.delete(`/api/items/permanent/${id}`).then(() => loadItems());
+    axios.delete(`/api/items/permanent/${id}`).then(() => reloadData());
     closeInfo();
     closeItemPopup();
   }
