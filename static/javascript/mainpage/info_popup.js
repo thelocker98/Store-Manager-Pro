@@ -12,24 +12,28 @@ function openInfo(id) {
     if (item.invoice_number != "") {
       html += `<strong>Invoice Number:</strong> ${item.invoice_number}<br />`;
     }
-    html += "<br />";
-
     if (item.location_id != 1) {
-      html += `<strong>Location:</strong> ${item.location_name}<br />`;
+      html += `<br /><strong>Location:</strong> ${item.location_name}`;
+    }
+    if (item.vendor_id != 1) {
+      html += `<br /><strong>Vendor:</strong> ${item.vendor_name}`;
+    }
+    if (item.description != "") {
+      html += `<br /><br />
+               <strong>Description:</strong><br/> ${item.description}
+      `;
     }
 
-    html += `<strong>Vendor:</strong> ${item.vendor_name}<br /><br />
-              <strong>Description:</strong><br/> ${item.description}
-              <br />
-              <br />
-              <strong>Price:</strong> ${formatPrice(item.price, item.weighed)}
+    html += `
+             <br /><br />
+             <strong>Price:</strong> ${formatPrice(item.price, item.weighed)}
     `;
 
-    if (item.count != null) {
-      html += `&nbsp;&nbsp;&nbsp;&nbsp<strong>Count:</strong> ${item.count}<br />`;
+    if (item.count != 0) {
+      html += `&nbsp;&nbsp;&nbsp;&nbsp<strong>Count:</strong> ${item.count}`;
     }
 
-    html += `<br/><strong>Bought:</strong> ${formatDate(item.arrived_at)}`;
+    html += `<br/><br/><strong>Bought:</strong> ${formatDate(item.arrived_at)}`;
 
     if (item.sold_out_at != null) {
       html += `&nbsp;&nbsp<strong>Sold:</strong> ${formatDate(item.sold_out_at)}`;

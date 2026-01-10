@@ -1,5 +1,5 @@
 // variables
-var showDeletedItems = false;
+var showDeletedItems = true;
 
 // Load all items
 async function loadItems() {
@@ -29,7 +29,7 @@ async function loadItems() {
     }
     tbody.innerHTML += `<tr onclick="openInfo(${item.item_id})" style="cursor:pointer" class="${class_val}">
                             <td>${item.upc}</td>
-                            <td>${item.vendor_name}</td>
+                            <td>${item.location_name}</td>
                             <td>${item.brand}</td>
                             <td>${item.name}</td>
                             <td>${item.description}</td>
@@ -95,8 +95,8 @@ function loadVendors() {
     select.innerHTML = "";
 
     const opt = document.createElement("option");
-    opt.value = -1;
-    opt.text = "Select Vendor";
+    opt.value = 1;
+    opt.text = "N/A";
     select.appendChild(opt);
 
     res.data.forEach((v) => {

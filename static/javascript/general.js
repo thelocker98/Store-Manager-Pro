@@ -34,3 +34,72 @@ function formatDateForSQL(dateValue) {
 
   return d.toISOString(); // returns "2026-01-01T12:00:00.000Z"
 }
+
+// Create overlay and popup elements
+const overlay = document.createElement("div");
+overlay.id = "connectionOverlay";
+overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 1999;
+  `;
+
+const popup = document.createElement("div");
+popup.id = "connectionPopup";
+popup.style.cssText = `
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: none;
+    z-index: 2000;
+    min-width: 300px;
+  `;
+
+popup.innerHTML = `
+    <h2 style="margin: 0 0 15px 0; color: #d32f2f;">Disconnected</h2>
+    <p style="margin: 0 0 20px 0; color: #666;">Lost connection to the server</p>
+    <button id="recheckBtn" onclick="connectWebSocket()" style="
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    ">Recheck Connection</button>
+  `;
+
+function showDisconnectPopup() {
+  overlay.style.display = "block";
+  popup.style.display = "block";
+}
+
+function hideDisconnectPopup() {
+  overlay.style.display = "none";
+  popup.style.display = "none";
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  document.body.appendChild(overlay);
+  document.body.appendChild(popup);
+
+  // Also monitor online/offline events
+  window.addEventListener("offline", () => {
+    showDisconnectPopup();
+  });
+
+  window.addEventListener("online", () => {
+    hideDisconnectPopup();
+  });
+});

@@ -22,7 +22,7 @@ func Devices() {
 			device = FindDevice(10)
 		} else {
 			// Once a device is found wait for it to get fully connected to the computer and setup
-			time.Sleep(1000 * time.Millisecond)
+			time.Sleep(3000 * time.Millisecond)
 
 			// Try to open the device port
 			port, err := OpenScanner(device, 115200)
@@ -109,7 +109,7 @@ func FindDevice(timeout int) string {
 			// Check for devices that disappeared quickly
 			for name, firstSeen := range seen {
 				if !current[name] {
-					if now.Sub(firstSeen) <= 2*time.Second {
+					if now.Sub(firstSeen) <= 5*time.Second {
 						// Device appeared & disappeared quickly → barcode scanner behavior
 						return name
 					}

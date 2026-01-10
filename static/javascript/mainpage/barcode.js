@@ -1,16 +1,19 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const statusEl = document.getElementById("barcodeLink");
-  console.log(statusEl);
+// Automatically use ws or wss based on page protocol
+const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+const wsUrl = `${protocol}://${window.location.host}/api/ws`;
+let socket = new WebSocket(wsUrl);
 
-  // Automatically use ws or wss based on page protocol
-  const protocol = window.location.protocol === "https:" ? "wss" : "ws";
-  const wsUrl = `${protocol}://${window.location.host}/api/ws`;
-
-  const socket = new WebSocket(wsUrl);
+function connectWebSocket() {
+  socket = new WebSocket(wsUrl);
 
   // Set the link to the barcode reader to gree to show there is no problems with the websocket
   socket.onopen = () => {
-    statusEl.style.color = "green";
+    hideDisconnectPopup();
+  };
+
+  // Set the link to the barcode reader to red to show there is a problem with the websocket
+  socket.onerror = () => {
+    showDisconnectPopup();
   };
 
   socket.onmessage = (event) => {
@@ -38,11 +41,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Set the link to the barcode reader to red to show there is a problem with the websocket
   socket.onclose = () => {
-    statusEl.style.color = "red";
+    showDisconnectPopup();
   };
 
   // Set the link to the barcode reader to red to show there is a problem with the websocket
   socket.onerror = () => {
-    statusEl.style.color = "red";
+    showDisconnectPopup();
   };
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  connectWebSocket();
 });

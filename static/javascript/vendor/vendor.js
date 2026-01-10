@@ -47,7 +47,6 @@ function deleteVendor(id) {
         document.getElementById("vendorinfoError").style.display = "block";
         var response = String(err.response.data.error).toLowerCase();
 
-        console.log(response);
         if (response.includes("foreign key")) {
           document.getElementById("vendorinfoError").textContent =
             "Some items still reference this vendor";

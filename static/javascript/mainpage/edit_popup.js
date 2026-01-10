@@ -33,7 +33,7 @@ function openAdditemPopup() {
     document.getElementById("popup_items_upc").value = searchupc;
   }
   document.getElementById("popup_items_invoicenumber").value = "";
-  document.getElementById("popup_items_vendorselector").value = -1;
+  document.getElementById("popup_items_vendorselector").value = 1;
   document.getElementById("popup_items_locationselector").value = 1;
   document.getElementById("popup_items_name").value = "";
   document.getElementById("popup_items_brand").value = "";
@@ -135,10 +135,19 @@ function submitAdditemsEntryPopup(e) {
   axios
     .post("/api/items", itemsEntry)
     .then(() => {
-      loadItems();
       closeInfo();
       closeItemPopup();
       document.getElementById("itemEntryFormPopup").reset();
+
+      // clear the search box of a barcode search
+      searchupc = document.getElementById("searchInput").value;
+      if (
+        /^\d+$/.test(searchupc) &&
+        document.getElementById("noResultsContainer").style.display == "block"
+      ) {
+        document.getElementById("searchInput").value = "";
+      }
+      reloadData();
     })
     .catch((err) => {
       document.getElementById("editError").style.display = "block";

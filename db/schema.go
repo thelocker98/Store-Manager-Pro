@@ -44,6 +44,16 @@ func createTables() {
 		panic(err)
 	}
 
+	query = `
+	INSERT OR IGNORE INTO vendors (vendor_id, vendor_name)
+	VALUES (1, 'N/A');
+	`
+
+	_, err = DB.Exec(query)
+	if err != nil {
+		panic(err)
+	}
+
 	// Location Table
 	query = `
 	CREATE TABLE IF NOT EXISTS locations (

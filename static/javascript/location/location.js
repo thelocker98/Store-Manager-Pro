@@ -47,7 +47,6 @@ function deleteLocation(id) {
         document.getElementById("locationinfoError").style.display = "block";
         var response = String(err.response.data.error).toLowerCase();
 
-        console.log(response);
         if (response.includes("foreign key")) {
           document.getElementById("locationinfoError").textContent =
             "Some items still reference this location";
