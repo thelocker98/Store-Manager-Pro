@@ -5,7 +5,7 @@ import (
 )
 
 type Inventory struct {
-	ID            int        `json:"item_id"`
+	ItemID        int        `json:"item_id"`
 	VendorID      int        `json:"vendor_id"`
 	LocationID    int        `json:"location_id"`
 	UPC           string     `json:"upc"`
@@ -22,7 +22,7 @@ type Inventory struct {
 }
 
 type InventoryAll struct {
-	ID            int        `json:"item_id"`
+	ItemID        int        `json:"item_id"`
 	VendorID      int        `json:"vendor_id"`
 	VendorName    string     `json:"vendor_name"`
 	LocationID    int        `json:"location_id"`
@@ -49,4 +49,37 @@ type Vendor struct {
 type Location struct {
 	LocationID   int    `json:"location_id"`
 	LocationName string `json:"location_name"`
+}
+
+type List struct {
+	ListID    int        `json:"list_id"`
+	ListName  string     `json:"list_name"`
+	CreatedAt *time.Time `json:"created_at"`
+}
+
+type ListEntry struct {
+	EntryID   int `json:"entry_id"`
+	ListID    int `json:"list_id"`
+	ListCount int `json:"list_count"`
+	ItemID    int `json:"item_id"`
+}
+
+type ListEntryAll struct {
+	EntryID       int     `json:"entry_id"`
+	ListID        int     `json:"list_id"`
+	ItemID        int     `json:"item_id"`
+	VendorID      int     `json:"vendor_id"`
+	LocationID    int     `json:"location_id"`
+	ListCount     int     `json:"list_count"`
+	VendorName    string  `json:"vendor_name"`
+	LocationName  string  `json:"location_name"`
+	UPC           string  `json:"upc"`
+	InvoiceNumber string  `json:"invoice_number"`
+	Brand         string  `json:"brand"`
+	Name          string  `json:"name"`
+	Description   string  `json:"description"`
+	Price         float64 `json:"price"`
+	Weighed       bool    `json:"weighed"`
+	Count         int     `json:"count"`
+	Deleted       bool    `json:"deleted"`
 }

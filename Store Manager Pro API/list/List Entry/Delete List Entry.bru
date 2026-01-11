@@ -1,0 +1,16 @@
+meta {
+  name: Delete List Entry
+  type: http
+  seq: 4
+}
+
+delete {
+  url: http://localhost:8080/api/listentrys/1
+  body: json
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

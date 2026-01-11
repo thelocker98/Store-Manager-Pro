@@ -76,12 +76,11 @@ func createTables() {
 		panic(err)
 	}
 
-	// Main List Table
+	// List Table
 	query = `
 		CREATE TABLE IF NOT EXISTS lists (
 			list_id INTEGER PRIMARY KEY AUTOINCREMENT,
 			list_name TEXT NOT NULL UNIQUE,
-			deleted BOOL DEFAULT FALSE,
 			created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 		);
 		`
@@ -91,14 +90,16 @@ func createTables() {
 		panic(err)
 	}
 
-	// List Data Table
+	// List Entrys Table
 	query = `
 		CREATE TABLE IF NOT EXISTS list_data (
 			list_entry_id INTEGER PRIMARY KEY AUTOINCREMENT,
 			list_id INTEGER,
 			item_id INTEGER,
-			FOREIGN KEY(list_id) REFERENCES lists(list_id),
-			FOREIGN KEY(item_id) REFERENCES inventory(id)
+			list_count INTEGER NOT NULL,
+			FOREIGN KEY(list_id) REFERENCES lists(list_id) ON DELETE CASCADE,
+			FOREIGN KEY(item_id) REFERENCES inventory(id),
+			UNIQUE (list_id, item_id)
 		);
 		`
 

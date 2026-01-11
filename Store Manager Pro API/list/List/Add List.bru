@@ -1,0 +1,22 @@
+meta {
+  name: Add List
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/api/lists
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "list_name": "First List"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

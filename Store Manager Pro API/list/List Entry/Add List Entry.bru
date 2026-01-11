@@ -1,0 +1,23 @@
+meta {
+  name: Add List Entry
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:8080/api/listentrys/1
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "item_id": 1,
+    "list_count":4
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -66,7 +66,7 @@ func GetAllItems(page int, pageSize int, showDeleted bool) ([]models.InventoryAl
 	for rows.Next() {
 		var i models.InventoryAll
 		err := rows.Scan(
-			&i.ID,
+			&i.ItemID,
 			&i.VendorID,
 			&i.VendorName,
 			&i.LocationID,
@@ -138,7 +138,7 @@ func GetItemById(id int) (models.InventoryAll, error) {
 
 	var item models.InventoryAll
 	err := DB.QueryRow(query, id).Scan(
-		&item.ID,
+		&item.ItemID,
 		&item.VendorID,
 		&item.VendorName,
 		&item.LocationID,
@@ -267,7 +267,7 @@ func SearchItems(search string, order string, showdeleted bool, page int, pageSi
 	for rows.Next() {
 		var i models.InventoryAll
 		if err := rows.Scan(
-			&i.ID,
+			&i.ItemID,
 			&i.VendorID,
 			&i.VendorName,
 			&i.UPC,

@@ -1,0 +1,16 @@
+meta {
+  name: Delete List
+  type: http
+  seq: 2
+}
+
+delete {
+  url: http://localhost:8080/api/lists/1
+  body: json
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

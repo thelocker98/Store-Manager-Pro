@@ -30,3 +30,8 @@ func LoadExport(c *gin.Context) {
 func LoadBarcode(c *gin.Context) {
 	c.HTML(http.StatusOK, "barcode.html", nil)
 }
+
+// LoadLists serves the HTML page
+func LoadLists(c *gin.Context) {
+	c.HTML(http.StatusOK, "lists.html", nil)
+}
