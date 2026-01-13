@@ -39,7 +39,7 @@
 
 /* Search Box*/
 .search {
-    --padding: 8px;
+    --padding: 10px;
 
     width: max-content;
     display: flex;
@@ -53,9 +53,17 @@
 .search:focus-within {
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
 }
-.searchButton:hover {
+
+.searchActions {
     font-size: 25px;
+    font-weight: 500;
+    transition: transform 0.2s ease;
+    display: inline-block;
     cursor: pointer;
+}
+.searchActions:hover {
+    transform: scale(1.35);
+    font-weight: 500;
 }
 
 #searchInput {
