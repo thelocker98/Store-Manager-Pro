@@ -16,7 +16,7 @@ func AddVendorEntry(vendor models.Vendor) error {
 }
 
 func GetAllVendors() ([]models.Vendor, error) {
-	rows, err := DB.Query(`SELECT vendor_id, vendor_name FROM vendors WHERE vendor_id != 1 ORDER BY vendor_name ASC`)
+	rows, err := DB.Query(`SELECT vendor_id, vendor_name FROM vendors WHERE vendor_id != 1 ORDER BY vendor_id DESC`)
 	if err != nil {
 		return nil, err
 	}

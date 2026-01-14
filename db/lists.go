@@ -11,6 +11,7 @@ func GetLists() ([]models.List, error) {
 		list_name,
 		created_at
 	FROM lists
+	ORDER BY list_id DESC;
 	`
 
 	rows, err := DB.Query(query)

@@ -29,9 +29,43 @@
 
         <main id="main" class="app-container">
             <h2>Lists</h2>
-            <button class="add-list-btn" onclick="createNewList()">+ Create New List</button>
+            <button class="add-list-btn" onclick="openList()">
+                + Create New List
+            </button>
 
-            <div class="lists-grid" id="listsContainer">
+            <div class="lists-grid" id="listsContainer"></div>
+            <!-- list Popup -->
+            <div id="listPopup" class="listPopup">
+                <h2>List Creator</h2>
+                <br />
+                <div>
+                    <label for="popup_list_title">List Title: </label>
+                    <input type="text" id="popup_list_title" required />
+                </div>
+
+                <br />
+                <div style="display: flex; justify-content: space-between">
+                    <button onclick="closeList()">Cancel</button>
+                    <button onclick="createNewList()">Save</button>
+                </div>
+                <p id="listError" class="errorText"></p>
+            </div>
+
+            <!-- Optional overlay for background -->
+            <div
+                id="listOverlay"
+                style="
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.3);
+                    z-index: 99;
+                "
+                onclick="closeList()"
+            ></div>
         </main>
     </body>
 </html>

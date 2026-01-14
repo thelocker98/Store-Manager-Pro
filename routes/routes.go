@@ -8,12 +8,13 @@ import (
 // We will implement these in routes/inventory.go
 func RegisterRoutes(r *gin.Engine) {
 	// Page
-	r.GET("/", LoadHome)              // Home page
-	r.GET("/vendors", LoadVendor)     // Vendors Page
-	r.GET("/locations", LoadLocation) // Locations Page
-	r.GET("/lists", LoadLists)        // Barcode Page
-	r.GET("/barcode", LoadBarcode)    // Barcode Page
-	r.GET("/export", LoadExport)      // Export Page
+	r.GET("/", LoadHome)                    // Home page
+	r.GET("/vendors", LoadVendor)           // Vendors Page
+	r.GET("/locations", LoadLocation)       // Locations Page
+	r.GET("/lists", LoadLists)              // Barcode Page
+	r.GET("/lists/:listid", LoadListEditor) // Update a List name
+	r.GET("/barcode", LoadBarcode)          // Barcode Page
+	r.GET("/export", LoadExport)            // Export Page
 
 	// API group
 	api := r.Group("/api")

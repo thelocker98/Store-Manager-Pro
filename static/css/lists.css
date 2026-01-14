@@ -35,6 +35,19 @@
     margin: 0;
 }
 
+.list-card-print {
+    font-size: 25px;
+    font-weight: 500;
+    transition: transform 0.2s ease;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.list-card-print:hover {
+    transform: scale(1.45);
+    font-weight: 500;
+}
+
 .list-card-delete {
     font-size: 25px;
     font-weight: 500;
@@ -54,7 +67,7 @@
     align-items: center;
     padding-top: 12px;
     border-top: 1px solid #f0f0f0;
-    font-size: 12px;
+    font-size: 14px;
     color: #999;
 }
 
@@ -78,4 +91,88 @@
     padding: 28px;
     max-width: 1000px;
     margin: 0 auto;
+}
+
+.edit-icon {
+    transition: all 0.2s ease;
+}
+
+.edit-icon:hover {
+    transform: scale(1.15);
+}
+
+/* Search Box*/
+.search {
+    --padding: 10px;
+
+    width: max-content;
+    display: flex;
+    align-items: center;
+    padding: var(--padding);
+    border-radius: 30px;
+    background-color: #eee;
+    transition: box-shadow 0.25s;
+}
+
+.search:focus-within {
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.searchActions {
+    font-size: 20px;
+    font-weight: 500;
+    transition: transform 0.2s ease;
+    display: inline-block;
+    cursor: pointer;
+}
+.searchActions:hover {
+    transform: scale(1.35);
+    font-weight: 500;
+}
+
+#searchInput {
+    font-size: 16px;
+    font-family: sans-serif;
+    margin-left: var(--padding);
+    outline: none;
+    border: none;
+    background: transparent;
+    width: 300px;
+}
+
+/* Sort by selector*/
+#sortBySelect {
+    border-radius: var(--radius);
+    overflow: hidden;
+    padding: 5px;
+    width: 225px;
+    font-size: 20px;
+}
+
+/* List Popup CSS */
+.listPopup {
+    border-radius: 10px;
+    font-size: 20px;
+    display: flex;
+    overflow: hidden;
+    position: fixed;
+    display: none;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--bg);
+    border: 1px solid #ccc;
+    padding: 20px;
+    z-index: 100;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    min-width: 400px;
+}
+
+#popup_list_title {
+    border-radius: var(--radius);
+    overflow: hidden;
+    padding: 5px;
+    width: 250px;
+    font-size: 20px;
 }

@@ -2,6 +2,7 @@ package routes
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -34,4 +35,18 @@ func LoadBarcode(c *gin.Context) {
 // LoadLists serves the HTML page
 func LoadLists(c *gin.Context) {
 	c.HTML(http.StatusOK, "lists.html", nil)
+}
+
+// LoadLists serves the HTML page
+func LoadListEditor(c *gin.Context) {
+	listID, err := strconv.ParseInt(c.Param("listid"), 10, 64)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "this list does not exist"})
+		return
+	}
+
+	c.HTML(http.StatusOK, "listEditor.html", gin.H{
+		"list_id": listID,
+	})
 }

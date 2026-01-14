@@ -16,7 +16,7 @@ func AddLocationEntry(location models.Location) error {
 }
 
 func GetAllLocations() ([]models.Location, error) {
-	rows, err := DB.Query(`SELECT location_id, location_name FROM locations WHERE location_id != 1 ORDER BY location_name ASC`)
+	rows, err := DB.Query(`SELECT location_id, location_name FROM locations WHERE location_id != 1 ORDER BY location_id DESC`)
 	if err != nil {
 		return nil, err
 	}
