@@ -11,7 +11,7 @@ function openAdditemPopup() {
   document.getElementById("itemEntryFormPopup").onsubmit = () =>
     submitAdditemsEntryPopup(event);
 
-  // This chunk of code checks if the search feild has only numbers and
+  // This chunk of code checks if the search field has only numbers and
   // if their is no result found and it this is true it will automatically
   // fill in the upc field on the create item popup
   searchupc = document.getElementById("searchInput").value;
@@ -27,11 +27,7 @@ function openAdditemPopup() {
   // Set Content
   document.getElementById("popup_items_id").value = 0;
   // Check if searchupc has text
-  if (searchupc == "") {
-    document.getElementById("popup_items_upc").value = "";
-  } else {
-    document.getElementById("popup_items_upc").value = searchupc;
-  }
+  document.getElementById("popup_items_upc").value = searchupc;
   document.getElementById("popup_items_invoicenumber").value = "";
   document.getElementById("popup_items_vendorselector").value = 1;
   document.getElementById("popup_items_locationselector").value = 1;
@@ -83,7 +79,7 @@ async function openEdititemsEntry(id) {
     document.getElementById("popup_items_description").value =
       itemsEntry.description;
     document.getElementById("popup_items_price").value = itemsEntry.price;
-    document.getElementById("popup_items_weighed").value = itemsEntry.weighed;
+    document.getElementById("popup_items_weighed").checked = itemsEntry.weighed;
     document.getElementById("popup_items_count").value = itemsEntry.count;
     document.getElementById("popup_items_arrived").value = formatDateForInput(
       itemsEntry.arrived_at,

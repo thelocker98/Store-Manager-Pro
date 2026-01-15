@@ -3,6 +3,8 @@ var showDeletedItems = true;
 
 // Load all items
 async function loadItems() {
+  closePriceSection();
+
   const res = await axios.get(
     `/api/items?page=${page}&pagesize=${pageSize}&showdeleted=${showDeletedItems}`,
   );

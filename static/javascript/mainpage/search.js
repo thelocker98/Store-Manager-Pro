@@ -12,19 +12,30 @@ async function searchItems() {
       `/api/search/${encodeURIComponent(query)}?showdeleted=${showDeleted}&sortby=${sortBy}&page=${page}&pagesize=${pageSize}`,
     );
 
-    const items = res.data; // assuming API returns an array of items
+    // assuming API returns an array of items
+    const items = res.data;
 
+    // check if the items array is empty
     if (!items) {
       if (page != 1) {
         page--;
         reloadData();
       }
-      // No results found → show Add Item button
+      // No results found -> show Add Item button
       tbody.innerHTML = "";
       noResultsContainer.style.display = "block";
+      closePriceSection();
+
       return 1;
     } else {
       noResultsContainer.style.display = "none";
+    }
+
+    // check if their is only one result then show it large
+    if (items.length == 1) {
+      openPriceSection(items[0]);
+    } else {
+      closePriceSection();
     }
 
     // clear table body
@@ -66,6 +77,20 @@ function resetSearch() {
   input.value = "";
 
   reloadData();
+}
+
+function openPriceSection(item) {
+  document.getElementById("priceSectionTitle").textContent =
+    item.name + " (" + item.brand + ")";
+  document.getElementById("priceSectionPrice").textContent =
+    "Price:" + formatPrice(item.price, item.weighed);
+  document.getElementById("priceSection").style.display = "block";
+
+  console.log(item);
+}
+
+function closePriceSection() {
+  document.getElementById("priceSection").style.display = "none";
 }
 
 document.addEventListener("DOMContentLoaded", function () {

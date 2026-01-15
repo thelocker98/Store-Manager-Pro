@@ -11,3 +11,7 @@
 1-5-26          2 Hours
 1-6-26          7 Hours
 1-8-26          0.5 Hours
+1-10-26         3 Hours
+1-11-26         2 Hours
+1-12-26         1 Hours
+1-13-26         2.5 Hours

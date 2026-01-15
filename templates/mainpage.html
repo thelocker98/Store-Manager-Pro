@@ -139,9 +139,46 @@
                 <p id="noResultsText">No Results Found for this search.</p>
             </div>
 
-            <button onclick="openAdditemPopup()" class="addItem">
+            <!--<button onclick="openAdditemPopup()" class="addItem">
                 Add Item
-            </button>
+            </button>-->
+
+            <div
+                id="bottomContainer"
+                style="
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                "
+            >
+                <div
+                    id="priceSection"
+                    style="
+                        min-width: 500px;
+                        min-height: 150px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+                        border-radius: 12px;
+                        display: none;
+                        text-align: center;
+                    "
+                >
+                    <h1 id="priceSectionTitle" style="margin: 15px">
+                        Name (Brand)
+                    </h1>
+                    <h1
+                        id="priceSectionPrice"
+                        style="margin: 30px; font-size: 50px"
+                        ;
+                    >
+                        Cost
+                    </h1>
+                    <div
+                        id="priceSectionInfo"
+                        class="justify"
+                        style="display: flex; justify-content: space-between"
+                    ></div>
+                </div>
+            </div>
 
             <!-- Item Info Popup -->
             <div id="infoPopup" class="infoPopup">
@@ -165,17 +202,17 @@
 
                     <div class="container">
                         <div style="display: flex">
+                            <label for="popup_items_name">Name:</label>
+                            <input type="text" id="popup_items_name" required />
+                        </div>
+
+                        <div style="display: flex">
                             <label for="popup_items_brand">Brand:</label>
                             <input
                                 type="text"
                                 id="popup_items_brand"
                                 required
                             />
-                        </div>
-
-                        <div style="display: flex">
-                            <label for="popup_items_name">Name:</label>
-                            <input type="text" id="popup_items_name" required />
                         </div>
                     </div>
 
