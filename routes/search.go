@@ -17,8 +17,9 @@ func SearchItems(c *gin.Context) {
 	// Page Settings
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	pageSize, _ := strconv.Atoi(c.DefaultQuery("pagesize", "50"))
+	listID, _ := strconv.Atoi(c.DefaultQuery("list_id", "-1"))
 
-	items, err := db.SearchItems(searchTerm, sortBy, showDeletedStr, page, pageSize)
+	items, err := db.SearchItems(searchTerm, sortBy, showDeletedStr, page, pageSize, listID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

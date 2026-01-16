@@ -198,7 +198,7 @@ func DeleteItemPermanent(id int) error {
 	return err
 }
 
-func SearchItems(search string, order string, showdeleted bool, page int, pageSize int) ([]models.InventoryAll, error) {
+func SearchItems(search string, order string, showdeleted bool, page int, pageSize int, list_id int) ([]models.InventoryAll, error) {
 	// Calculate pages
 	if page < 1 {
 		page = 1
@@ -227,9 +227,12 @@ func SearchItems(search string, order string, showdeleted bool, page int, pageSi
 			i.deleted,
 			i.arrived_at,
 			i.soldout_at,
+			COALESCE(l.list_entry_id, -1) AS list_entry_id,
+			COALESCE(l.list_count, -1) as list_count,
 			COUNT(*) OVER() AS entry_count
 		FROM inventory i
 		JOIN vendors v ON i.vendor_id = v.vendor_id
+		LEFT JOIN list_data l ON i.id = l.item_id AND l.list_id = ?
 		WHERE
 			(LOWER(i.name)        LIKE ?
 		 OR LOWER(i.brand)       LIKE ?
@@ -256,7 +259,7 @@ func SearchItems(search string, order string, showdeleted bool, page int, pageSi
 
 	query += ` LIMIT ? OFFSET ?;`
 
-	rows, err := DB.Query(query, search, search, search, search, search, search, pageSize, offset)
+	rows, err := DB.Query(query, list_id, search, search, search, search, search, search, pageSize, offset)
 
 	if err != nil {
 		return nil, err
@@ -281,6 +284,8 @@ func SearchItems(search string, order string, showdeleted bool, page int, pageSi
 			&i.Deleted,
 			&i.ArrivedAt,
 			&i.SoldOutAt,
+			&i.ListID,
+			&i.ListCount,
 			&i.Entry_Count,
 		); err != nil {
 			return nil, err

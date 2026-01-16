@@ -153,9 +153,9 @@ func GetListEntrys(listID int) ([]models.ListEntryAll, error) {
 func AddEntryToList(listEntry models.ListEntry) error {
 	query := `
 	INSERT INTO list_data (list_id,  item_id, list_count)
-	VALUES (?, ?, ?);
+	VALUES (?, ?, 1);
 	`
-	_, err := DB.Exec(query, listEntry.ListID, listEntry.ItemID, listEntry.ListCount)
+	_, err := DB.Exec(query, listEntry.ListID, listEntry.ItemID)
 	return err
 }
 

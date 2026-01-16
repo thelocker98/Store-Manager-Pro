@@ -70,16 +70,16 @@
                         <div class="search">
                             <span
                                 class="material-symbol searchActions"
-                                onclick="reloadData()"
+                                onclick="searchListItems()"
                                 >&#xE8B6;</span
                             >
                             <input
                                 id="searchInput"
                                 type="search"
-                                placeholder="Search"
+                                placeholder="Search an Item to add"
                             />
                             <span
-                                onclick="resetSearch()"
+                                onclick="resetSearchList()"
                                 class="searchActions material-symbol"
                                 style="cursor: pointer"
                             >
@@ -88,10 +88,25 @@
                         </div>
                     </div>
                 </div>
-
-                <table id="itemsTable">
+                <table id="searchResultsTable" style="display: none">
                     <thead>
                         <tr>
+                            <th>Location</th>
+                            <th>Brand</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <br />
+
+                <h2 style="text-align: center">List Entrys</h2>
+                <table id="listTable">
+                    <thead>
+                        <tr style="background-color: #f97316">
                             <th>Location</th>
                             <th>Brand</th>
                             <th>Name</th>

@@ -38,6 +38,8 @@ type InventoryAll struct {
 	Deleted       bool       `json:"deleted"`
 	ArrivedAt     *time.Time `json:"arrived_at"`
 	SoldOutAt     *time.Time `json:"sold_out_at"`
+	ListID        int        `json:"list_id"`
+	ListCount     int        `json:"list_count"`
 	Entry_Count   int        `json:"number_of_entrys"`
 }
 
