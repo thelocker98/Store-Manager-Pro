@@ -128,10 +128,6 @@ tr.deleted {
     color: #888;
     text-decoration: line-through;
 }
-/* On hover change */
-tbody tr:hover {
-    background-color: #aaa;
-}
 
 button {
     background-color: var(--buttoncolor);
@@ -149,4 +145,16 @@ button:hover {
 button:disabled {
     background-color: var(--muted);
     cursor: not-allowed;
+}
+
+.hoverExpand {
+    display: inline-block;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+    user-select: none;
+}
+
+.hoverExpand:hover {
+    transform: scale(1.5);
+    font-weight: 500;
 }

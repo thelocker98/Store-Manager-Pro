@@ -3,6 +3,12 @@ input {
     font-size: 16px;
     padding: 5px;
 }
+
+/* On hover change */
+tbody tr:hover {
+    background-color: #aaa;
+}
+
 .app-container {
     padding: 28px;
     max-width: 1000px;

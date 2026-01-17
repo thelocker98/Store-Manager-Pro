@@ -1,3 +1,8 @@
+/* On hover change */
+tbody tr:hover {
+    background-color: #aaa;
+}
+
 .page-header {
     display: flex;
     align-items: center;

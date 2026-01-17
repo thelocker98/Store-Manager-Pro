@@ -9,6 +9,7 @@
         <script src="/static/javascript/axios.min.js"></script>
         <script src="/static/javascript/general.js"></script>
         <script src="/static/javascript/lists/listsEditor.js"></script>
+        <script src="/static/javascript/lists/print.js"></script>
     </head>
 
     <body>
@@ -23,9 +24,12 @@
         </header>
 
         <main class="app-container">
-            <div class="page-header">
+            <div
+                class="page-header"
+                style="display: flex; justify-content: space-between"
+            >
                 <div style="display: flex; align-items: center; gap: 10px">
-                    <h2 id="listName"></h2>
+                    <h2 id="listName" style="user-select: none"></h2>
                     <input
                         type="text"
                         id="listNameInput"
@@ -38,92 +42,101 @@
                         "
                     />
                     <span
-                        class="material-symbol edit-icon"
+                        class="material-symbol hoverExpand"
                         onclick="editListName()"
                         style="font-size: 20px; cursor: pointer; color: #666"
                         >&#xE3C9;</span
                     >
                 </div>
-
-                <!-- Search for items to add section -->
-                <div>
-                    <div
-                        id="searchControls"
-                        style="
-                            margin-top: 15px;
-                            display: flex;
-                            align-items: center;
-                            justify-content: space-between;
-                        "
+                <div style="display: flex; align-items: center; gap: 10px">
+                    <span
+                        class="material-symbol hoverExpand"
+                        onclick="printList({{.list_id}})"
+                        style="font-size: 35px; cursor: pointer; color: #000"
+                        >&#xE8AD;</span
                     >
-                        <div>
-                            <!-- Sortby Selector -->
-                            <select id="sortBySelect">
-                                <option value="date">
-                                    Sort by Arrived Date
-                                </option>
-                                <option value="upc">Sort by UPC</option>
-                                <option value="name">Sort by Name</option>
-                            </select>
-                        </div>
+                </div>
+            </div>
 
-                        <div class="search">
-                            <span
-                                class="material-symbol searchActions"
-                                onclick="searchListItems()"
-                                >&#xE8B6;</span
-                            >
-                            <input
-                                id="searchInput"
-                                type="search"
-                                placeholder="Search an Item to add"
-                            />
-                            <span
-                                onclick="resetSearchList()"
-                                class="searchActions material-symbol"
-                                style="cursor: pointer"
-                            >
-                                &#xE5CD;
-                            </span>
-                        </div>
+            <!-- Search for items to add section -->
+            <div>
+                <div
+                    id="searchControls"
+                    style="
+                        margin-top: 15px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                    "
+                >
+                    <div>
+                        <!-- Sortby Selector -->
+                        <select id="sortBySelect">
+                            <option value="date">Sort by Arrived Date</option>
+                            <option value="upc">Sort by UPC</option>
+                            <option value="name">Sort by Name</option>
+                        </select>
+                    </div>
+
+                    <div class="search">
+                        <span
+                            class="material-symbol searchActions"
+                            onclick="searchListItems()"
+                            >&#xE8B6;</span
+                        >
+                        <input
+                            id="searchInput"
+                            type="search"
+                            placeholder="Search for an item to add"
+                        />
+                        <span
+                            onclick="resetSearchList()"
+                            class="searchActions material-symbol"
+                            style="cursor: pointer"
+                        >
+                            &#xE5CD;
+                        </span>
                     </div>
                 </div>
-                <table id="searchResultsTable" style="display: none">
-                    <thead>
-                        <tr>
-                            <th>Location</th>
-                            <th>Brand</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Price</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+            </div>
+            <table id="searchResultsTable" style="display: none">
+                <thead>
+                    <tr>
+                        <th>Location</th>
+                        <th>Brand</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
 
-                <br />
+            <br />
 
-                <h2 style="text-align: center">List Entrys</h2>
-                <table id="listTable">
-                    <thead>
-                        <tr style="background-color: #f97316">
-                            <th>Location</th>
-                            <th>Brand</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Price</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+            <h2 style="text-align: center">List Entrys</h2>
+            <table id="listTable">
+                <thead>
+                    <tr style="background-color: #f97316">
+                        <th>Location</th>
+                        <th>Brand</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
 
-                <div
-                    id="headsUpContainer"
-                    style="margin-top: 10px; display: none"
-                >
-                    <p id="noResultsText">No Results Found for this search.</p>
-                    <p id="searchToAdd">No Results Found for this search.</p>
-                </div>
+            <div
+                id="headsUpContainer"
+                style="display: none; justify-content: center; font-size: 18px"
+            >
+                <p id="noResultsText">
+                    Search and Add and item to make it appear here:
+                </p>
             </div>
         </main>
         <script>

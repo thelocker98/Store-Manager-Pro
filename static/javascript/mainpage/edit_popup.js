@@ -187,7 +187,7 @@ function submitEdititemsEntry(e) {
     .then(() => {
       closeItemPopup();
       closeInfo();
-      loadItems();
+      reloadData();
       document.getElementById("itemEntryFormPopup").reset();
     })
     .catch((err) => {

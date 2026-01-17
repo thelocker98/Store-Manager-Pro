@@ -49,6 +49,7 @@ func RegisterRoutes(r *gin.Engine) {
 		api.DELETE("/lists/:id", DeleteList) // Delete a List
 		// List Entrys
 		api.GET("/listentrys/:listid", GetListEntrys)           // Get All Entrys in a List id, list_id, item_id
+		api.GET("/listentry/:entryid", GetListEntryById)        // Get All Entrys in a List id, list_id, item_id
 		api.POST("/listentrys/:listid", AddEntryToList)         // Add a new Entry to an existing List
 		api.PUT("/listentrys/:entryid", UpdateEntryInList)      // Update Entry in an existing List
 		api.DELETE("/listentrys/:entryid", DeleteEntryFromList) // Delete Entry From A existing List
@@ -60,8 +61,9 @@ func RegisterRoutes(r *gin.Engine) {
 		api.GET("/ws", BarcodeReaderWS)
 
 		// Export
-		api.GET("/export/csv", ExportCSV)
-		api.GET("/export/pdf", ExportPDF)
+		api.GET("/export/csv", ExportInventoryCSV)
+		api.GET("/export/pdf", ExportInventoryPDF)
+		api.GET("/export/list/:listid", ExportListPDF)
 
 	}
 }

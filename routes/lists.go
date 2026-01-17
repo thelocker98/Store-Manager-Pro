@@ -90,7 +90,7 @@ func DeleteList(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "List deleted"})
 }
 
-// GetListsEntrys returns all entrys in a list
+// GetListEntrys returns all entrys in a list
 func GetListEntrys(c *gin.Context) {
 	listID, err := strconv.Atoi(c.Param("listid"))
 	if err != nil {
@@ -98,6 +98,21 @@ func GetListEntrys(c *gin.Context) {
 		return
 	}
 	lists, err := db.GetListEntrys(listID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, lists)
+}
+
+// GetListEntryById returns all entrys in a list
+func GetListEntryById(c *gin.Context) {
+	entryID, err := strconv.Atoi(c.Param("entryid"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid list entry id"})
+		return
+	}
+	lists, err := db.GetListEntryById(entryID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

@@ -93,14 +93,6 @@
     margin: 0 auto;
 }
 
-.edit-icon {
-    transition: all 0.2s ease;
-}
-
-.edit-icon:hover {
-    transform: scale(1.15);
-}
-
 /* Search Box*/
 .search {
     --padding: 10px;

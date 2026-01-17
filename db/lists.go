@@ -110,7 +110,8 @@ func GetListEntrys(listID int) ([]models.ListEntryAll, error) {
 	JOIN inventory i on ld.item_id = i.id
 	JOIN vendors v ON i.vendor_id = v.vendor_id
 	JOIN locations l ON i.location_id = l.location_id
-	WHERE ld.list_id = ?;
+	WHERE ld.list_id = ?
+	ORDER BY l.location_name ASC, ld.list_entry_id DESC;
 	`
 
 	rows, err := DB.Query(query, listID)
@@ -127,9 +128,9 @@ func GetListEntrys(listID int) ([]models.ListEntryAll, error) {
 			&l.EntryID,
 			&l.ListID,
 			&l.ItemID,
-			&l.ListCount,
 			&l.VendorID,
 			&l.LocationID,
+			&l.ListCount,
 			&l.VendorName,
 			&l.LocationName,
 			&l.UPC,
@@ -148,6 +149,59 @@ func GetListEntrys(listID int) ([]models.ListEntryAll, error) {
 		lists = append(lists, l)
 	}
 	return lists, nil
+}
+
+func GetListEntryById(listID int) (models.ListEntryAll, error) {
+	query := `
+	SELECT
+		ld.list_entry_id,
+		ld.list_id,
+		ld.item_id,
+		v.vendor_id,
+		l.location_id,
+		ld.list_count,
+		v.vendor_name,
+		l.location_name,
+		i.upc,
+		i.invoice_number,
+		i.brand,
+		i.name,
+		i.description,
+		i.price,
+		i.weighed,
+		i.count,
+		i.deleted
+	FROM list_data ld
+	JOIN lists l on ld.list_id = l.list_id
+	JOIN inventory i on ld.item_id = i.id
+	JOIN vendors v ON i.vendor_id = v.vendor_id
+	JOIN locations l ON i.location_id = l.location_id
+	WHERE ld.list_entry_id = ?;
+	`
+
+	var list models.ListEntryAll
+
+	err := DB.QueryRow(query, listID).Scan(
+		&list.EntryID,
+		&list.ListID,
+		&list.ItemID,
+		&list.VendorID,
+		&list.LocationID,
+		&list.ListCount,
+		&list.VendorName,
+		&list.LocationName,
+		&list.UPC,
+		&list.InvoiceNumber,
+		&list.Brand,
+		&list.Name,
+		&list.Description,
+		&list.Price,
+		&list.Weighed,
+		&list.Count,
+		&list.Deleted,
+	)
+
+	return list, err
 }
 
 func AddEntryToList(listEntry models.ListEntry) error {
