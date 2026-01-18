@@ -5,7 +5,7 @@ function loadLocations() {
     tbody.innerHTML = "";
     res.data.forEach((locations) => {
       tbody.innerHTML += `
-          <tr onclick="editVendor(${locations.location_id})" class="avalible">
+          <tr onclick="editLocation(${locations.location_id})" class="avalible">
             <td>
               <div style="display: flex; justify-content: space-between; align-items: center;">
                 <span>${locations.location_name}</span>
