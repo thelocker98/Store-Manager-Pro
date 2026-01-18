@@ -54,6 +54,29 @@ func createTables() {
 		panic(err)
 	}
 
+	// Department Table
+	query = `
+	CREATE TABLE IF NOT EXISTS departments (
+		department_id INTEGER PRIMARY KEY AUTOINCREMENT,
+		department_name TEXT NOT NULL UNIQUE
+	);
+	`
+
+	_, err = DB.Exec(query)
+	if err != nil {
+		panic(err)
+	}
+
+	query = `
+	INSERT OR IGNORE INTO departments (department_id, department_name)
+	VALUES (1, 'N/A');
+	`
+
+	_, err = DB.Exec(query)
+	if err != nil {
+		panic(err)
+	}
+
 	// Location Table
 	query = `
 	CREATE TABLE IF NOT EXISTS locations (

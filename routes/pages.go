@@ -50,3 +50,8 @@ func LoadListEditor(c *gin.Context) {
 		"list_id": listID,
 	})
 }
+
+// LoadDepartments serves the HTML page
+func LoadDepartments(c *gin.Context) {
+	c.HTML(http.StatusOK, "departments.html", nil)
+}

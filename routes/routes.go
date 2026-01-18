@@ -11,7 +11,8 @@ func RegisterRoutes(r *gin.Engine) {
 	r.GET("/", LoadHome)                    // Home page
 	r.GET("/vendors", LoadVendor)           // Vendors Page
 	r.GET("/locations", LoadLocation)       // Locations Page
-	r.GET("/lists", LoadLists)              // Barcode Page
+	r.GET("/departments", LoadDepartments)  // Department Page
+	r.GET("/lists", LoadLists)              // List Page
 	r.GET("/lists/:listid", LoadListEditor) // Update a List name
 	r.GET("/barcode", LoadBarcode)          // Barcode Page
 	r.GET("/export", LoadExport)            // Export Page
@@ -47,12 +48,19 @@ func RegisterRoutes(r *gin.Engine) {
 		api.POST("/lists", AddList)          // Add a new List
 		api.PUT("/lists/:id", UpdateList)    // Update a List name
 		api.DELETE("/lists/:id", DeleteList) // Delete a List
+
 		// List Entrys
 		api.GET("/listentrys/:listid", GetListEntrys)           // Get All Entrys in a List id, list_id, item_id
 		api.GET("/listentry/:entryid", GetListEntryById)        // Get All Entrys in a List id, list_id, item_id
 		api.POST("/listentrys/:listid", AddEntryToList)         // Add a new Entry to an existing List
 		api.PUT("/listentrys/:entryid", UpdateEntryInList)      // Update Entry in an existing List
 		api.DELETE("/listentrys/:entryid", DeleteEntryFromList) // Delete Entry From A existing List
+
+		// Departments
+		api.GET("/departments", GetDepartments)         // List all departments
+		api.POST("/department", AddDepartment)          // Add a new department
+		api.PUT("/department/:id", UpdateDepartment)    // Update an department
+		api.DELETE("/department/:id", DeleteDepartment) // Delete an department
 
 		// Search
 		api.GET("/search/:q", SearchItems)

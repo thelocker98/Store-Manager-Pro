@@ -48,6 +48,11 @@ type Vendor struct {
 	VendorName string `json:"vendor_name"`
 }
 
+type Department struct {
+	DepartmentID   int    `json:"department_id"`
+	DepartmentName string `json:"department_name"`
+}
+
 type Location struct {
 	LocationID   int    `json:"location_id"`
 	LocationName string `json:"location_name"`

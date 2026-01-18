@@ -3,12 +3,12 @@
     <head>
         <meta charset="UTF-8" />
         <title>Inventory</title>
-        <link rel="stylesheet" href="/static/css/location.css" />
+        <link rel="stylesheet" href="/static/css/department.css" />
         <link rel="stylesheet" href="/static/css/general.css" />
 
         <script src="/static/javascript/axios.min.js"></script>
         <script src="/static/javascript/general.js"></script>
-        <script src="/static/javascript/location/location.js"></script>
+        <script src="/static/javascript/department/department.js"></script>
     </head>
 
     <body>
@@ -18,15 +18,18 @@
             </div>
 
             <nav class="header-nav">
-                <a href="/" class="nav-link">Inventory</a>
-                <a href="/lists" class="nav-link">Lists</a>
-
+                <div class="nav-dropdown">
+                    <a href="/" class="nav-link">Inventory</a>
+                </div>
+                <div class="nav-dropdown">
+                    <a href="/lists" class="nav-link">Lists</a>
+                </div>
                 <div class="nav-dropdown">
                     <span class="nav-link dropdown-toggle">Manage ▾</span>
                     <div class="dropdown-menu">
-                        <a href="/vendors">Vendors</a>
-                        <a href="/locations">Locations</a>
-                        <a href="/departments">Departments</a>
+                        <a href="/vendors" class="nav-link">Vendors</a>
+                        <a href="/locations" class="nav-link">Locations</a>
+                        <a href="/departments" class="nav-link">Departments</a>
                     </div>
                 </div>
                 <div class="nav-dropdown">
@@ -42,32 +45,31 @@
         </header>
 
         <main id="main">
-            <!-- Locations Table -->
-            <h2>Locations</h2>
-
-            <form id="addLocationForm" onsubmit="addLocation(event)">
+            <!-- Add Departments Form -->
+            <h2>Departments</h2>
+            <form id="addDepartmentForm" onsubmit="addDepartment(event)">
                 <input
                     type="text"
-                    id="location_name"
-                    placeholder="Location Name"
+                    id="department_name"
+                    placeholder="Department Name"
                     required
                 />
                 <button type="submit">Add</button>
-                <p id="locationaddError" class="errorText"></p>
+                <p id="departmentaddError" class="errorText"></p>
             </form>
 
-            <table id="locationsTable" style="min-width: 325px">
+            <table id="departmentsTable" style="min-width: 325px">
                 <thead>
                     <tr>
-                        <th>Location</th>
+                        <th>Department</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
             </table>
 
-            <!-- Edit Location Popup -->
+            <!-- Edit Department Popup -->
             <div
-                id="editLocationPopup"
+                id="editDepartmentPopup"
                 style="
                     display: none;
                     position: fixed;
@@ -82,28 +84,28 @@
                     min-width: 300px;
                 "
             >
-                <h2>Edit Location</h2>
+                <h2>Edit Department</h2>
                 <form
-                    id="editLocationForm"
-                    onsubmit="submitLocationEdit(event)"
+                    id="editDepartmentForm"
+                    onsubmit="submitDepartmentEdit(event)"
                 >
-                    <input type="hidden" id="editLocationId" />
+                    <input type="hidden" id="editDepartmentId" />
 
-                    <label for="editLocationName">Location</label><br />
+                    <label for="editDepartmentName">Department</label><br />
                     <input
                         type="text"
-                        id="editLocationName"
+                        id="editDepartmentName"
                         required
                     /><br /><br />
 
-                    <button type="button" onclick="closeLocationEdit()">
+                    <button type="button" onclick="closeDepartmentEdit()">
                         Cancel
                     </button>
-                    <button id="locationDeleteButton" type="button">
+                    <button id="departmentDeleteButton" type="button">
                         Delete
                     </button>
                     <button type="submit">Save</button>
-                    <p id="locationinfoError" class="errorText"></p>
+                    <p id="departmentinfoError" class="errorText"></p>
                 </form>
             </div>
 
@@ -120,7 +122,7 @@
                     background: rgba(0, 0, 0, 0.3);
                     z-index: 999;
                 "
-                onclick="closeLocationEdit()"
+                onclick="closeDepartmentEdit()"
             ></div>
         </main>
 

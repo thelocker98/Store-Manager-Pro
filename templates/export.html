@@ -19,11 +19,25 @@
 
             <nav class="header-nav">
                 <a href="/" class="nav-link">Inventory</a>
-                <a href="/vendors" class="nav-link">Vendors</a>
-                <a href="/locations" class="nav-link">Locations</a>
                 <a href="/lists" class="nav-link">Lists</a>
-                <a href="/barcode" class="nav-link">Barcode</a>
-                <a href="/export" class="nav-link">Export</a>
+
+                <div class="nav-dropdown">
+                    <span class="nav-link dropdown-toggle">Manage ▾</span>
+                    <div class="dropdown-menu">
+                        <a href="/vendors">Vendors</a>
+                        <a href="/locations">Locations</a>
+                        <a href="/departments">Departments</a>
+                    </div>
+                </div>
+                <div class="nav-dropdown">
+                    <span class="nav-link dropdown-toggle"
+                        >Configurations ▾</span
+                    >
+                    <div class="dropdown-menu">
+                        <a href="/barcode" class="nav-link">Barcode</a>
+                        <a href="/export" class="nav-link">Export</a>
+                    </div>
+                </div>
             </nav>
         </header>
 
