@@ -43,11 +43,12 @@ func RegisterRoutes(r *gin.Engine) {
 		api.DELETE("/locations/:id", DeleteLocation) // Delete an location
 
 		// Lists
-		api.GET("/lists", GetLists)          // Get All Lists with their name, id, date
-		api.GET("/lists/:id", GetListById)   // Get List Using its ID
-		api.POST("/lists", AddList)          // Add a new List
-		api.PUT("/lists/:id", UpdateList)    // Update a List name
-		api.DELETE("/lists/:id", DeleteList) // Delete a List
+		api.GET("/lists", GetLists)                           // Get All Lists with their name, id, date
+		api.GET("/lists/:listid", GetListById)                // Get List Using its ID
+		api.GET("/lists/count/:listid", GetNumberOfItemsList) // Get Number of Items in a given list
+		api.POST("/lists", AddList)                           // Add a new List
+		api.PUT("/lists/:listid", UpdateList)                 // Update a List name
+		api.DELETE("/lists/:listid", DeleteList)              // Delete a List
 
 		// List Entrys
 		api.GET("/listentrys/:listid", GetListEntrys)           // Get All Entrys in a List id, list_id, item_id

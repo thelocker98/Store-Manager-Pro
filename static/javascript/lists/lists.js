@@ -9,7 +9,6 @@ async function renderLists() {
     const card = document.createElement("div");
     card.className = "list-card";
     card.onclick = () => viewList(list.list_id);
-    //#xE872;
     card.innerHTML = `
                      <div class="list-card-header">
                          <h3 class="list-card-title">${list.list_name}</h3>
@@ -19,7 +18,8 @@ async function renderLists() {
                          </div>
                      </div>
                      <div class="list-card-footer">
-                         <span>Created ${formatDate(list.created_at)}</span>
+                         <span>Created: ${formatDate(list.created_at)}</span>
+                         <span>Item Count: ${list.total_count}</span>
                      </div>
                  `;
     // Add delete handler with stopPropagation

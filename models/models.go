@@ -59,9 +59,10 @@ type Location struct {
 }
 
 type List struct {
-	ListID    int        `json:"list_id"`
-	ListName  string     `json:"list_name"`
-	CreatedAt *time.Time `json:"created_at"`
+	ListID     int        `json:"list_id"`
+	ListName   string     `json:"list_name"`
+	TotalCount int        `json:"total_count"`
+	CreatedAt  *time.Time `json:"created_at"`
 }
 
 type ListEntry struct {

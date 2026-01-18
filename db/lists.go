@@ -7,11 +7,14 @@ import (
 func GetLists() ([]models.List, error) {
 	query := `
 	SELECT
-		list_id,
-		list_name,
-		created_at
-	FROM lists
-	ORDER BY list_id DESC;
+		l.list_id,
+		l.list_name,
+		COALESCE(COUNT(ld.list_count), 0) AS total_items,
+		l.created_at
+	FROM lists l
+	LEFT JOIN list_data ld ON l.list_id = ld.list_id
+	GROUP BY l.list_id, l.list_name, l.created_at
+	ORDER BY l.list_id DESC;
 	`
 
 	rows, err := DB.Query(query)
@@ -23,16 +26,17 @@ func GetLists() ([]models.List, error) {
 
 	var lists []models.List
 	for rows.Next() {
-		var i models.List
+		var l models.List
 		err := rows.Scan(
-			&i.ListID,
-			&i.ListName,
-			&i.CreatedAt,
+			&l.ListID,
+			&l.ListName,
+			&l.TotalCount,
+			&l.CreatedAt,
 		)
 		if err != nil {
 			return nil, err
 		}
-		lists = append(lists, i)
+		lists = append(lists, l)
 	}
 	return lists, nil
 }
@@ -59,6 +63,25 @@ func GetListById(listID int) (models.List, error) {
 	}
 
 	return list, nil
+}
+
+func GetNumberOfItemsList(listID int) (int, error) {
+	query := `
+		SELECT SUM(list_count) AS total_items
+		FROM list_data
+		WHERE list_id = ?;
+	`
+
+	var totalCount int
+	err := DB.QueryRow(query, listID).Scan(
+		&totalCount,
+	)
+
+	if err != nil {
+		return -1, err
+	}
+
+	return totalCount, nil
 }
 
 func AddList(list models.List) error {

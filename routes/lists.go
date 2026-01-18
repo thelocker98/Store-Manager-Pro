@@ -23,7 +23,7 @@ func GetLists(c *gin.Context) {
 
 // Get Single List
 func GetListById(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("listid"))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "invalid list id"})
 		return
@@ -34,6 +34,20 @@ func GetListById(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, items)
+}
+
+func GetNumberOfItemsList(c *gin.Context) {
+	listID, err := strconv.Atoi(c.Param("listid"))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "invalid list id"})
+		return
+	}
+	totalCount, err := db.GetNumberOfItemsList(listID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "no list found"})
+		return
+	}
+	c.JSON(http.StatusOK, map[string]int{"total_count": totalCount})
 }
 
 // AddList adds a new list
@@ -54,7 +68,7 @@ func AddList(c *gin.Context) {
 
 // UpdateList updates an existing list by ID
 func UpdateList(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("listid"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid list id"})
 		return
@@ -76,7 +90,7 @@ func UpdateList(c *gin.Context) {
 
 // DeleteList deletes an list by ID
 func DeleteList(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("listid"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid list id"})
 		return
