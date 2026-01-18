@@ -8,8 +8,9 @@ func createTables() {
 	query := `
 	CREATE TABLE IF NOT EXISTS inventory (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		vendor_id INTEGER,
-		location_id INTEGER,
+		vendor_id INTEGER DEFAULT 1,
+		location_id INTEGER DEFAULT 1,
+		department_id INTEGER DEFAULT 1;
 		upc TEXT,
 		invoice_number TEXT,
 		name TEXT,

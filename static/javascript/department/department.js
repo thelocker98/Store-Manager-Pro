@@ -10,8 +10,12 @@ function loadDepartments() {
 
     res.data.forEach((departments) => {
       tbody.innerHTML += `
-          <tr onclick="editDepartment(${departments.department_id})" class="avalible">
-              <td>${departments.department_name}</td>
+          <td>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span>${departments.department_name}</span>
+                <span style="font-size: 15px; color: #555;">${departments.department_item_count} Items</span>
+              </div>
+            </td>
           </tr>
       `;
     });

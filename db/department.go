@@ -16,7 +16,19 @@ func AddDepartmentEntry(department models.Department) error {
 }
 
 func GetAllDepartments() ([]models.Department, error) {
-	rows, err := DB.Query(`SELECT department_id, department_name FROM departments WHERE department_id != 1 ORDER BY department_id DESC`)
+	query := `
+	SELECT
+		d.department_id,
+		d.department_name,
+		(SELECT COALESCE(COUNT(i.id), 0)
+		 FROM inventory AS i
+	     WHERE d.department_id = i.department_id) AS total_items
+	FROM departments AS d
+	WHERE department_id != 1
+	ORDER BY department_id DESC
+	`
+
+	rows, err := DB.Query(query)
 	if err != nil {
 		return nil, err
 	}
@@ -24,9 +36,9 @@ func GetAllDepartments() ([]models.Department, error) {
 
 	var departments []models.Department
 	for rows.Next() {
-		var v models.Department
-		rows.Scan(&v.DepartmentID, &v.DepartmentName)
-		departments = append(departments, v)
+		var d models.Department
+		rows.Scan(&d.DepartmentID, &d.DepartmentName, &d.DepartmentItemCount)
+		departments = append(departments, d)
 	}
 	return departments, nil
 }

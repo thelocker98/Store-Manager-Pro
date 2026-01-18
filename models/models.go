@@ -44,18 +44,21 @@ type InventoryAll struct {
 }
 
 type Vendor struct {
-	VendorID   int    `json:"vendor_id"`
-	VendorName string `json:"vendor_name"`
-}
-
-type Department struct {
-	DepartmentID   int    `json:"department_id"`
-	DepartmentName string `json:"department_name"`
+	VendorID        int    `json:"vendor_id"`
+	VendorName      string `json:"vendor_name"`
+	VendorItemCount int    `json:"vendor_item_count"`
 }
 
 type Location struct {
-	LocationID   int    `json:"location_id"`
-	LocationName string `json:"location_name"`
+	LocationID        int    `json:"location_id"`
+	LocationName      string `json:"location_name"`
+	LocationItemCount int    `json:"location_item_count"`
+}
+
+type Department struct {
+	DepartmentID        int    `json:"department_id"`
+	DepartmentName      string `json:"department_name"`
+	DepartmentItemCount int    `json:"department_item_count"`
 }
 
 type List struct {

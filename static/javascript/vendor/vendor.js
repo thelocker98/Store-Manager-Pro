@@ -6,7 +6,12 @@ function loadVendors() {
     res.data.forEach((vendors) => {
       tbody.innerHTML += `
           <tr onclick="editVendor(${vendors.vendor_id})" class="avalible">
-              <td>${vendors.vendor_name}</td>
+            <td>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span>${vendors.vendor_name}</span>
+                <span style="font-size: 15px; color: #555;">${vendors.vendor_item_count} Items</span>
+              </div>
+            </td>
           </tr>
       `;
     });

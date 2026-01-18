@@ -16,7 +16,19 @@ func AddLocationEntry(location models.Location) error {
 }
 
 func GetAllLocations() ([]models.Location, error) {
-	rows, err := DB.Query(`SELECT location_id, location_name FROM locations WHERE location_id != 1 ORDER BY location_id DESC`)
+	query := `
+	SELECT
+		l.location_id,
+		l.location_name,
+		(SELECT COALESCE(COUNT(i.id), 0)
+		 FROM inventory AS i
+	     WHERE i.location_id = l.location_id) AS total_items
+	FROM locations AS l
+	WHERE location_id != 1
+	ORDER BY location_id DESC
+	`
+
+	rows, err := DB.Query(query)
 	if err != nil {
 		return nil, err
 	}
@@ -24,9 +36,9 @@ func GetAllLocations() ([]models.Location, error) {
 
 	var locations []models.Location
 	for rows.Next() {
-		var v models.Location
-		rows.Scan(&v.LocationID, &v.LocationName)
-		locations = append(locations, v)
+		var l models.Location
+		rows.Scan(&l.LocationID, &l.LocationName, &l.LocationItemCount)
+		locations = append(locations, l)
 	}
 	return locations, nil
 }
