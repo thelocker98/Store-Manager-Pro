@@ -14,7 +14,7 @@ import (
 
 // ExportInventoryCSV downloads all items as CSV
 func ExportInventoryCSV(c *gin.Context) {
-	items, err := db.GetAllItems(1, 9999999, true)
+	items, err := db.GetAllItems(1, 9999999, true, 0, 0, 0, 0, "upc")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -59,7 +59,7 @@ func ExportInventoryCSV(c *gin.Context) {
 func ExportInventoryPDF(c *gin.Context) {
 	widths := []float64{90, 125, 125, 160, 60}
 
-	items, err := db.GetAllItems(1, 100000000, true)
+	items, err := db.GetAllItems(1, 100000000, true, 0, 0, 0, 0, "upc")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

@@ -23,7 +23,7 @@ tbody tr:hover {
     width: 50px;
 }
 
-#sortBySelect {
+#orderBySelect {
     border-radius: var(--radius);
     overflow: hidden;
     padding: 5px;

@@ -1,6 +1,8 @@
 package db
 
 import (
+	"fmt"
+
 	"gitea.locker98.com/locker98/Store-Manager-Pro/models"
 )
 
@@ -13,7 +15,7 @@ func AddItem(item models.Inventory) error {
 	return err
 }
 
-func GetAllItems(page int, pageSize int, showDeleted bool) ([]models.InventoryAll, error) {
+func GetAllItems(page int, pageSize int, showDeleted bool, vendor int, location int, department int, listId int, orderBy string) ([]models.InventoryAll, error) {
 	if page < 1 {
 		page = 1
 	}
@@ -45,9 +47,29 @@ func GetAllItems(page int, pageSize int, showDeleted bool) ([]models.InventoryAl
 	JOIN vendors v ON i.vendor_id = v.vendor_id
 	JOIN locations l ON i.location_id = l.location_id
 	`
-	if !showDeleted {
-		query += ` WHERE i.deleted = 0 `
+	if listId != 0 {
+		query += `LEFT JOIN list_data ld ON i.id = ld.item_id AND ld.list_id = ` + fmt.Sprint(listId)
 	}
+
+	query += ` WHERE `
+	if !showDeleted {
+		query += `i.deleted = 0 AND `
+	}
+	if vendor != 0 {
+		query += `i.vendor_id = ` + fmt.Sprint(vendor) + ` AND `
+	}
+	if location != 0 {
+		query += `i.location_id = ` + fmt.Sprint(location) + ` AND `
+	}
+	if department != 0 {
+		query += `i.department_id = ` + fmt.Sprint(department) + ` AND `
+	}
+	if listId != 0 {
+		query += `ld.list_id = ` + fmt.Sprint(listId) + ` AND `
+	}
+
+	query += `1=1 `
+
 	query += `
 		ORDER BY i.upc ASC
 		LIMIT ? OFFSET ?;

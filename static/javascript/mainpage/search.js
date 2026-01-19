@@ -4,12 +4,12 @@ async function searchItems() {
   const noResultsContainer = document.getElementById("noResultsContainer");
 
   // Build API URL
-  const sortBy = document.getElementById("sortBySelect").value;
+  const orderBy = document.getElementById("orderBySelect").value;
   const showDeleted = document.getElementById("showDeletedCheckbox").checked;
 
   try {
     const res = await axios.get(
-      `/api/search/${encodeURIComponent(query)}?showdeleted=${showDeleted}&sortby=${sortBy}&page=${page}&pagesize=${pageSize}`,
+      `/api/search/${encodeURIComponent(query)}?showdeleted=${showDeleted}&orderby=${orderBy}&page=${page}&pagesize=${pageSize}&vendor=${Vendor}&location=${Location}&department=${Department}&filterlist_id=${Listid}`,
     );
 
     // assuming API returns an array of items
@@ -96,7 +96,7 @@ function closePriceSection() {
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("searchInput");
   const showDeletedSearchInput = document.getElementById("showDeletedCheckbox");
-  const sortBySearchInput = document.getElementById("sortBySelect");
+  const orderBySearchInput = document.getElementById("orderBySelect");
 
   if (searchInput) {
     searchInput.addEventListener("keypress", function (e) {
@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  sortBySearchInput.addEventListener("change", (e) => {
+  orderBySearchInput.addEventListener("change", (e) => {
     if (searchInput.value != "") {
       reloadData();
     }

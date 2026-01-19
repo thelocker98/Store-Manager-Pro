@@ -111,7 +111,7 @@ function searchListItems() {
   const tbody = document.querySelector("#searchResultsTable tbody");
 
   // Build API URL
-  const sortBy = document.getElementById("sortBySelect").value;
+  const orderBy = document.getElementById("orderBySelect").value;
   if (query == "") {
     document.getElementById("searchResultsTable").style.display = "none";
     return;
@@ -119,7 +119,7 @@ function searchListItems() {
 
   axios
     .get(
-      `/api/search/${encodeURIComponent(query)}?showdeleted=false&sortby=${sortBy}&page=1&pagesize=10&list_id=${ListID}`,
+      `/api/search/${encodeURIComponent(query)}?showdeleted=false&orderby=${orderBy}&page=1&pagesize=10&list_id=${ListID}`,
     )
     .then((res) => {
       // assuming API returns an array of items
@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", function () {
   loadList();
 
   const searchInput = document.getElementById("searchInput");
-  const sortBySearchInput = document.getElementById("sortBySelect");
+  const orderBySearchInput = document.getElementById("orderBySelect");
 
   if (searchInput) {
     searchInput.addEventListener("keypress", function (e) {
@@ -195,7 +195,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  sortBySearchInput.addEventListener("change", (e) => {
+  orderBySearchInput.addEventListener("change", (e) => {
     if (searchInput.value != "") {
       searchListItems();
     }

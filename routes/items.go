@@ -16,9 +16,17 @@ import (
 func GetItems(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	pageSize, _ := strconv.Atoi(c.DefaultQuery("pagesize", "50"))
-	showDeleted, _ := strconv.ParseBool(c.DefaultQuery("showdeleted", "false"))
 
-	items, err := db.GetAllItems(page, pageSize, showDeleted)
+	// sort
+	showDeleted, _ := strconv.ParseBool(c.DefaultQuery("showdeleted", "false"))
+	vendorID, _ := strconv.Atoi(c.DefaultQuery("vendor", "0"))
+	locationID, _ := strconv.Atoi(c.DefaultQuery("location", "0"))
+	departmentID, _ := strconv.Atoi(c.DefaultQuery("department", "0"))
+	listID, _ := strconv.Atoi(c.DefaultQuery("list_id", "0"))
+	orderBy := c.DefaultQuery("orderby", "upc")
+
+	items, err := db.GetAllItems(page, pageSize, showDeleted, vendorID, locationID, departmentID, listID, orderBy)
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

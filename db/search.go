@@ -1,12 +1,13 @@
 package db
 
 import (
+	"fmt"
 	"strings"
 
 	"gitea.locker98.com/locker98/Store-Manager-Pro/models"
 )
 
-func SearchItems(search string, order string, showdeleted bool, page int, pageSize int, list_id int) ([]models.InventoryAll, error) {
+func SearchItems(search string, list_id int, page int, pageSize int, showdeleted bool, vendor int, location int, department int, limitToList bool, orderBy string) ([]models.InventoryAll, error) {
 	// Calculate pages
 	if page < 1 {
 		page = 1
@@ -37,13 +38,13 @@ func SearchItems(search string, order string, showdeleted bool, page int, pageSi
 			i.deleted,
 			i.arrived_at,
 			i.soldout_at,
-			COALESCE(l.list_entry_id, -1) AS list_entry_id,
-			COALESCE(l.list_count, -1) as list_count,
+			COALESCE(ld.list_entry_id, -1) AS list_entry_id,
+			COALESCE(ld.list_count, -1) as list_count,
 			COUNT(*) OVER() AS entry_count
 		FROM inventory i
 		JOIN vendors v ON i.vendor_id = v.vendor_id
 		JOIN locations l on l.location_id = i.location_id
-		LEFT JOIN list_data l ON i.id = l.item_id AND l.list_id = ?
+		LEFT JOIN list_data ld ON i.id = ld.item_id AND ld.list_id = ?
 		WHERE
 			(LOWER(i.name)        LIKE ?
 		 OR LOWER(i.brand)       LIKE ?
@@ -54,18 +55,31 @@ func SearchItems(search string, order string, showdeleted bool, page int, pageSi
 	`
 	// Don't show deleted items
 	if !showdeleted {
-		query += `AND i.deleted = 0
+		query += ` AND i.deleted = 0
 			`
+	}
+	if vendor != 0 {
+		query += ` AND i.vendor_id = ` + fmt.Sprint(vendor)
+	}
+	if location != 0 {
+		query += ` AND i.location_id = ` + fmt.Sprint(location)
+	}
+	if department != 0 {
+		query += ` AND i.department_id = ` + fmt.Sprint(department)
+	}
+	if limitToList == true {
+		query += ` AND ld.list_id = ` + fmt.Sprint(list_id)
 	}
 
 	// sort
-	switch strings.ToLower(order) {
+	switch strings.ToLower(orderBy) {
 	case "date":
-		query += `ORDER BY i.arrived_at DESC`
+		query += ` ORDER BY i.arrived_at DESC`
 	case "name":
-		query += `ORDER BY i.name DESC`
+		query += ` ORDER BY i.name DESC`
+	case "upc":
+		query += ` ORDER BY i.upc DESC`
 	default:
-		query += `ORDER BY i.upc DESC`
 	}
 
 	query += ` LIMIT ? OFFSET ?;`

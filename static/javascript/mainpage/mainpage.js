@@ -1,12 +1,17 @@
 // variables
 var showDeletedItems = true;
+var Vendor = 0;
+var Location = 0;
+var Department = 0;
+var Listid = 0;
+var Showdeleted = false;
 
 // Load all items
 async function loadItems() {
   closePriceSection();
 
   const res = await axios.get(
-    `/api/items?page=${page}&pagesize=${pageSize}&showdeleted=${showDeletedItems}`,
+    `/api/items?page=${page}&pagesize=${pageSize}&showdeleted=${showDeletedItems}&vendor=${Vendor}&location=${Location}&department=${Department}&list_id=${Listid}`,
   );
   const items = res.data;
 
@@ -130,6 +135,8 @@ function loadLocations() {
   });
 }
 
+// variables
+
 document.addEventListener("DOMContentLoaded", function () {
   const itemsPerPageSelector = document.getElementById("itemsPerPageSelector");
   const showDeletedItemsDOM = document.getElementById("showDeletedCheckbox");
@@ -162,6 +169,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const value = (parseInt(raw, 10) / 100).toFixed(2);
     priceInput.value = value;
   });
+
+  // Get URL parameters
+  const urlParams = new URLSearchParams(window.location.search);
+
+  // Get individual values
+  Vendor = parseInt(urlParams.get("vendor")) || 0;
+  Location = parseInt(urlParams.get("location")) || 0;
+  Department = parseInt(urlParams.get("department")) || 0;
+  Listid = parseInt(urlParams.get("list_id")) || 0;
+  Showdeleted = urlParams.get("showdeleted") === "1";
 
   // Load Inital Data
   reloadData();

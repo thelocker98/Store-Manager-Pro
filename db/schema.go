@@ -10,7 +10,7 @@ func createTables() {
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		vendor_id INTEGER DEFAULT 1,
 		location_id INTEGER DEFAULT 1,
-		department_id INTEGER DEFAULT 1;
+		department_id INTEGER DEFAULT 1,
 		upc TEXT,
 		invoice_number TEXT,
 		name TEXT,
