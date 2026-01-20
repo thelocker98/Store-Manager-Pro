@@ -3,13 +3,9 @@ async function searchItems() {
   const tbody = document.querySelector("#itemsTable tbody");
   const noResultsContainer = document.getElementById("noResultsContainer");
 
-  // Build API URL
-  const orderBy = document.getElementById("orderBySelect").value;
-  const showDeleted = document.getElementById("showDeletedCheckbox").checked;
-
   try {
     const res = await axios.get(
-      `/api/search/${encodeURIComponent(query)}?showdeleted=${showDeleted}&orderby=${orderBy}&page=${page}&pagesize=${pageSize}&vendor=${Vendor}&location=${Location}&department=${Department}&filterlist_id=${Listid}`,
+      `/api/search/${encodeURIComponent(query)}?showdeleted=${ShowDeleted}&orderby=${OrderBy}&page=${page}&pagesize=${pageSize}&vendor=${Vendor}&location=${Location}&department=${Department}&filterlist_id=${Listid}`,
     );
 
     // assuming API returns an array of items
@@ -95,8 +91,6 @@ function closePriceSection() {
 
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("searchInput");
-  const showDeletedSearchInput = document.getElementById("showDeletedCheckbox");
-  const orderBySearchInput = document.getElementById("orderBySelect");
 
   if (searchInput) {
     searchInput.addEventListener("keypress", function (e) {
@@ -105,16 +99,4 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
-
-  showDeletedSearchInput.addEventListener("change", (e) => {
-    if (searchInput.value != "") {
-      reloadData();
-    }
-  });
-
-  orderBySearchInput.addEventListener("change", (e) => {
-    if (searchInput.value != "") {
-      reloadData();
-    }
-  });
 });

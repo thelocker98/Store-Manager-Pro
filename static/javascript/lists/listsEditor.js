@@ -111,7 +111,7 @@ function searchListItems() {
   const tbody = document.querySelector("#searchResultsTable tbody");
 
   // Build API URL
-  const orderBy = document.getElementById("orderBySelect").value;
+  const orderBy = document.getElementById("orderBySelector").value;
   if (query == "") {
     document.getElementById("searchResultsTable").style.display = "none";
     return;
@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", function () {
   loadList();
 
   const searchInput = document.getElementById("searchInput");
-  const orderBySearchInput = document.getElementById("orderBySelect");
+  const orderBySearchInput = document.getElementById("orderBySelector");
 
   if (searchInput) {
     searchInput.addEventListener("keypress", function (e) {

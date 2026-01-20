@@ -18,4 +18,6 @@
 1-14-26         1.0 Hours
 1-15-26         1.5 Hours
 1-16-26         1.0 Hours
-1-17-26         * Hours
+1-17-26         4 Hours
+1-18-26         2 Hours
+1-19-26         5 Hours

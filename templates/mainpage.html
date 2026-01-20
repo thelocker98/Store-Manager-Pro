@@ -9,6 +9,7 @@
         <script src="/static/javascript/axios.min.js"></script>
         <script src="/static/javascript/general.js"></script>
         <script src="/static/javascript/mainpage/mainpage.js"></script>
+        <script src="/static/javascript/mainpage/filter.js"></script>
         <script src="/static/javascript/mainpage/edit_popup.js"></script>
         <script src="/static/javascript/mainpage/info_popup.js"></script>
         <script src="/static/javascript/mainpage/pagemanagement.js"></script>
@@ -81,31 +82,90 @@
                     justify-content: space-between;
                 "
             >
-                <div>
-                    <!-- Sortby Selector -->
-                    <select id="orderBySelect">
-                        <option value="date">Sort by Arrived Date</option>
-                        <option value="upc">Sort by UPC</option>
-                        <option value="name">Sort by Name</option>
-                    </select>
+                <div class="filter-dropdown">
+                    <button
+                        class="filter-dropdown-toggle"
+                        style="margin-right: 20px"
+                    >
+                        Filters
+                    </button>
+                    <div id="filter-dropdown-menu" class="filter-dropdown-menu">
+                        <h2 style="text-align: center; margin: 5px">Filters</h2>
+                        <div class="filterOptions">
+                            <span>Sort By</span>
+                            <select id="orderBySelector" class="filterSelector">
+                                <option value="date">
+                                    Sort by Arrived Date
+                                </option>
+                                <option value="upc">Sort by UPC</option>
+                                <option value="name">Sort by Name</option>
+                            </select>
+                        </div>
 
-                    <!-- Show Deleted Items Check Box -->
-                    <div class="checkbox-group">
-                        <label
-                            style="padding-left: 10px; font-size: 20px"
-                            for="showDeletedCheckbox"
-                            >Show Deleted</label
-                        >
-                        <input
-                            type="checkbox"
-                            checked="true"
-                            id="showDeletedCheckbox"
-                        />
+                        <div class="filterOptions">
+                            <span>Location</span>
+                            <select
+                                id="locationSelector"
+                                class="filterSelector"
+                            ></select>
+                        </div>
+
+                        <div class="filterOptions">
+                            <span>Vendor</span>
+                            <select
+                                id="vendorSelector"
+                                class="filterSelector"
+                            ></select>
+                        </div>
+
+                        <div class="filterOptions">
+                            <span>Department</span>
+                            <select
+                                id="departmentSelector"
+                                class="filterSelector"
+                            ></select>
+                        </div>
+
+                        <div class="filterOptions">
+                            <span>List</span>
+                            <select
+                                id="listSelector"
+                                class="filterSelector"
+                            ></select>
+                        </div>
+
+                        <div class="filterOptions">
+                            <span>Show Deleted Items</span>
+                            <label class="switch">
+                                <input
+                                    id="showDeletedCheckbox"
+                                    type="checkbox"
+                                    checked="true"
+                                />
+                                <span class="slider"></span>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
+                <div style="display: flex; gap: 8px; flex: 1; min-width: 0">
+                    <div
+                        id="filterSection"
+                        style="
+                            display: flex;
+                            flex-wrap: wrap;
+                            gap: 6px;
+                            align-items: center;
+                        "
+                    ></div>
+                </div>
+
                 <div>
-                    <button onclick="openAdditemPopup()" class="addItem">
+                    <button
+                        style="margin-right: 40px"
+                        onclick="openAdditemPopup()"
+                        class="addItem"
+                    >
                         Add Item
                     </button>
                 </div>
@@ -152,10 +212,6 @@
             >
                 <p id="noResultsText">No Results Found for this search.</p>
             </div>
-
-            <!--<button onclick="openAdditemPopup()" class="addItem">
-                Add Item
-            </button>-->
 
             <div
                 id="bottomContainer"

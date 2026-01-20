@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"strings"
 
 	"gitea.locker98.com/locker98/Store-Manager-Pro/models"
 )
@@ -70,10 +71,18 @@ func GetAllItems(page int, pageSize int, showDeleted bool, vendor int, location 
 
 	query += `1=1 `
 
-	query += `
-		ORDER BY i.upc ASC
-		LIMIT ? OFFSET ?;
-	`
+	// sort
+	switch strings.ToLower(orderBy) {
+	case "date":
+		query += ` ORDER BY i.arrived_at DESC`
+	case "name":
+		query += ` ORDER BY i.name DESC`
+	case "upc":
+		query += ` ORDER BY i.upc DESC`
+	default:
+	}
+
+	query += ` LIMIT ? OFFSET ?;`
 
 	rows, err := DB.Query(query, pageSize, offset)
 

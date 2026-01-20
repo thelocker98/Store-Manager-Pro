@@ -1,17 +1,17 @@
 // variables
-var showDeletedItems = true;
 var Vendor = 0;
 var Location = 0;
 var Department = 0;
 var Listid = 0;
-var Showdeleted = false;
+var OrderBy = "upc";
+var ShowDeleted = true;
 
 // Load all items
 async function loadItems() {
   closePriceSection();
 
   const res = await axios.get(
-    `/api/items?page=${page}&pagesize=${pageSize}&showdeleted=${showDeletedItems}&vendor=${Vendor}&location=${Location}&department=${Department}&list_id=${Listid}`,
+    `/api/items?page=${page}&pagesize=${pageSize}&showdeleted=${ShowDeleted}&vendor=${Vendor}&location=${Location}&department=${Department}&list_id=${Listid}&orderby=${OrderBy}`,
   );
   const items = res.data;
 
@@ -103,7 +103,7 @@ function loadVendors() {
 
     const opt = document.createElement("option");
     opt.value = 1;
-    opt.text = "N/A";
+    opt.text = "Not Assigned";
     select.appendChild(opt);
 
     res.data.forEach((v) => {
@@ -123,7 +123,7 @@ function loadLocations() {
 
     const opt = document.createElement("option");
     opt.value = 1;
-    opt.text = "N/A";
+    opt.text = "Not Assigned";
     select.appendChild(opt);
 
     res.data.forEach((v) => {
@@ -138,23 +138,15 @@ function loadLocations() {
 // variables
 
 document.addEventListener("DOMContentLoaded", function () {
+  const priceInput = document.getElementById("popup_items_price");
+  const filterDropDown = document.getElementById("filter-dropdown-menu");
   const itemsPerPageSelector = document.getElementById("itemsPerPageSelector");
-  const showDeletedItemsDOM = document.getElementById("showDeletedCheckbox");
 
   itemsPerPageSelector.addEventListener("change", (e) => {
     pageSize = e.target.value;
     // reload data and refresh page buttons
     reloadData(page);
   });
-
-  showDeletedItemsDOM.addEventListener("change", (e) => {
-    showDeletedItems = showDeletedItemsDOM.checked;
-    // reload data and refresh page buttons
-    reloadData(page);
-  });
-
-  // Price decimal conversion
-  const priceInput = document.getElementById("popup_items_price");
 
   priceInput.addEventListener("input", () => {
     // Remove anything that's not a digit
@@ -170,6 +162,13 @@ document.addEventListener("DOMContentLoaded", function () {
     priceInput.value = value;
   });
 
+  filterDropDown.addEventListener("mouseleave", () => {
+    applyFilter();
+  });
+  filterDropDown.addEventListener("mouseenter", () => {
+    loadFiltersDropdown();
+  });
+
   // Get URL parameters
   const urlParams = new URLSearchParams(window.location.search);
 
@@ -181,5 +180,6 @@ document.addEventListener("DOMContentLoaded", function () {
   Showdeleted = urlParams.get("showdeleted") === "1";
 
   // Load Inital Data
+  applyFilter();
   reloadData();
 });

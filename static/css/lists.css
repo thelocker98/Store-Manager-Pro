@@ -133,7 +133,7 @@
 }
 
 /* Sort by selector*/
-#orderBySelect {
+#orderBySelector {
     border-radius: var(--radius);
     overflow: hidden;
     padding: 5px;
