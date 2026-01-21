@@ -70,13 +70,90 @@
                         justify-content: space-between;
                     "
                 >
-                    <div>
-                        <!-- Sortby Selector -->
-                        <select id="orderBySelector">
-                            <option value="date">Sort by Arrived Date</option>
-                            <option value="upc">Sort by UPC</option>
-                            <option value="name">Sort by Name</option>
-                        </select>
+                    <div class="filter-dropdown">
+                        <button
+                            class="filter-dropdown-toggle"
+                            style="margin-right: 20px"
+                        >
+                            Filters
+                        </button>
+                        <div
+                            id="filter-dropdown-menu"
+                            class="filter-dropdown-menu"
+                        >
+                            <h2 style="text-align: center; margin: 5px">
+                                Filters
+                            </h2>
+                            <div class="filterOptions">
+                                <span>Sort By</span>
+                                <select
+                                    id="orderBySelector"
+                                    class="filterSelector"
+                                >
+                                    <option value="date">
+                                        Sort by Arrived Date
+                                    </option>
+                                    <option value="upc">Sort by UPC</option>
+                                    <option value="name">Sort by Name</option>
+                                </select>
+                            </div>
+
+                            <div class="filterOptions">
+                                <span>Location</span>
+                                <select
+                                    id="locationSelector"
+                                    class="filterSelector"
+                                ></select>
+                            </div>
+
+                            <div class="filterOptions">
+                                <span>Vendor</span>
+                                <select
+                                    id="vendorSelector"
+                                    class="filterSelector"
+                                ></select>
+                            </div>
+
+                            <div class="filterOptions">
+                                <span>Department</span>
+                                <select
+                                    id="departmentSelector"
+                                    class="filterSelector"
+                                ></select>
+                            </div>
+
+                            <div class="filterOptions">
+                                <span>List</span>
+                                <select
+                                    id="listSelector"
+                                    class="filterSelector"
+                                ></select>
+                            </div>
+
+                            <div class="filterOptions">
+                                <span>Show Deleted Items</span>
+                                <label class="switch">
+                                    <input
+                                        id="showDeletedCheckbox"
+                                        type="checkbox"
+                                        checked="true"
+                                    />
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 8px; flex: 1; min-width: 0">
+                        <div
+                            id="filterSection"
+                            style="
+                                display: flex;
+                                flex-wrap: wrap;
+                                gap: 6px;
+                                align-items: center;
+                            "
+                        ></div>
                     </div>
 
                     <div class="search">

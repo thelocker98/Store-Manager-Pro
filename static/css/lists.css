@@ -132,15 +132,6 @@
     width: 300px;
 }
 
-/* Sort by selector*/
-#orderBySelector {
-    border-radius: var(--radius);
-    overflow: hidden;
-    padding: 5px;
-    width: 225px;
-    font-size: 20px;
-}
-
 /* List Popup CSS */
 .listPopup {
     border-radius: 10px;

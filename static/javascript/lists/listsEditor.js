@@ -106,20 +106,25 @@ function saveListName() {
   input.style.display = "none";
 }
 
+function reloadData() {
+  searchListItems();
+}
+
 function searchListItems() {
   const query = document.getElementById("searchInput").value;
   const tbody = document.querySelector("#searchResultsTable tbody");
 
+  // clear table body
+  tbody.innerHTML = "";
+
   // Build API URL
-  const orderBy = document.getElementById("orderBySelector").value;
   if (query == "") {
-    document.getElementById("searchResultsTable").style.display = "none";
     return;
   }
 
   axios
     .get(
-      `/api/search/${encodeURIComponent(query)}?showdeleted=false&orderby=${orderBy}&page=1&pagesize=10&list_id=${ListID}`,
+      `/api/search/${encodeURIComponent(query)}?showdeleted=${ShowDeleted}&orderby=${OrderBy}&page=0&pagesize=10&vendor=${Vendor}&location=${Location}&department=${Department}&filterlist_id=${Listid}`,
     )
     .then((res) => {
       // assuming API returns an array of items
@@ -132,12 +137,15 @@ function searchListItems() {
       // show table
       document.getElementById("searchResultsTable").style.display = "table";
 
-      // clear table body
-      tbody.innerHTML = "";
-
       // Add rows
       items.forEach((item) => {
         const row = document.createElement("tr");
+
+        if (item.deleted == true) {
+          row.className = "deleted";
+        } else {
+          row.className = "avalible";
+        }
 
         var html = `
                 <td>${item.location_name || ""}</td>
@@ -179,28 +187,6 @@ function resetSearchList() {
 
   document.getElementById("searchResultsTable").style.display = "none";
 }
-
-document.addEventListener("DOMContentLoaded", function () {
-  loadListName();
-  loadList();
-
-  const searchInput = document.getElementById("searchInput");
-  const orderBySearchInput = document.getElementById("orderBySelector");
-
-  if (searchInput) {
-    searchInput.addEventListener("keypress", function (e) {
-      if (e.key === "Enter") {
-        searchListItems();
-      }
-    });
-  }
-
-  orderBySearchInput.addEventListener("change", (e) => {
-    if (searchInput.value != "") {
-      searchListItems();
-    }
-  });
-});
 
 function addToList(item_id) {
   // add item to list Database
@@ -272,3 +258,29 @@ function deleteListEntry(entryID) {
       return;
     });
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  loadListName();
+  loadList();
+  loadFiltersDropdown();
+  document.getElementById("showDeletedCheckbox").checked = false;
+  applyFilter();
+
+  const searchInput = document.getElementById("searchInput");
+  const filterDropDown = document.getElementById("filter-dropdown-menu");
+
+  if (searchInput) {
+    searchInput.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        searchListItems();
+      }
+    });
+  }
+
+  filterDropDown.addEventListener("mouseleave", () => {
+    applyFilter();
+  });
+  filterDropDown.addEventListener("mouseenter", () => {
+    loadFiltersDropdown();
+  });
+});

@@ -1,3 +1,11 @@
+// variables
+var Vendor = 0;
+var Location = 0;
+var Department = 0;
+var Listid = 0;
+var OrderBy = "upc";
+var ShowDeleted = true;
+
 const VendorLabels = new Map();
 const LocationLabels = new Map();
 const DepartmentLabels = new Map();
