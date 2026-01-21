@@ -1,3 +1,8 @@
+const VendorLabels = new Map();
+const LocationLabels = new Map();
+const DepartmentLabels = new Map();
+const ListLabels = new Map();
+
 function applyFilter() {
   const filterDiv = document.getElementById("filterSection");
   if (!filterDiv) return;
@@ -20,20 +25,16 @@ function applyFilter() {
   var html = "";
 
   if (Vendor != 0) {
-    const label = vendorFilter.options[vendorFilter.value].textContent;
-    html += `<span class="filters" onclick="removeFilter('vendor')">${label}</span>`;
+    html += `<span class="filters" onclick="removeFilter('vendor')">${VendorLabels.get(Number(Vendor))}</span>`;
   }
   if (Location != 0) {
-    const label = locationFilter.options[locationFilter.value].textContent;
-    html += `<span class="filters" onclick="removeFilter('location')">${label}</span>`;
+    html += `<span class="filters" onclick="removeFilter('location')">${LocationLabels.get(Number(Location))}</span>`;
   }
   if (Department != 0) {
-    const label = departmentFilter.options[departmentFilter.value].textContent;
-    html += `<span class="filters" onclick="removeFilter('department')">${label}</span>`;
+    html += `<span class="filters" onclick="removeFilter('department')">${DepartmentLabels.get(Number(Department))}</span>`;
   }
   if (Listid != 0) {
-    const label = listFilter.options[listFilter.value].textContent;
-    html += `<span class="filters" onclick="removeFilter('list')">${label}</span>`;
+    html += `<span class="filters" onclick="removeFilter('list')">${ListLabels.get(Number(Listid))}</span>`;
   }
   if (ShowDeleted != 0) {
     html += `<span class="filters" onclick="removeFilter('showdeleted')">Show Deleted</span>`;
@@ -79,11 +80,14 @@ async function loadFiltersDropdown() {
     select.innerHTML = "";
 
     select.append(new Option("All", 0));
-    select.append(new Option("Not Assigned", 1));
+    VendorLabels.set(0, "All");
+    select.append(new Option("Not Assigned To Vendor", 1));
+    VendorLabels.set(1, "Not Assigned To Vendor");
 
-    vendorsRes.data.forEach((v) =>
-      select.append(new Option(v.vendor_name, v.vendor_id)),
-    );
+    vendorsRes.data.forEach((v) => {
+      select.append(new Option(v.vendor_name, v.vendor_id));
+      VendorLabels.set(v.vendor_id, v.vendor_name);
+    });
 
     select.value = Vendor;
   }
@@ -94,11 +98,14 @@ async function loadFiltersDropdown() {
     select.innerHTML = "";
 
     select.append(new Option("All", 0));
-    select.append(new Option("Not Assigned", 1));
+    LocationLabels.set(0, "All");
+    select.append(new Option("Not Assigned To List", 1));
+    LocationLabels.set(1, "Not Assigned To List");
 
-    locationsRes.data.forEach((l) =>
-      select.append(new Option(l.location_name, l.location_id)),
-    );
+    locationsRes.data.forEach((l) => {
+      select.append(new Option(l.location_name, l.location_id));
+      LocationLabels.set(l.location_id, l.location_name);
+    });
 
     select.value = Location;
   }
@@ -109,11 +116,14 @@ async function loadFiltersDropdown() {
     select.innerHTML = "";
 
     select.append(new Option("All", 0));
-    select.append(new Option("Not Assigned", 1));
+    DepartmentLabels.set(0, "All");
+    select.append(new Option("Not Assigned To Department", 1));
+    DepartmentLabels.set(1, "Not Assigned To Department");
 
-    departmentsRes.data.forEach((d) =>
-      select.append(new Option(d.department_name, d.department_id)),
-    );
+    departmentsRes.data.forEach((d) => {
+      select.append(new Option(d.department_name, d.department_id));
+      DepartmentLabels.set(d.department_id, d.department_name);
+    });
 
     select.value = Department;
   }
@@ -124,10 +134,12 @@ async function loadFiltersDropdown() {
     select.innerHTML = "";
 
     select.append(new Option("All", 0));
+    ListLabels.set(0, "All");
 
-    listsRes.data.forEach((l) =>
-      select.append(new Option(l.list_name, l.list_id)),
-    );
+    listsRes.data.forEach((l) => {
+      select.append(new Option(l.list_name, l.list_id));
+      ListLabels.set(l.list_id, l.list_name);
+    });
 
     select.value = Listid;
   }

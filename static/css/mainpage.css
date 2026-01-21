@@ -20,7 +20,7 @@ tbody tr:hover {
     border-radius: var(--radius);
     overflow: hidden;
     padding: 5px;
-    width: 50px;
+    width: 60px;
 }
 
 /* Search Box*/
@@ -204,7 +204,7 @@ tbody tr:hover {
     position: absolute;
     top: 100%;
     left: 0;
-    min-width: 300px;
+    min-width: 400px;
 
     background: var(--card);
     border-radius: 6px;
@@ -226,6 +226,6 @@ tbody tr:hover {
 }
 
 .filterSelector {
-    min-width: 150px;
+    min-width: 225px;
     border-radius: 10px;
 }
