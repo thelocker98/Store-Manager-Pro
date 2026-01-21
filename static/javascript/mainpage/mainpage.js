@@ -137,7 +137,7 @@ function loadLocations() {
 
 // variables
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
   const priceInput = document.getElementById("popup_items_price");
   const filterDropDown = document.getElementById("filter-dropdown-menu");
   const itemsPerPageSelector = document.getElementById("itemsPerPageSelector");
@@ -180,6 +180,6 @@ document.addEventListener("DOMContentLoaded", function () {
   Showdeleted = urlParams.get("showdeleted") === "1";
 
   // Load Inital Data
+  await loadFiltersDropdown();
   applyFilter();
-  reloadData();
 });
