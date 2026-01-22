@@ -1,7 +1,7 @@
 package main
 
 import (
-	"net"
+	"log"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -14,6 +14,7 @@ import (
 	"gitea.locker98.com/locker98/Store-Manager-Pro/db"
 	"gitea.locker98.com/locker98/Store-Manager-Pro/devices"
 	"gitea.locker98.com/locker98/Store-Manager-Pro/routes"
+	"gitea.locker98.com/locker98/Store-Manager-Pro/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -51,12 +52,27 @@ func main() {
 	w := a.NewWindow("Local IP Addresses")
 	w.Resize(fyne.NewSize(300, 400))
 
+	icon, err := fyne.LoadResourceFromPath("static/icon.png")
+	if err != nil {
+		panic(err)
+	}
+
+	w.SetIcon(icon)
+
 	// Build IP list UI
-	ipList := container.NewVBox(
-		widget.NewLabel("Click an IP to open http://IP:8080"),
+
+	title := widget.NewLabelWithStyle(
+		"Store Manager Pro",
+		fyne.TextAlignLeading,
+		fyne.TextStyle{Bold: true},
 	)
 
-	for _, ip := range getLocalIPs() {
+	ipList := container.NewVBox(
+		title,
+		widget.NewLabel("Click on IP the interface"),
+	)
+
+	for _, ip := range utils.GetLocalIPs() {
 		ip := ip // capture
 		btn := widget.NewButton(ip, func() {
 			u, _ := url.Parse("http://" + ip + ":8080")
@@ -80,6 +96,13 @@ func main() {
 				w.RequestFocus()
 			}),
 			fyne.NewMenuItemSeparator(),
+			fyne.NewMenuItem("Open Database Folder", func() {
+				err := utils.OpenFileExplorer(appDir)
+				if err != nil {
+					log.Println("Failed to open file explorer:", err)
+				}
+			}),
+			fyne.NewMenuItemSeparator(),
 			fyne.NewMenuItem("Quit", func() {
 				a.Quit()
 			}),
@@ -88,52 +111,5 @@ func main() {
 	}
 
 	// Start hidden
-	w.Hide()
-	a.Run()
-}
-
-func getLocalIPs() []string {
-	var ips []string
-
-	ifaces, err := net.Interfaces()
-	if err != nil {
-		return ips
-	}
-
-	for _, iface := range ifaces {
-		if iface.Flags&net.FlagUp == 0 {
-			continue
-		}
-		if iface.Flags&net.FlagLoopback != 0 {
-			continue
-		}
-
-		addrs, err := iface.Addrs()
-		if err != nil {
-			continue
-		}
-
-		for _, addr := range addrs {
-			var ip net.IP
-			switch v := addr.(type) {
-			case *net.IPNet:
-				ip = v.IP
-			case *net.IPAddr:
-				ip = v.IP
-			}
-
-			if ip == nil || ip.IsLoopback() {
-				continue
-			}
-
-			ip = ip.To4()
-			if ip == nil {
-				continue
-			}
-
-			ips = append(ips, ip.String())
-		}
-	}
-
-	return ips
+	w.ShowAndRun()
 }

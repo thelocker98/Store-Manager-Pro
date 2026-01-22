@@ -3,6 +3,8 @@ function loadVendors() {
   axios.get("/api/vendors").then((res) => {
     const tbody = document.querySelector("#vendorsTable tbody");
     tbody.innerHTML = "";
+    if (!res.data) return;
+
     res.data.forEach((vendors) => {
       tbody.innerHTML += `
           <tr onclick="editVendor(${vendors.vendor_id})" class="avalible">

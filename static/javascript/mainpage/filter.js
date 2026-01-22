@@ -53,7 +53,6 @@ function applyFilter() {
 }
 
 function removeFilter(filterKey) {
-  console.log(filterKey);
   if (filterKey == "vendor") {
     document.getElementById("vendorSelector").value = 0;
   }
@@ -92,10 +91,12 @@ async function loadFiltersDropdown() {
     select.append(new Option("Not Assigned To Vendor", 1));
     VendorLabels.set(1, "Not Assigned To Vendor");
 
-    vendorsRes.data.forEach((v) => {
-      select.append(new Option(v.vendor_name, v.vendor_id));
-      VendorLabels.set(v.vendor_id, v.vendor_name);
-    });
+    if (Array.isArray(vendorsRes.data)) {
+      vendorsRes.data.forEach((v) => {
+        select.append(new Option(v.vendor_name, v.vendor_id));
+        VendorLabels.set(v.vendor_id, v.vendor_name);
+      });
+    }
 
     select.value = Vendor;
   }
@@ -110,10 +111,12 @@ async function loadFiltersDropdown() {
     select.append(new Option("Not Assigned To List", 1));
     LocationLabels.set(1, "Not Assigned To List");
 
-    locationsRes.data.forEach((l) => {
-      select.append(new Option(l.location_name, l.location_id));
-      LocationLabels.set(l.location_id, l.location_name);
-    });
+    if (Array.isArray(locationsRes.data)) {
+      locationsRes.data.forEach((l) => {
+        select.append(new Option(l.location_name, l.location_id));
+        LocationLabels.set(l.location_id, l.location_name);
+      });
+    }
 
     select.value = Location;
   }
@@ -128,10 +131,12 @@ async function loadFiltersDropdown() {
     select.append(new Option("Not Assigned To Department", 1));
     DepartmentLabels.set(1, "Not Assigned To Department");
 
-    departmentsRes.data.forEach((d) => {
-      select.append(new Option(d.department_name, d.department_id));
-      DepartmentLabels.set(d.department_id, d.department_name);
-    });
+    if (Array.isArray(departmentsRes.data)) {
+      departmentsRes.data.forEach((d) => {
+        select.append(new Option(d.department_name, d.department_id));
+        DepartmentLabels.set(d.department_id, d.department_name);
+      });
+    }
 
     select.value = Department;
   }
@@ -144,10 +149,12 @@ async function loadFiltersDropdown() {
     select.append(new Option("All", 0));
     ListLabels.set(0, "All");
 
-    listsRes.data.forEach((l) => {
-      select.append(new Option(l.list_name, l.list_id));
-      ListLabels.set(l.list_id, l.list_name);
-    });
+    if (Array.isArray(listsRes.data)) {
+      listsRes.data.forEach((l) => {
+        select.append(new Option(l.list_name, l.list_id));
+        ListLabels.set(l.list_id, l.list_name);
+      });
+    }
 
     select.value = Listid;
   }

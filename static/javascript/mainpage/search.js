@@ -81,8 +81,6 @@ function openPriceSection(item) {
   document.getElementById("priceSectionPrice").textContent =
     "Price:" + formatPrice(item.price, item.weighed);
   document.getElementById("priceSection").style.display = "block";
-
-  console.log(item);
 }
 
 function closePriceSection() {
