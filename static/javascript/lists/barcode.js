@@ -24,7 +24,7 @@ function connectWebSocket() {
     document.getElementById("searchInput").value = val;
 
     // Perform the search
-    reloadData();
+    searchListItems(true);
   };
 
   // Set the link to the barcode reader to red to show there is a problem with the websocket

@@ -45,7 +45,11 @@ func main() {
 	go devices.Devices()
 
 	// Start Server on Port 8080
-	go r.Run(":8080")
+	go func() {
+		if err := r.Run(":8080"); err != nil {
+			os.Exit(0)
+		}
+	}()
 
 	//---------------------------------------------------
 	a := app.New()

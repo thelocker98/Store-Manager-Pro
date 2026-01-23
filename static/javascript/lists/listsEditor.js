@@ -107,10 +107,10 @@ function saveListName() {
 }
 
 function reloadData() {
-  searchListItems();
+  searchListItems(false);
 }
 
-function searchListItems() {
+function searchListItems(UseScanner) {
   const query = document.getElementById("searchInput").value;
   const tbody = document.querySelector("#searchResultsTable tbody");
 
@@ -124,13 +124,24 @@ function searchListItems() {
 
   axios
     .get(
-      `/api/search/${encodeURIComponent(query)}?showdeleted=${ShowDeleted}&orderby=${OrderBy}&page=0&pagesize=10&vendor=${Vendor}&location=${Location}&department=${Department}&filterlist_id=${Listid}`,
+      `/api/search/${encodeURIComponent(query)}?showdeleted=${ShowDeleted}&orderby=${OrderBy}&page=0&pagesize=10&vendor=${Vendor}&location=${Location}&department=${Department}&filterlist_id=${Listid}&list_id=${ListID}`,
     )
     .then((res) => {
       // assuming API returns an array of items
       const items = res.data;
 
       if (!items) {
+        return;
+      }
+
+      if (items.length == 1 && UseScanner) {
+        if (items[0].entry_id == -1) {
+          addToList(items[0].item_id);
+        } else {
+          // Item exits so add another
+          incrementListEntry(items[0].entry_id);
+        }
+        reloadData();
         return;
       }
 
@@ -272,7 +283,11 @@ document.addEventListener("DOMContentLoaded", function () {
   if (searchInput) {
     searchInput.addEventListener("keypress", function (e) {
       if (e.key === "Enter") {
-        searchListItems();
+        if (document.getElementById("searchInput").value == "") {
+          resetSearchList();
+        } else {
+          searchListItems();
+        }
       }
     });
   }
