@@ -141,7 +141,6 @@ function searchListItems(UseScanner) {
           // Item exits so add another
           incrementListEntry(items[0].entry_id);
         }
-        reloadData();
         return;
       }
 

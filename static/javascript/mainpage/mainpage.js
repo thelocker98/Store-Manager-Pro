@@ -98,12 +98,14 @@ function loadVendors() {
     opt.text = "Not Assigned";
     select.appendChild(opt);
 
-    res.data.forEach((v) => {
-      const opt = document.createElement("option");
-      opt.value = v.vendor_id;
-      opt.text = v.vendor_name;
-      select.appendChild(opt);
-    });
+    if (Array.isArray(res.data)) {
+      res.data.forEach((v) => {
+        const opt = document.createElement("option");
+        opt.value = v.vendor_id;
+        opt.text = v.vendor_name;
+        select.appendChild(opt);
+      });
+    }
   });
 }
 
@@ -118,12 +120,14 @@ function loadLocations() {
     opt.text = "Not Assigned";
     select.appendChild(opt);
 
-    res.data.forEach((v) => {
-      const opt = document.createElement("option");
-      opt.value = v.location_id;
-      opt.text = v.location_name;
-      select.appendChild(opt);
-    });
+    if (Array.isArray(res.data)) {
+      res.data.forEach((v) => {
+        const opt = document.createElement("option");
+        opt.value = v.location_id;
+        opt.text = v.location_name;
+        select.appendChild(opt);
+      });
+    }
   });
 }
 
