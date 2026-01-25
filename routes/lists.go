@@ -13,7 +13,9 @@ import (
 
 // GetLists returns all lists in JSON
 func GetLists(c *gin.Context) {
-	lists, err := db.GetLists()
+	departmentID, err := strconv.Atoi(c.Param("departmentid"))
+
+	lists, err := db.GetLists(departmentID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

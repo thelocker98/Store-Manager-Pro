@@ -3,7 +3,7 @@ async function loadItems() {
   closePriceSection();
 
   const res = await axios.get(
-    `/api/items?page=${page}&pagesize=${pageSize}&showdeleted=${ShowDeleted}&vendor=${Vendor}&location=${Location}&department=${Department}&list_id=${Listid}&orderby=${OrderBy}`,
+    `/api/items?page=${page}&pagesize=${pageSize}&showdeleted=${ShowDeleted}&vendor=${Vendor}&location=${Location}&department=${GlobalDepartment}&list_id=${Listid}&orderby=${OrderBy}`,
   );
   const items = res.data;
 
@@ -111,7 +111,7 @@ function loadVendors() {
 
 // Populate Vendors selector
 function loadLocations() {
-  return axios.get("/api/locations").then((res) => {
+  return axios.get("/api/locations/" + String(GlobalDepartment)).then((res) => {
     const select = document.getElementById("popup_items_locationselector");
     select.innerHTML = "";
 
@@ -137,6 +137,13 @@ document.addEventListener("DOMContentLoaded", async function () {
   const priceInput = document.getElementById("popup_items_price");
   const filterDropDown = document.getElementById("filter-dropdown-menu");
   const itemsPerPageSelector = document.getElementById("itemsPerPageSelector");
+  const addItemButton = document.getElementById("addItemButton");
+
+  if (GlobalDepartment == 0) {
+    addItemButton.disabled = true;
+  } else {
+    addItemButton.disabled = false;
+  }
 
   itemsPerPageSelector.addEventListener("change", (e) => {
     pageSize = e.target.value;

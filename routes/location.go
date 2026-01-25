@@ -11,7 +11,8 @@ import (
 
 // GetLocations returns all items in JSON
 func GetLocations(c *gin.Context) {
-	location, err := db.GetAllLocations()
+	departmentID, err := strconv.Atoi(c.Param("departmentid"))
+	location, err := db.GetAllLocations(departmentID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

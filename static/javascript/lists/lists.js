@@ -1,9 +1,17 @@
 async function renderLists() {
-  const res = await axios.get(`/api/lists`);
+  if (GlobalDepartment == 0) {
+    document.getElementById("addListButton").disabled = true;
+  } else {
+    document.getElementById("addListButton").disabled = false;
+  }
+
+  const res = await axios.get(`/api/lists/d/${GlobalDepartment}`);
   const lists = res.data;
 
   const container = document.getElementById("listsContainer");
   container.innerHTML = "";
+
+  if (!Array.isArray(lists)) return;
 
   lists.forEach((list) => {
     const card = document.createElement("div");
@@ -74,6 +82,7 @@ function closeList() {
 function createNewList() {
   const list = {
     list_name: document.getElementById("popup_list_title").value,
+    department_id: GlobalDepartment,
   };
 
   axios

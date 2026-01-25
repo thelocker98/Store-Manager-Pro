@@ -17,14 +17,12 @@ function applyFilter() {
 
   const vendorFilter = document.getElementById("vendorSelector");
   const locationFilter = document.getElementById("locationSelector");
-  const departmentFilter = document.getElementById("departmentSelector");
   const listFilter = document.getElementById("listSelector");
   const orderByFilter = document.getElementById("orderBySelector");
   const showDeletedFilter = document.getElementById("showDeletedCheckbox");
 
   Vendor = vendorFilter.value || 0;
   Location = locationFilter.value || 0;
-  Department = departmentFilter.value || 0;
   Listid = listFilter.value || 0;
   OrderBy = orderByFilter.value || 0;
   ShowDeleted = showDeletedFilter.checked || 0;
@@ -37,9 +35,6 @@ function applyFilter() {
   }
   if (Location != 0) {
     html += `<span class="filters" onclick="removeFilter('location')">${LocationLabels.get(Number(Location))}</span>`;
-  }
-  if (Department != 0) {
-    html += `<span class="filters" onclick="removeFilter('department')">${DepartmentLabels.get(Number(Department))}</span>`;
   }
   if (Listid != 0) {
     html += `<span class="filters" onclick="removeFilter('list')">${ListLabels.get(Number(Listid))}</span>`;
@@ -59,9 +54,6 @@ function removeFilter(filterKey) {
   if (filterKey == "location") {
     document.getElementById("locationSelector").value = 0;
   }
-  if (filterKey == "department") {
-    document.getElementById("departmentSelector").value = 0;
-  }
   if (filterKey == "list") {
     document.getElementById("listSelector").value = 0;
   }
@@ -73,13 +65,11 @@ function removeFilter(filterKey) {
 }
 
 async function loadFiltersDropdown() {
-  const [vendorsRes, locationsRes, departmentsRes, listsRes] =
-    await Promise.all([
-      axios.get("/api/vendors"),
-      axios.get("/api/locations"),
-      axios.get("/api/departments"),
-      axios.get("/api/lists"),
-    ]);
+  const [vendorsRes, locationsRes, listsRes] = await Promise.all([
+    axios.get("/api/vendors"),
+    axios.get("/api/locations/" + String(GlobalDepartment)),
+    axios.get("/api/lists/d/" + String(GlobalDepartment)),
+  ]);
 
   // Vendors
   {
@@ -108,8 +98,8 @@ async function loadFiltersDropdown() {
 
     select.append(new Option("All", 0));
     LocationLabels.set(0, "All");
-    select.append(new Option("Not Assigned To List", 1));
-    LocationLabels.set(1, "Not Assigned To List");
+    select.append(new Option("Not Assigned To Location", 1));
+    LocationLabels.set(1, "Not Assigned To Location");
 
     if (Array.isArray(locationsRes.data)) {
       locationsRes.data.forEach((l) => {
@@ -119,26 +109,6 @@ async function loadFiltersDropdown() {
     }
 
     select.value = Location;
-  }
-
-  // Departments
-  {
-    const select = document.getElementById("departmentSelector");
-    select.innerHTML = "";
-
-    select.append(new Option("All", 0));
-    DepartmentLabels.set(0, "All");
-    select.append(new Option("Not Assigned To Department", 1));
-    DepartmentLabels.set(1, "Not Assigned To Department");
-
-    if (Array.isArray(departmentsRes.data)) {
-      departmentsRes.data.forEach((d) => {
-        select.append(new Option(d.department_name, d.department_id));
-        DepartmentLabels.set(d.department_id, d.department_name);
-      });
-    }
-
-    select.value = Department;
   }
 
   // Lists

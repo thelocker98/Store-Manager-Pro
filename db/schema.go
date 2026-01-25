@@ -10,7 +10,7 @@ func createTables() {
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		vendor_id INTEGER DEFAULT 1,
 		location_id INTEGER DEFAULT 1,
-		department_id INTEGER DEFAULT 1,
+		department_id INTEGER NOT NULL,
 		upc TEXT,
 		invoice_number TEXT,
 		name TEXT,
@@ -24,6 +24,7 @@ func createTables() {
 		deleted BOOL DEFAULT FALSE,
 		FOREIGN KEY(vendor_id) REFERENCES vendors(vendor_id),
 		FOREIGN KEY(location_id) REFERENCES locations(location_id)
+		FOREIGN KEY(department_id) REFERENCES departments(department_id)
 	);
 	`
 
@@ -82,7 +83,9 @@ func createTables() {
 	query = `
 	CREATE TABLE IF NOT EXISTS locations (
 		location_id INTEGER PRIMARY KEY AUTOINCREMENT,
-		location_name TEXT NOT NULL UNIQUE
+		location_name TEXT NOT NULL UNIQUE,
+		department_id INTEGER NOT NULL,
+		FOREIGN KEY(department_id) REFERENCES departments(department_id)
 	);
 	`
 	_, err = DB.Exec(query)
@@ -105,7 +108,9 @@ func createTables() {
 		CREATE TABLE IF NOT EXISTS lists (
 			list_id INTEGER PRIMARY KEY AUTOINCREMENT,
 			list_name TEXT NOT NULL UNIQUE,
-			created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+			department_id INTEGER NOT NULL,
+			created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			FOREIGN KEY(department_id) REFERENCES departments(department_id)
 		);
 		`
 

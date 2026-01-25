@@ -6,6 +6,17 @@ function loadListName() {
     .get(`/api/lists/${ListID}`)
     .then((res) => {
       display.textContent = res.data.list_name;
+
+      // if department_id is not equal to all departments and it is in the wrong department relative to the list then exit to the listpage
+      if (res.data.department_id != GlobalDepartment && GlobalDepartment != 0) {
+        window.location.href = "/lists";
+      }
+
+      if (GlobalDepartment == 0) {
+        document.getElementById("searchControls").style.display = "none";
+      } else {
+        document.getElementById("searchControls").style.display = "flex";
+      }
     })
     .catch((err) => {
       console.log("error updating list name in database");
@@ -34,13 +45,16 @@ function loadList() {
     items.forEach((item) => {
       const row = document.createElement("tr");
 
-      row.innerHTML = `
+      var html = `
                 <td>${item.location_name || ""}</td>
                 <td>${item.brand || ""}</td>
                 <td>${item.name || ""}</td>
                 <td>${item.description || ""}</td>
                 <td>${formatPrice(item.price, item.weighed) || ""}</td>
-                <td style="width: 110px; font-size: 25px;">
+                `;
+      if (GlobalDepartment != 0) {
+        html += `
+                <td style="width: 110px; font-size: 25px;" class="controls">
                     <div style="display: flex; align-items: center; justify-content: space-between;">
                         <div class="material-symbol hoverExpand" onclick="deincrementListEntry(${item.entry_id})" style="cursor: pointer; font-size:25px;">&#xE15B;</div>
                         <span>${item.list_count}</span>
@@ -49,6 +63,11 @@ function loadList() {
                     </div>
                 </td>
             `;
+      } else {
+        html += `<td></td>`;
+      }
+
+      row.innerHTML = html;
 
       tbody.appendChild(row);
     });
@@ -124,7 +143,7 @@ function searchListItems(UseScanner) {
 
   axios
     .get(
-      `/api/search/${encodeURIComponent(query)}?showdeleted=${ShowDeleted}&orderby=${OrderBy}&page=0&pagesize=10&vendor=${Vendor}&location=${Location}&department=${Department}&filterlist_id=${Listid}&list_id=${ListID}`,
+      `/api/search/${encodeURIComponent(query)}?showdeleted=${ShowDeleted}&orderby=${OrderBy}&page=0&pagesize=10&vendor=${Vendor}&location=${Location}&department=${getCookie("defaultDepartment") || 0}&filterlist_id=${Listid}&list_id=${ListID}`,
     )
     .then((res) => {
       // assuming API returns an array of items

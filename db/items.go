@@ -9,10 +9,10 @@ import (
 
 func AddItem(item models.Inventory) error {
 	query := `
-	INSERT INTO inventory (vendor_id, location_id, upc, invoice_number, name, brand, description, price, weighed, count)
-	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+	INSERT INTO inventory (vendor_id, location_id, department_id, upc, invoice_number, name, brand, description, price, weighed, count)
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 	`
-	_, err := DB.Exec(query, item.VendorID, item.LocationID, item.UPC, item.InvoiceNumber, item.Name, item.Brand, item.Description, item.Price, item.Weighed, item.Count)
+	_, err := DB.Exec(query, item.VendorID, item.LocationID, item.DepartmentID, item.UPC, item.InvoiceNumber, item.Name, item.Brand, item.Description, item.Price, item.Weighed, item.Count)
 	return err
 }
 
@@ -32,6 +32,7 @@ func GetAllItems(page int, pageSize int, showDeleted bool, vendor int, location 
 		v.vendor_name,
 		l.location_id,
 		l.location_name,
+		i.department_id,
 		i.upc,
 		i.invoice_number,
 		i.brand,
@@ -39,7 +40,7 @@ func GetAllItems(page int, pageSize int, showDeleted bool, vendor int, location 
 		i.description,
 		i.price,
 		i.weighed,
-		i.count,
+		COALESCE(i.count, 0) AS count,
 		i.deleted,
 		i.arrived_at,
 		i.soldout_at,
@@ -100,6 +101,7 @@ func GetAllItems(page int, pageSize int, showDeleted bool, vendor int, location 
 			&i.VendorName,
 			&i.LocationID,
 			&i.LocationName,
+			&i.DepartmentID,
 			&i.UPC,
 			&i.InvoiceNumber,
 			&i.Brand,

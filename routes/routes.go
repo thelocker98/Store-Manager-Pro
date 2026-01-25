@@ -37,13 +37,13 @@ func RegisterRoutes(r *gin.Engine) {
 		api.DELETE("/vendors/:id", DeleteVendor) // Delete an vendor
 
 		// Locations
-		api.GET("/locations", GetLocations)          // List all locations
-		api.POST("/locations", AddLocation)          // Add a new location
-		api.PUT("/locations/:id", UpdateLocation)    // Update an location
-		api.DELETE("/locations/:id", DeleteLocation) // Delete an location
+		api.GET("/locations/:departmentid", GetLocations) // List all locations
+		api.POST("/locations", AddLocation)               // Add a new location
+		api.PUT("/locations/:id", UpdateLocation)         // Update an location
+		api.DELETE("/locations/:id", DeleteLocation)      // Delete an location
 
 		// Lists
-		api.GET("/lists", GetLists)                           // Get All Lists with their name, id, date
+		api.GET("/lists/d/:departmentid", GetLists)           // Get All Lists with their name, id, date
 		api.GET("/lists/:listid", GetListById)                // Get List Using its ID
 		api.GET("/lists/count/:listid", GetNumberOfItemsList) // Get Number of Items in a given list
 		api.POST("/lists", AddList)                           // Add a new List

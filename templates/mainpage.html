@@ -9,6 +9,7 @@
 
         <script src="/static/javascript/axios.min.js"></script>
         <script src="/static/javascript/general.js"></script>
+        <script src="/static/javascript/departments.js"></script>
         <script src="/static/javascript/mainpage/mainpage.js"></script>
         <script src="/static/javascript/mainpage/filter.js"></script>
         <script src="/static/javascript/mainpage/edit_popup.js"></script>
@@ -22,6 +23,10 @@
         <header class="app-header">
             <div class="header-left">
                 <span class="logo">Store Manager Pro</span>
+                <select
+                    id="departmentPageSelector"
+                    class="departmentSelector"
+                ></select>
             </div>
 
             <nav class="header-nav">
@@ -120,14 +125,6 @@
                         </div>
 
                         <div class="filterOptions">
-                            <span>Department</span>
-                            <select
-                                id="departmentSelector"
-                                class="filterSelector"
-                            ></select>
-                        </div>
-
-                        <div class="filterOptions">
                             <span>List</span>
                             <select
                                 id="listSelector"
@@ -165,6 +162,7 @@
                     <button
                         style="margin-right: 40px"
                         onclick="openAdditemPopup()"
+                        id="addItemButton"
                         class="addItem"
                     >
                         Add Item

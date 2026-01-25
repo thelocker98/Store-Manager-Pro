@@ -1,18 +1,27 @@
 package db
 
 import (
+	"fmt"
+
 	"gitea.locker98.com/locker98/Store-Manager-Pro/models"
 )
 
-func GetLists() ([]models.List, error) {
+func GetLists(listid int) ([]models.List, error) {
 	query := `
 	SELECT
 		l.list_id,
 		l.list_name,
+		l.department_id,
 		COALESCE(COUNT(ld.list_count), 0) AS total_items,
 		l.created_at
 	FROM lists l
 	LEFT JOIN list_data ld ON l.list_id = ld.list_id
+	`
+	if listid != 0 {
+		query += `WHERE department_id = ` + fmt.Sprint(listid)
+	}
+
+	query += `
 	GROUP BY l.list_id, l.list_name, l.created_at
 	ORDER BY l.list_id DESC;
 	`
@@ -30,6 +39,7 @@ func GetLists() ([]models.List, error) {
 		err := rows.Scan(
 			&l.ListID,
 			&l.ListName,
+			&l.DepartmentID,
 			&l.TotalCount,
 			&l.CreatedAt,
 		)
@@ -46,6 +56,7 @@ func GetListById(listID int) (models.List, error) {
 	SELECT
 		list_id,
 		list_name,
+		department_id,
 		created_at
 	FROM lists
 	WHERE list_id = ?;
@@ -55,6 +66,7 @@ func GetListById(listID int) (models.List, error) {
 	err := DB.QueryRow(query, listID).Scan(
 		&list.ListID,
 		&list.ListName,
+		&list.DepartmentID,
 		&list.CreatedAt,
 	)
 
@@ -86,10 +98,10 @@ func GetNumberOfItemsList(listID int) (int, error) {
 
 func AddList(list models.List) error {
 	query := `
-	INSERT INTO lists (list_name)
-	VALUES (?);
+	INSERT INTO lists (list_name, department_id)
+	VALUES (?, ?);
 	`
-	_, err := DB.Exec(query, list.ListName)
+	_, err := DB.Exec(query, list.ListName, list.DepartmentID)
 	return err
 }
 

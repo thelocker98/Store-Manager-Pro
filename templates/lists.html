@@ -9,6 +9,7 @@
 
         <script src="/static/javascript/axios.min.js"></script>
         <script src="/static/javascript/general.js"></script>
+        <script src="/static/javascript/departments.js"></script>
         <script src="/static/javascript/lists/lists.js"></script>
         <script src="/static/javascript/lists/print.js"></script>
     </head>
@@ -17,6 +18,10 @@
         <header class="app-header">
             <div class="header-left">
                 <span class="logo">Store Manager Pro</span>
+                <select
+                    id="departmentPageSelector"
+                    class="departmentSelector"
+                ></select>
             </div>
 
             <nav class="header-nav">
@@ -45,7 +50,11 @@
 
         <main id="main" class="app-container">
             <h2>Lists</h2>
-            <button class="add-list-btn" onclick="openList()">
+            <button
+                class="add-list-btn"
+                id="addListButton"
+                onclick="openList()"
+            >
                 + Create New List
             </button>
 

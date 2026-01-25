@@ -26,7 +26,7 @@ async function reloadData() {
   }
 
   // Find out number of pages for result
-  numberOfPages = Math.ceil(entryCount / pageSize);
+  numberOfPages = Math.ceil(entryCount / pageSize) || 1;
 
   // Clamp page to max
   if (page > numberOfPages) page = entryCount;

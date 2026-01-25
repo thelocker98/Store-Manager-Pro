@@ -114,6 +114,7 @@ function submitAdditemsEntryPopup(e) {
       document.getElementById("popup_items_locationselector").value,
       10,
     ),
+    department_id: GlobalDepartment,
     name: document.getElementById("popup_items_name").value,
     brand: document.getElementById("popup_items_brand").value,
     description: document.getElementById("popup_items_description").value,

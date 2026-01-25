@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -42,7 +41,7 @@ func CountItems(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, `{"count":`+fmt.Sprint(count)+`}`)
+	c.JSON(http.StatusOK, gin.H{"count": count})
 }
 
 // Get Single Item

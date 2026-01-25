@@ -90,6 +90,15 @@ function hideDisconnectPopup() {
   popup.style.display = "none";
 }
 
+function getCookie(name) {
+  return Number(
+    document.cookie
+      .split("; ")
+      .find((row) => row.startsWith(name + "="))
+      ?.split("=")[1],
+  );
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   document.body.appendChild(overlay);
   document.body.appendChild(popup);

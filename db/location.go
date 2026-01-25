@@ -2,29 +2,35 @@ package db
 
 import (
 	"errors"
+	"fmt"
 
 	"gitea.locker98.com/locker98/Store-Manager-Pro/models"
 )
 
 func AddLocationEntry(location models.Location) error {
 	query := `
-	INSERT INTO locations (location_name)
-	VALUES (?)
+	INSERT INTO locations (location_name, department_id)
+	VALUES (?, ?)
 	`
-	_, err := DB.Exec(query, location.LocationName)
+	_, err := DB.Exec(query, location.LocationName, location.DepartmentID)
 	return err
 }
 
-func GetAllLocations() ([]models.Location, error) {
+func GetAllLocations(departmentid int) ([]models.Location, error) {
 	query := `
 	SELECT
 		l.location_id,
 		l.location_name,
-		(SELECT COALESCE(COUNT(i.id), 0)
-		 FROM inventory AS i
-	     WHERE i.location_id = l.location_id) AS total_items
-	FROM locations AS l
-	WHERE location_id != 1
+		l.department_id,
+			(SELECT COALESCE(COUNT(i.id), 0)
+			 FROM inventory AS i
+		     WHERE i.location_id = l.location_id) AS total_items
+		FROM locations AS l
+		WHERE l.location_id != 1 `
+	if departmentid != 0 {
+		query += `AND l.department_id = ` + fmt.Sprint(departmentid)
+	}
+	query += `
 	ORDER BY location_id DESC
 	`
 
@@ -37,7 +43,7 @@ func GetAllLocations() ([]models.Location, error) {
 	var locations []models.Location
 	for rows.Next() {
 		var l models.Location
-		rows.Scan(&l.LocationID, &l.LocationName, &l.LocationItemCount)
+		rows.Scan(&l.LocationID, &l.LocationName, &l.DepartmentID, &l.LocationItemCount)
 		locations = append(locations, l)
 	}
 	return locations, nil

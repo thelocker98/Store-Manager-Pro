@@ -1,8 +1,17 @@
 // Load all Locations
 function loadLocations() {
-  axios.get("/api/locations").then((res) => {
+  axios.get("/api/locations/" + String(GlobalDepartment)).then((res) => {
     const tbody = document.querySelector("#locationsTable tbody");
     tbody.innerHTML = "";
+
+    if (!Array.isArray(res.data)) return;
+
+    if (GlobalDepartment == 0) {
+      document.getElementById("addLocationForm").style.display = "none";
+    } else {
+      document.getElementById("addLocationForm").style.display = "block";
+    }
+
     res.data.forEach((locations) => {
       tbody.innerHTML += `
           <tr onclick="editLocation(${locations.location_id})" class="avalible">
@@ -23,6 +32,7 @@ function addLocation(e) {
   e.preventDefault();
   const locations = {
     location_name: document.getElementById("location_name").value,
+    department_id: GlobalDepartment,
   };
   axios
     .post("/api/locations", locations)
@@ -69,7 +79,7 @@ loadLocations();
 // Open the edit popup and fill fields
 function editLocation(id) {
   axios
-    .get("/api/locations")
+    .get("/api/locations/" + String(GlobalDepartment))
     .then((res) => {
       const location = res.data.find((i) => i.location_id === id);
       if (!location) return;

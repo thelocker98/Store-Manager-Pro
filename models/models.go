@@ -8,6 +8,7 @@ type Inventory struct {
 	ItemID        int        `json:"item_id"`
 	VendorID      int        `json:"vendor_id"`
 	LocationID    int        `json:"location_id"`
+	DepartmentID  int        `json:"department_id"`
 	UPC           string     `json:"upc"`
 	InvoiceNumber string     `json:"invoice_number"`
 	Brand         string     `json:"brand"`
@@ -26,6 +27,7 @@ type InventoryAll struct {
 	VendorID      int        `json:"vendor_id"`
 	VendorName    string     `json:"vendor_name"`
 	LocationID    int        `json:"location_id"`
+	DepartmentID  int        `json:"department_id"`
 	LocationName  string     `json:"location_name"`
 	UPC           string     `json:"upc"`
 	InvoiceNumber string     `json:"invoice_number"`
@@ -52,6 +54,7 @@ type Vendor struct {
 type Location struct {
 	LocationID        int    `json:"location_id"`
 	LocationName      string `json:"location_name"`
+	DepartmentID      int    `json:"department_id"`
 	LocationItemCount int    `json:"location_item_count"`
 }
 
@@ -62,10 +65,11 @@ type Department struct {
 }
 
 type List struct {
-	ListID     int        `json:"list_id"`
-	ListName   string     `json:"list_name"`
-	TotalCount int        `json:"total_count"`
-	CreatedAt  *time.Time `json:"created_at"`
+	ListID       int        `json:"list_id"`
+	ListName     string     `json:"list_name"`
+	DepartmentID int        `json:"department_id"`
+	TotalCount   int        `json:"total_count"`
+	CreatedAt    *time.Time `json:"created_at"`
 }
 
 type ListEntry struct {
