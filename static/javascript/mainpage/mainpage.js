@@ -115,10 +115,12 @@ function loadLocations() {
     const select = document.getElementById("popup_items_locationselector");
     select.innerHTML = "";
 
-    const opt = document.createElement("option");
-    opt.value = 1;
-    opt.text = "Not Assigned";
-    select.appendChild(opt);
+    if (res.data.length > 1) {
+      const opt = document.createElement("option");
+      opt.value = 1;
+      opt.text = "Not Assigned";
+      select.appendChild(opt);
+    }
 
     if (Array.isArray(res.data)) {
       res.data.forEach((v) => {
@@ -127,6 +129,13 @@ function loadLocations() {
         opt.text = v.location_name;
         select.appendChild(opt);
       });
+    }
+
+    if (res.data.length == 1) {
+      const opt = document.createElement("option");
+      opt.value = 1;
+      opt.text = "Not Assigned";
+      select.appendChild(opt);
     }
   });
 }
