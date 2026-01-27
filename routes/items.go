@@ -52,6 +52,7 @@ func GetItemById(c *gin.Context) {
 		return
 	}
 	items, err := db.GetItemById(id)
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "no rows found"})
 		return
@@ -90,6 +91,27 @@ func UpdateItem(c *gin.Context) {
 	}
 
 	if err := db.UpdateItem(id, item); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Item updated"})
+}
+
+func UpdateItemDepartment(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+		return
+	}
+
+	var item models.Inventory
+	if err := c.ShouldBindJSON(&item); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := db.UpdateItemDepartment(id, item); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

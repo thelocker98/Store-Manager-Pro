@@ -21,3 +21,11 @@
 1-17-26         4 Hours
 1-18-26         2 Hours
 1-19-26         5 Hours
+1-20-26         4 Hours
+1-21-26         1 Hours
+1-22-26         0.5 Hours
+1-23-26         0.5 Hours
+1-24-26         2 Hours
+1-25-26         4 Hours
+1-26-26         3 Hours
+1-27-26         4 Hours

@@ -49,12 +49,16 @@ function openAdditemPopup() {
 async function openEdititemsEntry(id) {
   // Load vendor selector
   await loadVendors();
-  await loadLocations();
 
-  // Check that entry exists in database
-  axios.get(`/api/items/${id}`).then((res) => {
+  try {
+    // Check that entry exists in database
+    const res = await axios.get(`/api/items/${id}`);
+
     const itemsEntry = res.data;
     if (!itemsEntry) return;
+
+    // Load locations based on department
+    await loadLocations(itemsEntry.department_id);
 
     // Set Title
     document.getElementById("itemPopupHeader").textContent = "Edit Item Entry";
@@ -97,7 +101,9 @@ async function openEdititemsEntry(id) {
 
     document.getElementById("itemPopup").style.display = "block";
     document.getElementById("itemsOverlay").style.display = "block";
-  });
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 // Add items Entry from Popup
@@ -168,7 +174,7 @@ function submitEdititemsEntry(e) {
       document.getElementById("popup_items_vendorselector").value,
       10,
     ),
-    Location_id: parseInt(
+    location_id: parseInt(
       document.getElementById("popup_items_locationselector").value,
       10,
     ),

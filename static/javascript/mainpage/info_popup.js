@@ -12,6 +12,9 @@ function openInfo(id) {
     if (item.invoice_number != "") {
       html += `<strong>Invoice Number:</strong> ${item.invoice_number}<br />`;
     }
+
+    html += `<strong>Department:</strong> ${item.department_name}`;
+
     if (item.location_id != 1) {
       html += `<br /><strong>Location:</strong> ${item.location_name}`;
     }
@@ -41,6 +44,16 @@ function openInfo(id) {
 
     document.getElementById("infoContent").innerHTML = html;
 
+    // Make sure Buttons are Visible if they were hidden in the move department Dialog
+    document.getElementById("infoEditBtn").style.display = "inline-block";
+    document.getElementById("infoDeleteBtn").style.display = "inline-block";
+    document.getElementById("infoEditBtn").style.display = "inline-block";
+    document.getElementById("infoChangeDepartmenBtn").textContent =
+      "Department";
+
+    // Hide Submit
+    document.getElementById("submitDepartmentChange").style.display = "none";
+
     // Check if the Item has already been marked as deleted
     if (item.deleted) {
       // Edit to Restore button
@@ -52,6 +65,9 @@ function openInfo(id) {
         "Delete Permanently";
       document.getElementById("infoDeleteBtn").onclick = () =>
         deleteItemPermanent(item.item_id);
+
+      // Hide Department button
+      document.getElementById("infoChangeDepartmenBtn").style.display = "none";
     } else {
       // Restore to Edit button
       document.getElementById("infoEditBtn").textContent = "Edit";
@@ -61,6 +77,12 @@ function openInfo(id) {
       document.getElementById("infoDeleteBtn").textContent = "Delete";
       document.getElementById("infoDeleteBtn").onclick = () =>
         deleteItem(item.item_id);
+
+      // Show Department button and add onclick
+      document.getElementById("infoChangeDepartmenBtn").style.display =
+        "inline-block";
+      document.getElementById("infoChangeDepartmenBtn").onclick = () =>
+        moveDepartment(item.item_id);
     }
 
     document.getElementById("infoPopup").style.display = "block";

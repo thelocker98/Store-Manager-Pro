@@ -33,6 +33,7 @@ func GetAllItems(page int, pageSize int, showDeleted bool, vendor int, location 
 		l.location_id,
 		l.location_name,
 		i.department_id,
+		d.department_name,
 		i.upc,
 		i.invoice_number,
 		i.brand,
@@ -48,6 +49,7 @@ func GetAllItems(page int, pageSize int, showDeleted bool, vendor int, location 
 	FROM inventory i
 	JOIN vendors v ON i.vendor_id = v.vendor_id
 	JOIN locations l ON i.location_id = l.location_id
+	JOIN departments d ON i.department_id = d.department_id
 	`
 	if listId != 0 {
 		query += `LEFT JOIN list_data ld ON i.id = ld.item_id AND ld.list_id = ` + fmt.Sprint(listId)
@@ -102,6 +104,7 @@ func GetAllItems(page int, pageSize int, showDeleted bool, vendor int, location 
 			&i.LocationID,
 			&i.LocationName,
 			&i.DepartmentID,
+			&i.DepartmentName,
 			&i.UPC,
 			&i.InvoiceNumber,
 			&i.Brand,
@@ -150,6 +153,8 @@ func GetItemById(id int) (models.InventoryAll, error) {
 		v.vendor_name,
 		l.location_id,
 		l.location_name,
+		i.department_id,
+		d.department_name,
 		i.upc,
 		i.invoice_number,
 		i.brand,
@@ -157,13 +162,14 @@ func GetItemById(id int) (models.InventoryAll, error) {
 		i.description,
 		i.price,
 		i.weighed,
-		i.count,
+		COALESCE(i.count, 0) AS count,
 		i.deleted,
 		i.arrived_at,
 		i.soldout_at
 	FROM inventory i
 	JOIN vendors v ON i.vendor_id = v.vendor_id
 	JOIN locations l ON i.location_id = l.location_id
+	JOIN departments d ON i.department_id = d.department_id
 	WHERE i.id = ?;
 	`
 
@@ -174,6 +180,8 @@ func GetItemById(id int) (models.InventoryAll, error) {
 		&item.VendorName,
 		&item.LocationID,
 		&item.LocationName,
+		&item.DepartmentID,
+		&item.DepartmentName,
 		&item.UPC,
 		&item.InvoiceNumber,
 		&item.Brand,
@@ -201,6 +209,17 @@ func UpdateItem(id int, item models.Inventory) error {
 	WHERE id = ?;
 	`
 	_, err := DB.Exec(query, item.VendorID, item.LocationID, item.UPC, item.InvoiceNumber, item.Brand, item.Name, item.Description, item.Price, item.Weighed, item.Count, item.Deleted, item.ArrivedAt, item.SoldOutAt, id)
+	return err
+}
+
+func UpdateItemDepartment(id int, item models.Inventory) error {
+	fmt.Println(id, item)
+	query := `
+	UPDATE inventory
+	SET location_id = ?, department_id = ?
+	WHERE id = ?;
+	`
+	_, err := DB.Exec(query, item.LocationID, item.DepartmentID, id)
 	return err
 }
 

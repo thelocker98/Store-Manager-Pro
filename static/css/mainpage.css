@@ -79,7 +79,7 @@ tbody tr:hover {
     padding: 20px;
     z-index: 100;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    min-width: 300px;
+    min-width: 350px;
 }
 
 /* iframe CSS */

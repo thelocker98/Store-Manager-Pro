@@ -109,9 +109,15 @@ function loadVendors() {
   });
 }
 
-// Populate Vendors selector
-function loadLocations() {
-  return axios.get("/api/locations/" + String(GlobalDepartment)).then((res) => {
+// Populate Location selector
+function loadLocations(DepartmentID) {
+  console.log(DepartmentID);
+  var department_id = GlobalDepartment;
+  if (DepartmentID != 0 && DepartmentID != undefined) {
+    department_id = DepartmentID;
+  }
+
+  return axios.get("/api/locations/" + String(department_id)).then((res) => {
     const select = document.getElementById("popup_items_locationselector");
     select.innerHTML = "";
 

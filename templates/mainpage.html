@@ -14,6 +14,7 @@
         <script src="/static/javascript/mainpage/filter.js"></script>
         <script src="/static/javascript/mainpage/edit_popup.js"></script>
         <script src="/static/javascript/mainpage/info_popup.js"></script>
+        <script src="/static/javascript/mainpage/movedepartment.js"></script>
         <script src="/static/javascript/mainpage/pagemanagement.js"></script>
         <script src="/static/javascript/mainpage/search.js"></script>
         <script src="/static/javascript/mainpage/barcode.js"></script>
@@ -257,9 +258,14 @@
                 <div id="infoContent"></div>
 
                 <br />
-                <div>
-                    <button id="infoEditBtn">Edit</button>
-                    <button id="infoDeleteBtn">Delete</button>
+                <div style="display: flex; justify-content: space-between">
+                    <div>
+                        <button id="infoEditBtn">Edit</button>
+                        <button id="infoChangeDepartmenBtn">Department</button>
+                        <button id="infoDeleteBtn">Delete</button>
+                    </div>
+
+                    <button id="submitDepartmentChange">Save</button>
                     <button onclick="closeInfo()">Close</button>
                 </div>
                 <p id="infoError" class="errorText"></p>

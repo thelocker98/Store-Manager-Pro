@@ -26,9 +26,10 @@ func RegisterRoutes(r *gin.Engine) {
 		api.GET("/items/:id", GetItemById)                      // Get item by id
 		api.POST("/items", AddItem)                             // Add a new item
 		api.PUT("/items/:id", UpdateItem)                       // Update an item
+		api.PUT("/items/department/:id", UpdateItemDepartment)  // Update Deparmtent and Location on item
 		api.DELETE("/items/:id", DeleteItem)                    // Delete an item
-		api.GET("/items/restore/:id", RestoreItem)              // Delete an item
-		api.DELETE("/items/permanent/:id", DeleteItemPermanent) // Delete an item
+		api.GET("/items/restore/:id", RestoreItem)              // Restore an item
+		api.DELETE("/items/permanent/:id", DeleteItemPermanent) // Permentently Delete an item
 
 		// Vendors
 		api.GET("/vendors", GetVendors)          // List all vendors
