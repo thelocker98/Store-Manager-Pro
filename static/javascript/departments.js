@@ -30,7 +30,8 @@ function updateDepartment() {
     document.getElementById("departmentPageSelector").value,
   );
 
-  document.cookie = "defaultDepartment=" + GlobalDepartment + "; path=/";
+  document.cookie =
+    "defaultDepartment=" + GlobalDepartment + "; max-age=315360000; path=/";
   window.location.reload();
 }
 
