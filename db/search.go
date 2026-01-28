@@ -34,7 +34,7 @@ func SearchItems(search string, list_id int, page int, pageSize int, showdeleted
 			i.description,
 			i.price,
 			i.weighed,
-			i.count,
+			COALESCE(i.count, 0) AS count,
 			i.deleted,
 			i.arrived_at,
 			i.soldout_at,

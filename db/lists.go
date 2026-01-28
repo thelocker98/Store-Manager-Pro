@@ -54,12 +54,14 @@ func GetLists(listid int) ([]models.List, error) {
 func GetListById(listID int) (models.List, error) {
 	query := `
 	SELECT
-		list_id,
-		list_name,
-		department_id,
-		created_at
-	FROM lists
-	WHERE list_id = ?;
+		l.list_id,
+		l.list_name,
+		l.department_id,
+		d.department_name,
+		l.created_at
+	FROM lists l
+	JOIN departments d ON l.department_id = d.department_id
+	WHERE l.list_id = ?;
 	`
 
 	var list models.List
@@ -67,6 +69,7 @@ func GetListById(listID int) (models.List, error) {
 		&list.ListID,
 		&list.ListName,
 		&list.DepartmentID,
+		&list.DepartmentName,
 		&list.CreatedAt,
 	)
 
@@ -138,7 +141,7 @@ func GetListEntrys(listID int) ([]models.ListEntryAll, error) {
 		i.description,
 		i.price,
 		i.weighed,
-		i.count,
+		COALESCE(ld.list_count, 0) AS list_count,
 		i.deleted
 	FROM list_data ld
 	JOIN lists l on ld.list_id = l.list_id
@@ -204,7 +207,7 @@ func GetListEntryById(listID int) (models.ListEntryAll, error) {
 		i.description,
 		i.price,
 		i.weighed,
-		i.count,
+		COALESCE(i.count, 0) AS count,
 		i.deleted
 	FROM list_data ld
 	JOIN lists l on ld.list_id = l.list_id

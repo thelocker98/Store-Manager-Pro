@@ -67,11 +67,12 @@ type Department struct {
 }
 
 type List struct {
-	ListID       int        `json:"list_id"`
-	ListName     string     `json:"list_name"`
-	DepartmentID int        `json:"department_id"`
-	TotalCount   int        `json:"total_count"`
-	CreatedAt    *time.Time `json:"created_at"`
+	ListID         int        `json:"list_id"`
+	ListName       string     `json:"list_name"`
+	DepartmentID   int        `json:"department_id"`
+	DepartmentName string     `json:"department_name"`
+	TotalCount     int        `json:"total_count"`
+	CreatedAt      *time.Time `json:"created_at"`
 }
 
 type ListEntry struct {

@@ -181,7 +181,7 @@ func ExportListPDF(c *gin.Context) {
 	}
 
 	// setup colum sizes on pdf
-	widths := []float64{130, 200, 155, 70}
+	widths := []float64{60, 95, 200, 130, 65}
 
 	// Setup pdf page
 	pdf := fpdf.New("P", "pt", "Letter", "") // 560
@@ -205,15 +205,18 @@ func ExportListPDF(c *gin.Context) {
 	pdf.SetFont("Arial", "", 15)
 	pdf.Cell(180, 10, "Created: "+list.CreatedAt.Local().Format("01/02/2006"))
 
-	pdf.Cell(0, 10, "Printed: "+time.Now().Format("01/02/2006"))
+	pdf.Cell(190, 10, "Printed: "+time.Now().Format("01/02/2006"))
+
+	pdf.Cell(0, 10, "Department: "+list.DepartmentName)
 	pdf.Ln(30)
 
 	// Create collum names
 	pdf.SetFont("Arial", "B", 18)
-	pdf.CellFormat(widths[0], 20, "Location", "1", 0, "C", false, 0, "")
-	pdf.CellFormat(widths[1], 20, "Name", "1", 0, "C", false, 0, "")
-	pdf.CellFormat(widths[2], 20, "Brand", "1", 0, "C", false, 0, "")
-	pdf.CellFormat(widths[3], 20, "Price", "1", 0, "C", false, 0, "")
+	pdf.CellFormat(widths[0], 20, "Count", "1", 0, "C", false, 0, "")
+	pdf.CellFormat(widths[1], 20, "Location", "1", 0, "C", false, 0, "")
+	pdf.CellFormat(widths[2], 20, "Name", "1", 0, "C", false, 0, "")
+	pdf.CellFormat(widths[3], 20, "Brand", "1", 0, "C", false, 0, "")
+	pdf.CellFormat(widths[4], 20, "Price", "1", 0, "C", false, 0, "")
 
 	// Move to the next line and set font type and size
 	pdf.Ln(-1)
@@ -235,6 +238,7 @@ func ExportListPDF(c *gin.Context) {
 		lineHeight := 19.0
 
 		texts := []string{
+			fmt.Sprint(list_datum.Count),
 			list_datum.LocationName,
 			list_datum.Name,
 			list_datum.Brand,
@@ -268,7 +272,10 @@ func ExportListPDF(c *gin.Context) {
 		pdf.MultiCell(widths[2], lineHeight, texts[2], "", "L", false)
 		pdf.SetXY(x+widths[0]+widths[1]+widths[2], y)
 
-		pdf.CellFormat(widths[3], rowHeight, texts[3], "", 0, "R", false, 0, "")
+		pdf.MultiCell(widths[3], lineHeight, texts[3], "", "L", false)
+		pdf.SetXY(x+widths[0]+widths[1]+widths[2]+widths[3], y)
+
+		pdf.CellFormat(widths[4], rowHeight, texts[4], "", 0, "R", false, 0, "")
 
 		pdf.Ln(-1)
 	}
