@@ -1,3 +1,6 @@
+// Values
+var BarcodeValue = "";
+
 // Automatically use ws or wss based on page protocol
 const protocol = window.location.protocol === "https:" ? "wss" : "ws";
 const wsUrl = `${protocol}://${window.location.host}/api/ws`;
@@ -18,7 +21,7 @@ function connectWebSocket() {
 
   socket.onmessage = (event) => {
     // Remove the first and last character of the barcode result before searching it
-    val = event.data.slice(1, event.data.length - 2);
+    BarcodeValue = event.data;
 
     // Check if the info overlay or the item overlay is active so that searchs don't take place in the background
     if (
@@ -26,8 +29,17 @@ function connectWebSocket() {
       document.getElementById("itemsOverlay").style.display == "none"
     ) {
       // Set search feild to barcode reader value
-      document.getElementById("searchInput").value = val;
-      // Perform the search
+      // If the item begans with a 2 then ignore the last 5 digits
+      if (BarcodeValue.slice(0, 1) == "2") {
+        document.getElementById("searchInput").value =
+          BarcodeValue.slice(1, BarcodeValue.length - 6) + "00000";
+      } else {
+        document.getElementById("searchInput").value = BarcodeValue.slice(
+          1,
+          BarcodeValue.length - 1,
+        );
+      }
+
       reloadData();
 
       // Check it the item overlay is active to automatically fill in the upc value with the barcode value
@@ -35,7 +47,16 @@ function connectWebSocket() {
       document.getElementById("itemsOverlay").style.display != "none"
     ) {
       // fill in the upc value with the barcode reader result
-      document.getElementById("popup_items_upc").value = val;
+      // If the item begans with a 2 then ignore the last 5 digits
+      if (BarcodeValue.slice(0, 1) == "2") {
+        document.getElementById("popup_items_upc").value =
+          BarcodeValue.slice(0, BarcodeValue.length - 6) + "00000";
+      } else {
+        document.getElementById("popup_items_upc").value = BarcodeValue.slice(
+          0,
+          BarcodeValue.length - 1,
+        );
+      }
     }
   };
 

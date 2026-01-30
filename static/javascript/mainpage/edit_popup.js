@@ -14,7 +14,13 @@ function openAdditemPopup() {
   // This chunk of code checks if the search field has only numbers and
   // if their is no result found and it this is true it will automatically
   // fill in the upc field on the create item popup
-  searchupc = document.getElementById("searchInput").value;
+
+  if (BarcodeValue.slice(0, 1) == "2") {
+    searchupc = BarcodeValue.slice(0, BarcodeValue.length - 6) + "00000";
+  } else {
+    searchupc = BarcodeValue.slice(0, BarcodeValue.length - 1);
+  }
+
   if (
     !(
       /^\d+$/.test(searchupc) &&
