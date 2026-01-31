@@ -18,7 +18,17 @@ function connectWebSocket() {
 
   socket.onmessage = (event) => {
     // Remove the first and last character of the barcode result before searching it
-    val = event.data.slice(1, event.data.length - 2);
+    var BarcodeValue = event.data;
+
+    if (BarcodeValue.slice(0, 1) == "2") {
+      document.getElementById("searchInput").value =
+        BarcodeValue.slice(1, BarcodeValue.length - 7) + "00000";
+    } else {
+      document.getElementById("searchInput").value = BarcodeValue.slice(
+        1,
+        BarcodeValue.length - 1,
+      );
+    }
 
     // Set search feild to barcode reader value
     document.getElementById("searchInput").value = val;

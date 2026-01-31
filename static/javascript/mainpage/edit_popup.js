@@ -16,9 +16,9 @@ function openAdditemPopup() {
   // fill in the upc field on the create item popup
 
   if (BarcodeValue.slice(0, 1) == "2") {
-    searchupc = BarcodeValue.slice(0, BarcodeValue.length - 6) + "00000";
+    searchupc = BarcodeValue.slice(0, BarcodeValue.length - 7) + "00000";
   } else {
-    searchupc = BarcodeValue.slice(0, BarcodeValue.length - 1);
+    searchupc = BarcodeValue.slice(0, BarcodeValue.length - 2);
   }
 
   if (

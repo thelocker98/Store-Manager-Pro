@@ -32,7 +32,7 @@ function connectWebSocket() {
       // If the item begans with a 2 then ignore the last 5 digits
       if (BarcodeValue.slice(0, 1) == "2") {
         document.getElementById("searchInput").value =
-          BarcodeValue.slice(1, BarcodeValue.length - 6) + "00000";
+          BarcodeValue.slice(1, BarcodeValue.length - 7) + "00000";
       } else {
         document.getElementById("searchInput").value = BarcodeValue.slice(
           1,
@@ -50,11 +50,11 @@ function connectWebSocket() {
       // If the item begans with a 2 then ignore the last 5 digits
       if (BarcodeValue.slice(0, 1) == "2") {
         document.getElementById("popup_items_upc").value =
-          BarcodeValue.slice(0, BarcodeValue.length - 6) + "00000";
+          BarcodeValue.slice(0, BarcodeValue.length - 7) + "00000";
       } else {
         document.getElementById("popup_items_upc").value = BarcodeValue.slice(
           0,
-          BarcodeValue.length - 1,
+          BarcodeValue.length - 2,
         );
       }
     }
