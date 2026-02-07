@@ -36,7 +36,7 @@ function connectWebSocket() {
       } else {
         document.getElementById("searchInput").value = BarcodeValue.slice(
           1,
-          BarcodeValue.length - 1,
+          BarcodeValue.length - 2,
         );
       }
 

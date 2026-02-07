@@ -3,7 +3,7 @@
 ; Non-commercial use only
 
 #define MyAppName "Store Manger Pro"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.0.1"
 #define MyAppPublisher "Locker98"
 #define MyAppExeName "Store-Manager-Pro.exe"
 

@@ -26,12 +26,12 @@ function connectWebSocket() {
     } else {
       document.getElementById("searchInput").value = BarcodeValue.slice(
         1,
-        BarcodeValue.length - 1,
+        BarcodeValue.length - 2,
       );
     }
 
-    // Set search feild to barcode reader value
-    document.getElementById("searchInput").value = val;
+    // // Set search feild to barcode reader value
+    // document.getElementById("searchInput").value = val;
 
     // Perform the search
     searchListItems(true);
