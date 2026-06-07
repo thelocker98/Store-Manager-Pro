@@ -101,3 +101,26 @@ type ListEntryAll struct {
 	Count         int     `json:"count"`
 	Deleted       bool    `json:"deleted"`
 }
+
+type Invoice struct {
+	InvoiceID      int        `json:"invoice_id"`
+	InvoiceName    string     `json:"invoice_name"`
+	InvoiceType    string     `json:"invoice_type"`
+	DepartmentID   int        `json:"department_id"`
+	DepartmentName string     `json:"department_name"`
+	TotalCount     int        `json:"total_count"`
+	CreatedAt      *time.Time `json:"created_at"`
+}
+
+type InvoiceEntry struct {
+	InvoiceDataID int     `json:"invoice_data_id"`
+	InvoiceID     int     `json:"invoice_id"`
+	RawText       string  `json:"rawtext"`
+	UPC           string  `json:"upc"`
+	Detail        string  `json:"details"`
+	QTY           int     `json:"qty"`
+	ItemCost      float64 `json:"item_cost"`
+	TotalCost     float64 `json:"total_cost"`
+	DiscountCost  float64 `json:"discount_cost"`
+	TrueCost      float64 `json:"true_cost"`
+}

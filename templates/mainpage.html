@@ -24,15 +24,13 @@
         <header class="app-header">
             <div class="header-left">
                 <span class="logo">Store Manager Pro</span>
-                <select
-                    id="departmentPageSelector"
-                    class="departmentSelector"
-                ></select>
+                <select id="departmentPageSelector" class="departmentSelector"></select>
             </div>
 
             <nav class="header-nav">
                 <a href="/" class="nav-link">Inventory</a>
                 <a href="/lists" class="nav-link">Lists</a>
+                <a href="/invoices" class="nav-link">Invoices</a>
 
                 <div class="nav-dropdown">
                     <span class="nav-link dropdown-toggle">Manage ▾</span>
@@ -43,9 +41,7 @@
                     </div>
                 </div>
                 <div class="nav-dropdown">
-                    <span class="nav-link dropdown-toggle"
-                        >Configurations ▾</span
-                    >
+                    <span class="nav-link dropdown-toggle">Configurations ▾</span>
                     <div class="dropdown-menu">
                         <a href="/barcode" class="nav-link">Barcode</a>
                         <a href="/export" class="nav-link">Export</a>
@@ -60,16 +56,10 @@
                 <h2>Inventory</h2>
 
                 <div class="search">
-                    <span
-                        class="material-symbol searchActions"
-                        onclick="reloadData()"
+                    <span class="material-symbol searchActions" onclick="reloadData()"
                         >&#xE8B6;</span
                     >
-                    <input
-                        id="searchInput"
-                        type="search"
-                        placeholder="Search"
-                    />
+                    <input id="searchInput" type="search" placeholder="Search" />
                     <span
                         onclick="resetSearch()"
                         class="searchActions material-symbol"
@@ -90,10 +80,7 @@
                 "
             >
                 <div class="filter-dropdown">
-                    <button
-                        class="filter-dropdown-toggle"
-                        style="margin-right: 20px"
-                    >
+                    <button class="filter-dropdown-toggle" style="margin-right: 20px">
                         Filters
                     </button>
                     <div id="filter-dropdown-menu" class="filter-dropdown-menu">
@@ -101,9 +88,7 @@
                         <div class="filterOptions">
                             <span>Sort By</span>
                             <select id="orderBySelector" class="filterSelector">
-                                <option value="date">
-                                    Sort by Arrived Date
-                                </option>
+                                <option value="date">Sort by Arrived Date</option>
                                 <option value="upc">Sort by UPC</option>
                                 <option value="name">Sort by Name</option>
                             </select>
@@ -111,36 +96,23 @@
 
                         <div class="filterOptions">
                             <span>Location</span>
-                            <select
-                                id="locationSelector"
-                                class="filterSelector"
-                            ></select>
+                            <select id="locationSelector" class="filterSelector"></select>
                         </div>
 
                         <div class="filterOptions">
                             <span>Vendor</span>
-                            <select
-                                id="vendorSelector"
-                                class="filterSelector"
-                            ></select>
+                            <select id="vendorSelector" class="filterSelector"></select>
                         </div>
 
                         <div class="filterOptions">
                             <span>List</span>
-                            <select
-                                id="listSelector"
-                                class="filterSelector"
-                            ></select>
+                            <select id="listSelector" class="filterSelector"></select>
                         </div>
 
                         <div class="filterOptions">
                             <span>Show Deleted Items</span>
                             <label class="switch">
-                                <input
-                                    id="showDeletedCheckbox"
-                                    type="checkbox"
-                                    checked="true"
-                                />
+                                <input id="showDeletedCheckbox" type="checkbox" checked="true" />
                                 <span class="slider"></span>
                             </label>
                         </div>
@@ -150,12 +122,7 @@
                 <div style="display: flex; gap: 8px; flex: 1; min-width: 0">
                     <div
                         id="filterSection"
-                        style="
-                            display: flex;
-                            flex-wrap: wrap;
-                            gap: 6px;
-                            align-items: center;
-                        "
+                        style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center"
                     ></div>
                 </div>
 
@@ -172,9 +139,7 @@
 
                 <div>
                     <!-- Next and Previous buttons for Pages -->
-                    <button id="prevPageBtn" onclick="prevPage()" disabled>
-                        Previous
-                    </button>
+                    <button id="prevPageBtn" onclick="prevPage()" disabled>Previous</button>
                     <span id="pageIndicator">Page 1/1</span>
                     <button id="nextPageBtn" onclick="nextPage()">Next</button>
 
@@ -206,20 +171,13 @@
             </table>
 
             <!-- Spot for add item button when no result is found for search -->
-            <div
-                id="noResultsContainer"
-                style="margin-top: 10px; display: none"
-            >
+            <div id="noResultsContainer" style="margin-top: 10px; display: none">
                 <p id="noResultsText">No Results Found for this search.</p>
             </div>
 
             <div
                 id="bottomContainer"
-                style="
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                "
+                style="display: flex; justify-content: center; align-items: center"
             >
                 <div
                     id="priceSection"
@@ -232,19 +190,10 @@
                         text-align: center;
                     "
                 >
-                    <h1
-                        id="priceSectionTitle"
-                        style="margin: 15px; font-size: 60px"
-                    >
+                    <h1 id="priceSectionTitle" style="margin: 15px; font-size: 60px">
                         Name (Brand)
                     </h1>
-                    <h1
-                        id="priceSectionPrice"
-                        style="margin: 30px; font-size: 80px"
-                        ;
-                    >
-                        Cost
-                    </h1>
+                    <h1 id="priceSectionPrice" style="margin: 30px; font-size: 80px" ;>Cost</h1>
                     <div
                         id="priceSectionInfo"
                         class="justify"
@@ -286,11 +235,7 @@
 
                         <div style="display: flex">
                             <label for="popup_items_brand">Brand:</label>
-                            <input
-                                type="text"
-                                id="popup_items_brand"
-                                required
-                            />
+                            <input type="text" id="popup_items_brand" required />
                         </div>
                     </div>
 
@@ -301,9 +246,7 @@
                         </div>
 
                         <div style="display: flex">
-                            <label for="popup_items_invoicenumber"
-                                >Invoice Number:</label
-                            >
+                            <label for="popup_items_invoicenumber">Invoice Number:</label>
                             <input type="text" id="popup_items_invoicenumber" />
                         </div>
                     </div>
@@ -311,9 +254,7 @@
                     <div style="display: flex; padding: 5px">
                         <!-- Vendor Selector -->
                         <div style="padding-right: 20px">
-                            <label for="popup_items_vendorselector"
-                                >Vendor:</label
-                            >
+                            <label for="popup_items_vendorselector">Vendor:</label>
                             <select
                                 id="popup_items_vendorselector"
                                 style="
@@ -324,15 +265,11 @@
                                 "
                             ></select>
                         </div>
-                        <button type="button" onclick="openIframe('vendor')">
-                            + Add Vendor
-                        </button>
+                        <button type="button" onclick="openIframe('vendor')">+ Add Vendor</button>
 
                         <!-- Location Box -->
                         <div style="padding-right: 20px">
-                            <label for="popup_items_locationselector"
-                                >Location:</label
-                            >
+                            <label for="popup_items_locationselector">Location:</label>
                             <select
                                 id="popup_items_locationselector"
                                 style="
@@ -349,9 +286,7 @@
                     </div>
 
                     <div style="display: flex; padding: 5px">
-                        <label for="popup_items_description"
-                            >Description:</label
-                        >
+                        <label for="popup_items_description">Description:</label>
                         <textarea
                             id="popup_items_description"
                             style="
@@ -383,10 +318,7 @@
                             </div>
 
                             <div style="display: flex">
-                                <input
-                                    type="checkbox"
-                                    id="popup_items_weighed"
-                                />
+                                <input type="checkbox" id="popup_items_weighed" />
                                 <label for="popup_items_weighed">Weighed</label>
                             </div>
                         </div>
@@ -414,12 +346,8 @@
                     </div>
 
                     <div class="form-actions container">
-                        <button type="button" onclick="closeItemPopup()">
-                            Cancel
-                        </button>
-                        <button id="itemsEntrySubmitButton" type="submit">
-                            Add
-                        </button>
+                        <button type="button" onclick="closeItemPopup()">Cancel</button>
+                        <button id="itemsEntrySubmitButton" type="submit">Add</button>
                     </div>
                 </form>
                 <p id="editError" class="errorText"></p>
@@ -432,10 +360,7 @@
                     src="/vendors?iframe=true"
                     style="width: 100%; height: 100%; border: 0"
                 ></iframe>
-                <button
-                    style="position: absolute; top: 5px; right: 5px"
-                    onclick="closeIframe()"
-                >
+                <button style="position: absolute; top: 5px; right: 5px" onclick="closeIframe()">
                     Close
                 </button>
             </div>

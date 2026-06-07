@@ -17,19 +17,14 @@
         <header class="app-header">
             <div class="header-left">
                 <span class="logo">Store Manager Pro</span>
-                <select
-                    id="departmentPageSelector"
-                    class="departmentSelector"
-                ></select>
+                <select id="departmentPageSelector" class="departmentSelector"></select>
             </div>
 
             <nav class="header-nav">
-                <div class="nav-dropdown">
-                    <a href="/" class="nav-link">Inventory</a>
-                </div>
-                <div class="nav-dropdown">
-                    <a href="/lists" class="nav-link">Lists</a>
-                </div>
+                <a href="/" class="nav-link">Inventory</a>
+                <a href="/lists" class="nav-link">Lists</a>
+                <a href="/invoices" class="nav-link">Invoices</a>
+
                 <div class="nav-dropdown">
                     <span class="nav-link dropdown-toggle">Manage ▾</span>
                     <div class="dropdown-menu">
@@ -39,9 +34,7 @@
                     </div>
                 </div>
                 <div class="nav-dropdown">
-                    <span class="nav-link dropdown-toggle"
-                        >Configurations ▾</span
-                    >
+                    <span class="nav-link dropdown-toggle">Configurations ▾</span>
                     <div class="dropdown-menu">
                         <a href="/barcode" class="nav-link">Barcode</a>
                         <a href="/export" class="nav-link">Export</a>
@@ -54,12 +47,7 @@
             <!-- Add Departments Form -->
             <h2>Departments</h2>
             <form id="addDepartmentForm" onsubmit="addDepartment(event)">
-                <input
-                    type="text"
-                    id="department_name"
-                    placeholder="Department Name"
-                    required
-                />
+                <input type="text" id="department_name" placeholder="Department Name" required />
                 <button type="submit">Add</button>
                 <p id="departmentaddError" class="errorText"></p>
             </form>
@@ -91,25 +79,14 @@
                 "
             >
                 <h2>Edit Department</h2>
-                <form
-                    id="editDepartmentForm"
-                    onsubmit="submitDepartmentEdit(event)"
-                >
+                <form id="editDepartmentForm" onsubmit="submitDepartmentEdit(event)">
                     <input type="hidden" id="editDepartmentId" />
 
                     <label for="editDepartmentName">Department</label><br />
-                    <input
-                        type="text"
-                        id="editDepartmentName"
-                        required
-                    /><br /><br />
+                    <input type="text" id="editDepartmentName" required /><br /><br />
 
-                    <button type="button" onclick="closeDepartmentEdit()">
-                        Cancel
-                    </button>
-                    <button id="departmentDeleteButton" type="button">
-                        Delete
-                    </button>
+                    <button type="button" onclick="closeDepartmentEdit()">Cancel</button>
+                    <button id="departmentDeleteButton" type="button">Delete</button>
                     <button type="submit">Save</button>
                     <p id="departmentinfoError" class="errorText"></p>
                 </form>

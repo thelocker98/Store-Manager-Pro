@@ -137,4 +137,44 @@ func createTables() {
 	if err != nil {
 		panic(err)
 	}
+
+	// Invoice Table
+	query = `
+		CREATE TABLE IF NOT EXISTS invoices (
+			invoice_id INTEGER PRIMARY KEY AUTOINCREMENT,
+			invoice_name TEXT NOT NULL UNIQUE,
+			invoice_type TEXT NOT NULL,
+			department_id INTEGER NOT NULL,
+			created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			FOREIGN KEY(department_id) REFERENCES departments(department_id)
+		);
+		`
+
+	_, err = DB.Exec(query)
+	if err != nil {
+		panic(err)
+	}
+
+	// Invoice Entrys Table
+	query = `
+		CREATE TABLE IF NOT EXISTS invoice_data (
+			invoice_data_id INTEGER PRIMARY KEY AUTOINCREMENT,
+			invoice_id INTEGER NOT NULL,
+			rawtext STRING NOT NULL,
+			upc STRING,
+			details STRING,
+			qty INTEGER,
+			item_cost FLOAT,
+			total_cost FLOAT,
+			discount_cost FLOAT,
+			true_cost FLOAT,
+			FOREIGN KEY(invoice_id) REFERENCES invoices(invoice_id) ON DELETE CASCADE,
+			UNIQUE (invoice_data_id, invoice_id)
+		);
+		`
+
+	_, err = DB.Exec(query)
+	if err != nil {
+		panic(err)
+	}
 }

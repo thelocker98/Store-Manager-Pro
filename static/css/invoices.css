@@ -1,0 +1,176 @@
+.invoices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.invoice-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.invoice-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: var(--buttoncolor);
+}
+
+.invoice-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 12px;
+}
+
+.invoice-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.invoice-card-print {
+    font-size: 25px;
+    font-weight: 500;
+    transition: transform 0.2s ease;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.invoice-card-print:hover {
+    transform: scale(1.45);
+    font-weight: 500;
+}
+
+.invoice-card-delete {
+    font-size: 25px;
+    font-weight: 500;
+    transition: transform 0.2s ease;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.invoice-card-delete:hover {
+    transform: scale(1.45);
+    font-weight: 500;
+}
+
+.invoice-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid #f0f0f0;
+    font-size: 14px;
+    color: #999;
+}
+
+.import-invoice-btn {
+    background: var(--buttoncolor);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background 0.2s;
+}
+
+.import-invoice-btn:hover {
+    background: var(--buttonaccent);
+}
+
+.app-container {
+    padding: 28px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Search Box*/
+.search {
+    --padding: 10px;
+
+    width: max-content;
+    display: flex;
+    align-items: center;
+    padding: var(--padding);
+    border-radius: 30px;
+    background-color: #eee;
+    transition: box-shadow 0.25s;
+}
+
+.search:focus-within {
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.searchActions {
+    font-size: 20px;
+    font-weight: 500;
+    transition: transform 0.2s ease;
+    display: inline-block;
+    cursor: pointer;
+}
+.searchActions:hover {
+    transform: scale(1.35);
+    font-weight: 500;
+}
+
+#searchInput {
+    font-size: 16px;
+    font-family: sans-serif;
+    margin-left: var(--padding);
+    outline: none;
+    border: none;
+    background: transparent;
+    width: 300px;
+}
+
+/* Invoice Popup CSS */
+.invoicePopup {
+    border-radius: 10px;
+    font-size: 20px;
+    display: flex;
+    overflow: hidden;
+    position: fixed;
+    display: none;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--bg);
+    border: 1px solid #ccc;
+    padding: 20px;
+    z-index: 100;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    min-width: 400px;
+}
+
+#popup_invoice_title {
+    border-radius: var(--radius);
+    overflow: hidden;
+    padding: 5px;
+    width: 250px;
+    font-size: 20px;
+}
+
+/*page entrys*/
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+#itemsPerPageSelector {
+    border-radius: var(--radius);
+    overflow: hidden;
+    padding: 5px;
+    width: 60px;
+}

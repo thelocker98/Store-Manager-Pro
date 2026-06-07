@@ -6,7 +6,7 @@ import (
 	"gitea.locker98.com/locker98/Store-Manager-Pro/models"
 )
 
-func GetLists(listid int) ([]models.List, error) {
+func GetLists(departmentid int) ([]models.List, error) {
 	query := `
 	SELECT
 		l.list_id,
@@ -17,8 +17,8 @@ func GetLists(listid int) ([]models.List, error) {
 	FROM lists l
 	LEFT JOIN list_data ld ON l.list_id = ld.list_id
 	`
-	if listid != 0 {
-		query += `WHERE department_id = ` + fmt.Sprint(listid)
+	if departmentid != 0 {
+		query += `WHERE department_id = ` + fmt.Sprint(departmentid)
 	}
 
 	query += `

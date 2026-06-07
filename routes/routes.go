@@ -8,14 +8,16 @@ import (
 // We will implement these in routes/inventory.go
 func RegisterRoutes(r *gin.Engine) {
 	// Page
-	r.GET("/", LoadHome)                    // Home page
-	r.GET("/vendors", LoadVendor)           // Vendors Page
-	r.GET("/locations", LoadLocation)       // Locations Page
-	r.GET("/departments", LoadDepartments)  // Department Page
-	r.GET("/lists", LoadLists)              // List Page
-	r.GET("/lists/:listid", LoadListEditor) // Update a List name
-	r.GET("/barcode", LoadBarcode)          // Barcode Page
-	r.GET("/export", LoadExport)            // Export Page
+	r.GET("/", LoadHome)                             // Home page
+	r.GET("/vendors", LoadVendor)                    // Vendors Page
+	r.GET("/locations", LoadLocation)                // Locations Page
+	r.GET("/departments", LoadDepartments)           // Department Page
+	r.GET("/lists", LoadLists)                       // List Page
+	r.GET("/lists/:listid", LoadListEditor)          // List Entry Page
+	r.GET("/invoices", LoadInvoices)                 // Invoice Page
+	r.GET("/invoices/:invoiceid", LoadInvoiceEditor) // Invoice Entry Page
+	r.GET("/barcode", LoadBarcode)                   // Barcode Page
+	r.GET("/export", LoadExport)                     // Export Page
 
 	// API group
 	api := r.Group("/api")
@@ -57,6 +59,20 @@ func RegisterRoutes(r *gin.Engine) {
 		api.POST("/listentrys/:listid", AddEntryToList)         // Add a new Entry to an existing List
 		api.PUT("/listentrys/:entryid", UpdateEntryInList)      // Update Entry in an existing List
 		api.DELETE("/listentrys/:entryid", DeleteEntryFromList) // Delete Entry From A existing List
+
+		// Invoices
+		api.GET("/invoices/d/:departmentid", GetInvoices) // Get All Invoices with their name, Id, date
+		api.GET("/invoices/:invoiceid", GetInvoiceById)   // Get Invoice Using its ID
+		api.POST("/invoices", AddInvoice)                 // Add a new Invoice
+		api.PUT("/invoices/:invoiceid", UpdateInvoice)    // Update a Invoice name
+		api.DELETE("/invoices/:invoiceid", DeleteInvoice) // Delete a Invoice
+
+		// Invoice Entrys
+		api.GET("/invoiceentrys/:invoiceid", GetInvoiceEntrys)        // Get All Entrys in a Invoice
+		api.GET("/invoiceentry/:entryid", GetInvoiceEntryById)        // Get Individual Entry by entry id in a Invoice
+		api.POST("/invoiceentrys/:invoiceid", AddEntryToInvoice)      // Add a new Entry to an existing Invoice
+		api.PUT("/invoiceentrys/:entryid", UpdateEntryInInvoice)      // Update Entry in an existing Invoice
+		api.DELETE("/invoiceentrys/:entryid", DeleteEntryFromInvoice) // Delete Entry From A existing Invoice
 
 		// Departments
 		api.GET("/departments", GetDepartments)         // List all departments
