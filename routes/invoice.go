@@ -94,17 +94,36 @@ func DeleteInvoice(c *gin.Context) {
 
 // GetInvoiceEntrys returns all entrys in a list
 func GetInvoiceEntrys(c *gin.Context) {
-	invoiceID, err := strconv.Atoi(c.Param("invoiceid"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid invoice id"})
+	invoiceID, err0 := strconv.Atoi(c.Param("invoiceid"))
+	page, err1 := strconv.Atoi(c.DefaultQuery("page", "1"))
+	pageSize, err2 := strconv.Atoi(c.DefaultQuery("pagesize", "50"))
+
+	if err0 != nil || err1 != nil || err2 != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid invoice id or page data"})
 		return
 	}
-	invoices, err := db.GetInvoiceEntrys(invoiceID)
+	invoices, err := db.GetInvoiceEntrys(invoiceID, page, pageSize)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, invoices)
+}
+
+// GetItems returns all items in JSON
+func GetInvoiceEntryCount(c *gin.Context) {
+	invoiceID, err := strconv.Atoi(c.Param("invoiceid"))
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid invoice id"})
+		return
+	}
+	count, err := db.CountAllInvoiceEntrys(invoiceID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"count": count})
 }
 
 // GetInvoiceEntryById returns an entrys in a invoice by id

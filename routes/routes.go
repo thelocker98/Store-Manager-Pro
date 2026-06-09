@@ -68,11 +68,12 @@ func RegisterRoutes(r *gin.Engine) {
 		api.DELETE("/invoices/:invoiceid", DeleteInvoice) // Delete a Invoice
 
 		// Invoice Entrys
-		api.GET("/invoiceentrys/:invoiceid", GetInvoiceEntrys)        // Get All Entrys in a Invoice
-		api.GET("/invoiceentry/:entryid", GetInvoiceEntryById)        // Get Individual Entry by entry id in a Invoice
-		api.POST("/invoiceentrys/:invoiceid", AddEntryToInvoice)      // Add a new Entry to an existing Invoice
-		api.PUT("/invoiceentrys/:entryid", UpdateEntryInInvoice)      // Update Entry in an existing Invoice
-		api.DELETE("/invoiceentrys/:entryid", DeleteEntryFromInvoice) // Delete Entry From A existing Invoice
+		api.GET("/invoiceentrys/:invoiceid", GetInvoiceEntrys)           // Get All Entrys in a Invoice
+		api.GET("/invoiceentrys/count/:invoiceid", GetInvoiceEntryCount) // Get Count of how many Entrys in Invoice
+		api.GET("/invoiceentry/:entryid", GetInvoiceEntryById)           // Get Individual Entry by entry id in a Invoice
+		api.POST("/invoiceentrys/:invoiceid", AddEntryToInvoice)         // Add a new Entry to an existing Invoice
+		api.PUT("/invoiceentrys/:entryid", UpdateEntryInInvoice)         // Update Entry in an existing Invoice
+		api.DELETE("/invoiceentrys/:entryid", DeleteEntryFromInvoice)    // Delete Entry From A existing Invoice
 
 		// Departments
 		api.GET("/departments", GetDepartments)         // List all departments

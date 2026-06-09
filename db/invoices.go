@@ -98,7 +98,7 @@ func AddInvoice(invoice models.Invoice) error {
 
 func UpdateInvoice(invoiceID int, invoice models.Invoice) error {
 	query := `
-	UPDATE invoice
+	UPDATE invoices
 	SET invoice_name = ?
 	WHERE invoice_id = ?;
 	`
@@ -115,7 +115,15 @@ func DeleteInvoice(invoiceID int) error {
 	return err
 }
 
-func GetInvoiceEntrys(invoiceID int) ([]models.InvoiceEntry, error) {
+func GetInvoiceEntrys(invoiceID int, page int, pageSize int) ([]models.InvoiceEntry, error) {
+	if page < 1 {
+		page = 1
+	}
+	if pageSize < 1 {
+		pageSize = 50
+	}
+	offset := (page - 1) * pageSize
+
 	query := `
 	SELECT
 		id.invoice_data_id,
@@ -127,13 +135,15 @@ func GetInvoiceEntrys(invoiceID int) ([]models.InvoiceEntry, error) {
 		id.item_cost,
 		id.total_cost,
 		id.discount_cost,
-		id.true_cost
+		id.true_cost,
+		COUNT(*) OVER() AS total_items
 	FROM invoice_data id
 	WHERE id.invoice_id = ?
-	ORDER BY id.qty DESC;
+	ORDER BY id.qty DESC
+	LIMIT ? OFFSET ?;
 	`
-
-	rows, err := DB.Query(query, invoiceID)
+	fmt.Println(pageSize, offset)
+	rows, err := DB.Query(query, invoiceID, pageSize, offset)
 
 	if err != nil {
 		return nil, err
@@ -154,6 +164,7 @@ func GetInvoiceEntrys(invoiceID int) ([]models.InvoiceEntry, error) {
 			&i.TotalCost,
 			&i.DiscountCost,
 			&i.TrueCost,
+			&i.Count,
 		)
 		if err != nil {
 			return nil, err
@@ -161,6 +172,23 @@ func GetInvoiceEntrys(invoiceID int) ([]models.InvoiceEntry, error) {
 		invoiceEntrys = append(invoiceEntrys, i)
 	}
 	return invoiceEntrys, nil
+}
+
+func CountAllInvoiceEntrys(invoiceId int) (int, error) {
+	query := `
+	SELECT COUNT(invoice_data_id)
+	FROM invoice_data
+	WHERE invoice_id = ?;
+	`
+
+	var count int
+	err := DB.QueryRow(query, invoiceId).Scan(&count)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
 }
 
 func GetInvoiceEntryById(invoiceID int) (models.InvoiceEntry, error) {

@@ -33,7 +33,7 @@ func GetItems(c *gin.Context) {
 	c.JSON(http.StatusOK, items)
 }
 
-// GetItems returns all items in JSON
+// CountItems returns the number of items in db in JSON
 func CountItems(c *gin.Context) {
 	showDeleted, _ := strconv.ParseBool(c.DefaultQuery("countdeleted", "false")) // default to false
 	count, err := db.CountAllItems(showDeleted)

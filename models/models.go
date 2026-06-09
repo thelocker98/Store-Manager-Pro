@@ -123,4 +123,5 @@ type InvoiceEntry struct {
 	TotalCost     float64 `json:"total_cost"`
 	DiscountCost  float64 `json:"discount_cost"`
 	TrueCost      float64 `json:"true_cost"`
+	Count         int     `json:"count"`
 }

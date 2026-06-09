@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Inventory</title>
+        <link rel="icon" type="image/x-icon" href="/static/icon.ico" />
+        <link rel="stylesheet" href="/static/css/general.css" />
+        <link rel="stylesheet" href="/static/css/invoices.css" />
+
+        <script src="/static/javascript/axios.min.js"></script>
+        <script src="/static/javascript/general.js"></script>
+        <script src="/static/javascript/departments.js"></script>
+        <script src="/static/javascript/invoices/invoiceEditor.js"></script>
+        <script src="/static/javascript/invoices/pagemanagement.js"></script>
+        <script src="/static/javascript/invoices/search.js"></script>
+        <script src="/static/javascript/invoices/barcode.js"></script>
+    </head>
+
+    <body>
+        <header class="app-header">
+            <div class="header-left">
+                <span class="logo">Store Manager Pro</span>
+                <select id="departmentPageSelector" class="departmentSelector"></select>
+            </div>
+
+            <nav class="header-nav">
+                <a href="/invoices" class="nav-link">Back to Invoices</a>
+            </nav>
+        </header>
+
+        <main class="app-container">
+            <div class="page-header" style="display: flex; justify-content: space-between">
+                <div style="display: flex; align-items: center; gap: 10px">
+                    <h2 id="invoiceName" style="user-select: none"></h2>
+                    <input
+                        type="text"
+                        id="invoiceNameInput"
+                        style="
+                            display: none;
+                            font-size: 24px;
+                            font-weight: bold;
+                            padding: 5px;
+                            border-radius: 4px;
+                        "
+                    />
+                    <span
+                        class="material-symbol hoverExpand"
+                        onclick="invoiceEdit()"
+                        style="font-size: 20px; cursor: pointer; color: #666"
+                        >&#xE3C9;</span
+                    >
+                </div>
+            </div>
+            <div class="main-content"></div>
+
+            <!-- Items Table -->
+            <div class="page-header">
+                <h2>Invoice</h2>
+
+                <div class="search">
+                    <span class="material-symbol searchActions" onclick="reloadData()"
+                        >&#xE8B6;</span
+                    >
+                    <input id="searchInput" type="search" placeholder="Search" />
+                    <span
+                        onclick="resetSearch()"
+                        class="searchActions material-symbol"
+                        style="cursor: pointer"
+                    >
+                        &#xE5CD;
+                    </span>
+                </div>
+            </div>
+
+            <div
+                id="paginationControls"
+                style="
+                    margin-top: 15px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                "
+            >
+                <div>
+                    <button
+                        style="margin-right: 40px"
+                        onclick="openAdditemPopup()"
+                        id="addItemButton"
+                        class="addItem"
+                    >
+                        Add Item
+                    </button>
+                </div>
+
+                <div>
+                    <!-- Next and Previous buttons for Pages -->
+                    <button id="prevPageBtn" onclick="prevPage()" disabled>Previous</button>
+                    <span id="pageIndicator">Page 1/1</span>
+                    <button id="nextPageBtn" onclick="nextPage()">Next</button>
+
+                    <!-- Items Per Page Selector -->
+                    <span id="itemsPerPageText">View:</span>
+                    <select id="itemsPerPageSelector">
+                        <option value="2">2</option>
+                        <option value="10">10</option>
+                        <option selected="selected" value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+            </div>
+
+            <table id="invoiceTable">
+                <thead>
+                    <tr>
+                        <th>UPC</th>
+                        <th>QTY</th>
+                        <th>Details</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <!-- Spot for when no result is found for search -->
+            <div id="noResultsContainer" style="margin-top: 10px; display: none">
+                <p id="noResultsText" style="text-align: center">
+                    No Results Found for this search.
+                </p>
+            </div>
+            <!-- Spot for when no result is found for search -->
+            <div id="proccessingInvoice" style="margin-top: 10px; display: none">
+                <p id="proccessingInvoiceText" style="font-size: 50px; text-align: center">
+                    Proccessing Invoice.
+                </p>
+                <p style="font-size: 20px; text-align: center">
+                    Please wait before using using this invoice or adding new invoices to process.
+                </p>
+            </div>
+        </main>
+        <script>
+            const InvoiceID = {{.invoice_id}};
+        </script>
+    </body>
+</html>

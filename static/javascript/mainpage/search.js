@@ -76,8 +76,7 @@ function resetSearch() {
 }
 
 function openPriceSection(item) {
-  document.getElementById("priceSectionTitle").textContent =
-    item.name + " (" + item.brand + ")";
+  document.getElementById("priceSectionTitle").textContent = item.name + " (" + item.brand + ")";
   document.getElementById("priceSectionPrice").textContent =
     "Price:" + formatPrice(item.price, item.weighed);
   document.getElementById("priceSection").style.display = "block";
