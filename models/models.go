@@ -113,7 +113,7 @@ type Invoice struct {
 }
 
 type InvoiceEntry struct {
-	InvoiceDataID int     `json:"invoice_data_id"`
+	InvoiceDataID int     `json:"invoice_entry_id"`
 	InvoiceID     int     `json:"invoice_id"`
 	RawText       string  `json:"rawtext"`
 	UPC           string  `json:"upc"`

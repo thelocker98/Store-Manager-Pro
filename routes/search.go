@@ -38,3 +38,20 @@ func SearchItems(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, items)
 }
+
+func SearchInvoice(c *gin.Context) {
+	// Search Settings
+	searchTerm := c.Param("q")
+
+	// Page Settings
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	pageSize, _ := strconv.Atoi(c.DefaultQuery("pagesize", "50"))
+	invoiceID, _ := strconv.Atoi(c.DefaultQuery("invoice_id", "0"))
+
+	entrys, err := db.SearchInvoice(searchTerm, invoiceID, page, pageSize)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, entrys)
+}

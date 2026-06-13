@@ -28,34 +28,31 @@
             </nav>
         </header>
 
-        <main class="app-container">
-            <div class="page-header" style="display: flex; justify-content: space-between">
-                <div style="display: flex; align-items: center; gap: 10px">
-                    <h2 id="invoiceName" style="user-select: none"></h2>
-                    <input
-                        type="text"
-                        id="invoiceNameInput"
-                        style="
-                            display: none;
-                            font-size: 24px;
-                            font-weight: bold;
-                            padding: 5px;
-                            border-radius: 4px;
-                        "
-                    />
-                    <span
-                        class="material-symbol hoverExpand"
-                        onclick="invoiceEdit()"
-                        style="font-size: 20px; cursor: pointer; color: #666"
-                        >&#xE3C9;</span
-                    >
-                </div>
-            </div>
-            <div class="main-content"></div>
-
+        <main class="app-container" style="max-width: 2000px">
             <!-- Items Table -->
             <div class="page-header">
-                <h2>Invoice</h2>
+                <div class="page-header" style="display: flex; justify-content: space-between">
+                    <div style="display: flex; align-items: center; gap: 10px">
+                        <h2 id="invoiceName" style="user-select: none"></h2>
+                        <input
+                            type="text"
+                            id="invoiceNameInput"
+                            style="
+                                display: none;
+                                font-size: 24px;
+                                font-weight: bold;
+                                padding: 5px;
+                                border-radius: 4px;
+                            "
+                        />
+                        <span
+                            class="material-symbol hoverExpand"
+                            onclick="invoiceEdit()"
+                            style="font-size: 20px; cursor: pointer; color: #666"
+                            >&#xE3C9;</span
+                        >
+                    </div>
+                </div>
 
                 <div class="search">
                     <span class="material-symbol searchActions" onclick="reloadData()"

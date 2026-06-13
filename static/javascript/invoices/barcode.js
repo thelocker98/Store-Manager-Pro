@@ -21,17 +21,10 @@ function connectWebSocket() {
     var BarcodeValue = event.data;
 
     if (BarcodeValue.slice(0, 1) == "2") {
-      document.getElementById("searchInput").value =
-        BarcodeValue.slice(1, BarcodeValue.length - 7) + "00000";
+      document.getElementById("searchInput").value = BarcodeValue.slice(1, BarcodeValue.length - 7); // + "00000";
     } else {
-      document.getElementById("searchInput").value = BarcodeValue.slice(
-        1,
-        BarcodeValue.length - 2,
-      );
+      document.getElementById("searchInput").value = BarcodeValue.slice(1, BarcodeValue.length - 2);
     }
-
-    // // Set search feild to barcode reader value
-    // document.getElementById("searchInput").value = val;
 
     // Perform the search
     searchListItems(true);

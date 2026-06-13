@@ -239,11 +239,10 @@ func AddEntryToInvoice(invoiceEntry models.InvoiceEntry) error {
         discount_cost,
         true_cost
 )
-VALUES
-	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
 	`
 	_, err := DB.Exec(query,
-		invoiceEntry.InvoiceDataID,
+		invoiceEntry.InvoiceID,
 		invoiceEntry.RawText,
 		invoiceEntry.UPC,
 		invoiceEntry.Detail,
@@ -272,7 +271,6 @@ func UpdateEntryInInvoice(entryID int, invoiceEntry models.InvoiceEntry) error {
     WHERE invoice_data_id = ?;
 	`
 	_, err := DB.Exec(query,
-		invoiceEntry.InvoiceDataID,
 		invoiceEntry.RawText,
 		invoiceEntry.UPC,
 		invoiceEntry.Detail,

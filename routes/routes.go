@@ -83,6 +83,7 @@ func RegisterRoutes(r *gin.Engine) {
 
 		// Search
 		api.GET("/search/:q", SearchItems)
+		api.GET("/search/invoice/:q", SearchInvoice)
 
 		// Barcode Websocket
 		api.GET("/ws", BarcodeReaderWS)

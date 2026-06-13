@@ -5,7 +5,7 @@ async function searchItems() {
 
   try {
     const res = await axios.get(
-      `/api/invoice/search/${encodeURIComponent(query)}?page=${page}&pagesize=${pageSize}`,
+      `/api/search/invoice/${encodeURIComponent(query)}?invoice_id=${InvoiceID}&page=${page}&pagesize=${pageSize}`,
     );
 
     // assuming API returns an array of invoice entrys
@@ -20,18 +20,10 @@ async function searchItems() {
       // No results found -> show Add Item button
       tbody.innerHTML = "";
       noResultsContainer.style.display = "block";
-      closeInvoiceDetailSection();
 
       return 1;
     } else {
       noResultsContainer.style.display = "none";
-    }
-
-    // check if their is only one result then show it large
-    if (entrys.length == 1) {
-      openInvoiceDetailSection(entrys[0]);
-    } else {
-      closeInvoiceDetailSection();
     }
 
     // clear table body
@@ -40,6 +32,7 @@ async function searchItems() {
     // Add rows
     entrys.forEach((entry) => {
       const row = document.createElement("tr");
+      row.id = `tr-${entry.invoice_entry_id}`;
 
       var html = `
                   <td>${entry.upc || ""}</td>
@@ -52,10 +45,16 @@ async function searchItems() {
 
       tbody.appendChild(row);
       // Open Info on click
-      row.onclick = () => openInfo(entry.invoice_id);
+      row.onclick = () => openInvoiceEntryEdit(entry.invoice_entry_id);
 
       tbody.appendChild(row);
     });
+
+    // check if their is only one result then show it large
+    if (entrys.length == 1) {
+      openInvoiceEntryEdit(entrys[0].invoice_entry_id);
+    }
+
     return entrys[0].number_of_entrys;
   } catch (error) {
     console.error("Search error:", error);
@@ -77,9 +76,9 @@ function openInvoiceDetailSection(entry) {
   document.getElementById("invoiceDetailSection").style.display = "block";
 }
 
-function closeInvoiceDetailSection() {
-  document.getElementById("invocieDetailSection").style.display = "none";
-}
+// function closeInvoiceDetailSection() {
+//   //document.getElementById("invocieDetailSection").style.display = "none";
+// }
 
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("searchInput");

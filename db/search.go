@@ -121,3 +121,72 @@ func SearchItems(search string, list_id int, page int, pageSize int, showdeleted
 	}
 	return items, nil
 }
+
+func SearchInvoice(search string, invoice_id int, page int, pageSize int) ([]models.InvoiceEntry, error) {
+	// Calculate pages
+	if page < 1 {
+		page = 1
+	}
+	if pageSize < 1 {
+		pageSize = 50
+	}
+	offset := (page - 1) * pageSize
+
+	// Search String
+	search = "%" + strings.ToLower(search) + "%"
+	fmt.Println(invoice_id, search)
+
+	query := `
+		SELECT
+			id.invoice_data_id,
+			id.invoice_id,
+			id.rawtext,
+			id.upc,
+			id.details,
+			id.qty,
+			id.item_cost,
+			id.total_cost,
+			id.discount_cost,
+			id.true_cost,
+			COUNT(*) OVER() AS total_items
+
+		FROM invoice_data id
+		WHERE
+			invoice_id = ? AND (
+				LOWER(id.rawtext)        LIKE ?
+				OR LOWER(id.upc)       LIKE ?
+				OR LOWER(id.details) LIKE ?
+			)
+		ORDER BY id.qty DESC
+		LIMIT ? OFFSET ?;
+	`
+
+	rows, err := DB.Query(query, invoice_id, search, search, search, pageSize, offset)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var entrys []models.InvoiceEntry
+	for rows.Next() {
+		var i models.InvoiceEntry
+		if err := rows.Scan(
+			&i.InvoiceDataID,
+			&i.InvoiceID,
+			&i.RawText,
+			&i.UPC,
+			&i.Detail,
+			&i.QTY,
+			&i.ItemCost,
+			&i.TotalCost,
+			&i.DiscountCost,
+			&i.TrueCost,
+			&i.Count,
+		); err != nil {
+			return nil, err
+		}
+		entrys = append(entrys, i)
+	}
+	return entrys, nil
+}
