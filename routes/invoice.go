@@ -1,8 +1,10 @@
 package routes
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"gitea.locker98.com/locker98/Store-Manager-Pro/db"
 	"gitea.locker98.com/locker98/Store-Manager-Pro/models"
@@ -201,4 +203,31 @@ func DeleteEntryFromInvoice(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "entry deleted from invoice"})
+}
+
+// Manage File Uploads
+func InvoiceFile(c *gin.Context) {
+	invoiceID, err := strconv.Atoi(c.Param("invoiceid"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid invoice id"})
+		return
+	}
+
+	// Get file from form data
+	file, err := c.FormFile("file")
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "file is required"})
+		return
+	}
+
+	// Save file to ./temp
+	timestamp := time.Now().UnixNano()
+	dst := fmt.Sprintf("./temp/%d_%d_%s", invoiceID, timestamp, file.Filename)
+	if err := c.SaveUploadedFile(file, dst); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to save file"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "file uploaded successfully"})
 }

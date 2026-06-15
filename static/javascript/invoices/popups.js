@@ -30,10 +30,9 @@ async function uploadFile(file) {
   // Prepare form data
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("invoice_id", InvoiceID);
 
   try {
-    const response = await fetch(`api/invoice/file/${InvoiceID}`, {
+    const response = await fetch(`/api/invoices/file/${InvoiceID}`, {
       method: "POST",
       body: formData,
     });

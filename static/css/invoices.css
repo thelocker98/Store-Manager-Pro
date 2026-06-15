@@ -179,10 +179,10 @@
 .uploadPopup {
     border-radius: 10px;
     font-size: 20px;
-    display: flex; /* Change from 'block' to 'flex' */
-    flex-direction: column; /* Stack children vertically */
-    justify-content: center; /* Center vertically */
-    align-items: center; /* Center horizontally */
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     overflow: hidden;
     position: fixed;
     top: 50%;
