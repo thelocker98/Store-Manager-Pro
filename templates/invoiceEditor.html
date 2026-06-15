@@ -13,6 +13,7 @@
         <script src="/static/javascript/invoices/invoiceEditor.js"></script>
         <script src="/static/javascript/invoices/pagemanagement.js"></script>
         <script src="/static/javascript/invoices/search.js"></script>
+        <script src="/static/javascript/invoices/popups.js"></script>
         <script src="/static/javascript/invoices/barcode.js"></script>
     </head>
 
@@ -80,12 +81,16 @@
             >
                 <div>
                     <button
-                        style="margin-right: 40px"
+                        style="margin-right: 20px"
                         onclick="openAdditemPopup()"
                         id="addItemButton"
                         class="addItem"
                     >
                         Add Item
+                    </button>
+
+                    <button style="margin-right: 20px" onclick="openUploadPopup()">
+                        Add Invoice PDF
                     </button>
                 </div>
 
@@ -135,6 +140,57 @@
                 </p>
             </div>
         </main>
+
+        <!-- Item Upload Popup -->
+        <div id="uploadPopup" class="uploadPopup">
+            <h2>Upload PDF Invoice</h2>
+            <div
+                id="uploadArea"
+                style="
+                    border-radius: 10px;
+                    border: 2px solid gray;
+                    background-color: lightgoldenrodyellow;
+                    width: 375px;
+                    height: 200px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-direction: column;
+                "
+            >
+                <img
+                    src="/static/assets/file.png"
+                    width="70"
+                    style="filter: grayscale(100%) opacity(0.5); margin-bottom: 10px"
+                />
+                <p style="margin-top: 10px; color: #666">Click or drag PDF here</p>
+            </div>
+
+            <a
+                style="font-size: 8px; color: lightgray"
+                href="https://www.flaticon.com/free-icons/file"
+                title="file icons"
+                >File icons created by Good Ware - Flaticon</a
+            >
+            <p id="uploadMessage"></p>
+        </div>
+
+        <!-- Optional overlay for background -->
+        <div
+            id="uploadOverlay"
+            style="
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 99;
+            "
+            onclick="closeUploadPopup()"
+        ></div>
+
         <script>
             const InvoiceID = {{.invoice_id}};
         </script>

@@ -192,6 +192,7 @@ function openInvoiceEntryEdit(invoice_id) {
 
             <div style="display:flex; justify-content: space-between; width:90%;">
               <button style="padding:10px; width:100px" onclick="cancelInvoiceEntryEdit(${invoice_id})">Close</button>
+              <button style="padding:10px; width:100px" onclick="deleteInvoiceEntryEdit(${invoice_id})">Delete</button>
               <button style="padding:10px; width:100px" onclick="saveInvoiceEntryEdit(${invoice_id})">Save</button>
             </div>
           </div>
@@ -281,6 +282,21 @@ function cancelInvoiceEntryEdit(invoice_id) {
   }
 }
 
+function deleteInvoiceEntryEdit(invoice_id) {
+  const answer = window.confirm("Are you sure you want to deleted this entry?");
+  if (answer) {
+    axios
+      .delete(`/api/invoiceentrys/${invoice_id}`)
+      .then(() => {
+        cancelInvoiceEntryEdit(invoice_id);
+        resetSearch();
+      })
+      .catch((err) => {
+        return;
+      });
+  }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   loadInvoiceName();
   reloadData();
@@ -307,7 +323,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // If click is outside edit div and not on the original row, close it
       if (!isClickInsideEdit && !isClickOnOriginalRow) {
-        console.log("Saved");
         saveInvoiceEntryEdit(invoice_id, true);
       }
     }
