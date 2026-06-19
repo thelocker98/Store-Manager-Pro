@@ -125,3 +125,36 @@ type InvoiceEntry struct {
 	TrueCost      float64 `json:"true_cost"`
 	Count         int     `json:"count"`
 }
+
+type OCREntry struct {
+	FileID        int        `json:"file_id"`
+	InvoiceID     int        `json:"invoice_id"`
+	FilePath      string     `json:"file_path"`
+	Status        int        `json:"status"`
+	EntriesAdded  int        `json:"entries_added"`
+	EntriesFailed int        `json:"entries_failed"`
+	ErrorMessage  string     `json:"error_message"`
+	StartedAt     *time.Time `json:"started_at"`
+	CompletedAt   *time.Time `json:"completed_at"`
+	CreatedAt     *time.Time `json:"created_at"`
+}
+
+type OCRJob struct {
+	FileID       int
+	InvoiceID    int
+	FilePath     string
+	MarkupAmount int
+}
+
+type OCRStatus int
+
+const (
+	Pending OCRStatus = iota
+	Processing
+	Failed
+	Succeeded
+)
+
+func (c OCRStatus) String() string {
+	return [...]string{"Pending", "Processing", "Failed", "Succeded"}[c]
+}

@@ -22,7 +22,7 @@ async function reloadData() {
   if (searchBox != "") {
     entryCount = await searchItems();
   } else {
-    entryCount = (await loadInvoice()) || 101;
+    entryCount = (await loadInvoice()) || 1;
   }
 
   // Find out number of pages for result

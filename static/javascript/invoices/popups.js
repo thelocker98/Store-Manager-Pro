@@ -1,23 +1,40 @@
-// Upload Popup
+var GlobalMarkupAmount = 0;
 
+// Upload Popup
+let refreshInterval = null; // Global variable to store interval ID
 function openUploadPopup() {
-  console.log("Opening");
   document.getElementById("uploadPopup").style.display = "flex";
   document.getElementById("uploadOverlay").style.display = "block";
-  console.log("Opened");
+
+  // Start refreshing every 10 seconds
+  renderNotifications(); // Render immediately
+  refreshInterval = setInterval(renderNotifications, 10000); // Then every 10 seconds
 }
 
 function closeUploadPopup() {
   document.getElementById("uploadPopup").style.display = "none";
   document.getElementById("uploadOverlay").style.display = "none";
+
+  // Stop refreshing
+  if (refreshInterval) {
+    clearInterval(refreshInterval);
+    refreshInterval = null;
+  }
+  // Reload Data
+  reloadData();
 }
-//
 
 // Function to upload file to Go backend
 async function uploadFile(file) {
   // Validate PDF
   if (!file.name.toLowerCase().endsWith(".pdf") && file.type !== "application/pdf") {
     showUploadError("Invalid file type - PDF required");
+    return false;
+  }
+  // Validate Markup
+  var markup = document.getElementById("markupAmount").value;
+  if (markup < 0) {
+    showUploadError("Invalid Markup");
     return false;
   }
 
@@ -30,6 +47,7 @@ async function uploadFile(file) {
   // Prepare form data
   const formData = new FormData();
   formData.append("file", file);
+  formData.append("markup", markup);
 
   try {
     const response = await fetch(`/api/invoices/file/${InvoiceID}`, {
@@ -100,7 +118,138 @@ function showUploadSuccess(message) {
       messageElement.classList.remove("successMessage");
     }, 5000);
   }
-  console.log("Upload success:", message);
+  renderNotifications();
+}
+
+// Populate Markup Amount
+function loadMarkupAmount() {
+  document.getElementById("markupAmount").value = GlobalMarkupAmount;
+}
+
+async function renderNotifications() {
+  const res = await axios.get(`/api/invoices/notification/${InvoiceID}`);
+  const ocrEntrys = res.data;
+
+  const container = document.getElementById("notification-container");
+  container.innerHTML = "";
+
+  if (!Array.isArray(ocrEntrys)) {
+    document.getElementById("notification-header").style.display = "none";
+    return;
+  }
+  document.getElementById("notification-header").style.display = "block";
+
+  ocrEntrys.forEach((ocrEntry) => {
+    const card = document.createElement("div");
+    card.className = "notification-card";
+
+    card.innerHTML = `
+    <button id="delete-btn-${ocrEntry.file_id}" class="delete-notification-btn" onclick="deleteNotification(this, ${ocrEntry.file_id})">
+      ✕
+    </button>
+    <div class="card-header">
+      <h3>${ocrEntry.file_path}</h3>
+      <p class="status-badge" id="status-badge-${ocrEntry.file_id}"></p>
+    </div>
+
+    <div class="card-row">
+      <p>
+      <strong>Duration: </strong>
+      ${
+        ocrEntry.started_at && ocrEntry.completed_at
+          ? `${((new Date(ocrEntry.completed_at) - new Date(ocrEntry.started_at)) / 1000).toFixed(
+              0,
+            )} sec`
+          : "Waiting..."
+      }
+      </p>
+    </div>
+    <div class="card-row">
+      <p>
+        <strong>Entrys Failed: </strong>${ocrEntry.entries_failed}
+      </p>
+      <p>
+        <strong>Entrys Added: </strong>${ocrEntry.entries_added}
+      </p>
+    </div>
+    <p style="color: Red" id="error-message-${ocrEntry.file_id}"></p>
+    `;
+
+    container.appendChild(card);
+
+    error_message = document.getElementById(`error-message-${ocrEntry.file_id}`);
+    if (ocrEntry.status == 2) {
+      error_message.style.display = "block";
+      error_message.textContent = `error: ${ocrEntry.error_message}`;
+    } else {
+      error_message.style.display = "none";
+      error_message.textContent = "";
+    }
+
+    status_badge = document.getElementById(`status-badge-${ocrEntry.file_id}`);
+
+    switch (ocrEntry.status) {
+      case 0:
+        // Handle Pending status
+        status_badge.textContent = "Pending";
+        status_badge.style.backgroundColor = "Yellow";
+        card.style.backgroundColor = "LightYellow";
+
+        break;
+
+      case 1:
+        // Handle Processing status
+        status_badge.textContent = "Processing";
+        status_badge.style.backgroundColor = "Blue";
+        card.style.backgroundColor = "LightBlue";
+        document.getElementById(`delete-btn-${ocrEntry.file_id}`).remove();
+
+        break;
+
+      case 2:
+        // Handle Failed status
+        status_badge.textContent = "Failed";
+        status_badge.style.backgroundColor = "Red";
+        card.style.backgroundColor = "LightRed";
+
+        break;
+
+      case 3:
+        // Handle Succeeded status
+        status_badge.textContent = "Succeeded";
+        status_badge.style.backgroundColor = "Green";
+        card.style.backgroundColor = "LightGreen";
+
+        break;
+
+      default:
+        // Handle unknown status
+        status_badge.style.display = "none";
+        break;
+    }
+  });
+}
+function deleteNotification(btn, file_id) {
+  axios
+    .delete(`/api/invoices/notification/${file_id}`)
+    .then(() => {
+      const card = btn.closest(".notification-card");
+      card.style.transition = "opacity 0.3s, transform 0.3s";
+      card.style.opacity = "0";
+      card.style.transform = "scale(0.95)";
+
+      setTimeout(() => {
+        card.remove();
+      }, 300);
+    })
+    .catch((err) => {
+      return;
+    });
+}
+
+function updateMarkupAmount() {
+  GlobalMarkupAmount = Number(document.getElementById("markupAmount").value);
+  document.cookie = "markupAmount=" + GlobalMarkupAmount + "; max-age=315360000; path=/";
 }
 
 // Complete DOMContentLoaded with all features
@@ -154,4 +303,23 @@ document.addEventListener("DOMContentLoaded", function () {
   dropzoneContainer.addEventListener("dragleave", (e) => {
     dropzoneContainer.classList.remove("uploadDrag");
   });
+
+  // Markup
+  GlobalMarkupAmount = Number(getCookie("markupAmount"));
+  // get cookie or set the default to 30%
+  if (isNaN(GlobalMarkupAmount)) {
+    document.getElementById("markupAmount").value = 30;
+    updateMarkupAmount();
+  }
+
+  const markupAmountSelector = document.getElementById("markupAmount");
+
+  if (markupAmountSelector) {
+    markupAmountSelector.addEventListener("change", () => {
+      updateMarkupAmount();
+      console.log("Markup Changed");
+    });
+  }
+
+  loadMarkupAmount();
 });

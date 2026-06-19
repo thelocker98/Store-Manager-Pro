@@ -55,7 +55,7 @@ async function loadInvoice() {
 
     var html = `
                 <td>${entry.upc || ""}</td>
-                <td>${entry.qty || ""}</td>
+                <td>${entry.qty}</td>
                 <td>${entry.details || entry.rawtext || ""}</td>
                 <td>${formatPrice(entry.true_cost, false) || ""}</td>
                 `;
@@ -147,7 +147,12 @@ function openInvoiceEntryEdit(invoice_id) {
         margin: 10px;
       `;
 
-      const quantity = Math.round(entry.total_cost / entry.item_cost);
+      var quantity;
+      if (entry.item_cost && entry.item_cost > 0 && entry.total_cost) {
+        quantity = Math.round(entry.total_cost / entry.item_cost);
+      } else {
+        quantity = 0;
+      }
 
       container.innerHTML = `
       <td colspan="4" style="padding: 20px 0px;">
@@ -160,10 +165,10 @@ function openInvoiceEntryEdit(invoice_id) {
             <p style="margin: 5px 20px;"><strong>Raw Invoice Line:</strong> ${entry.rawtext}</p>
 
             <div style="display:flex; justify-content:space-between;">
-              <p style="margin: 5px 20px;"><strong>Item Cost: </strong>${formatPrice(entry.item_cost, false)}</p>
-              <p style="margin: 5px 20px;"><strong>Quantity Received: </strong>${quantity}</p>
-              <p style="margin: 5px 20px;"><strong>Total Cost: </strong>${formatPrice(entry.total_cost, false)}</p>
-              <p style="margin: 5px 20px;"><strong>Actually Paid: </strong>${formatPrice(entry.discount_cost, false)}</p>
+              <p style="margin: 5px 20px;" id="p-itemcost-${entry.invoice_entry_id}"><strong>Item Cost: </strong>${formatPrice(entry.item_cost, false)}</p>
+              <p style="margin: 5px 20px;" id="p-quantityrecived-${entry.invoice_entry_id}"><strong>Quantity Received: </strong>${quantity}</p>
+              <p style="margin: 5px 20px;" id="p-totalcost-${entry.invoice_entry_id}"><strong>Total Cost: </strong>${formatPrice(entry.total_cost, false)}</p>
+              <p style="margin: 5px 20px;" id="p-actuallypaid-${entry.invoice_entry_id}"><strong>Actually Paid: </strong>${formatPrice(entry.discount_cost, false)}</p>
             </div>
           </div>
 
@@ -201,8 +206,21 @@ function openInvoiceEntryEdit(invoice_id) {
       `;
 
       row.style.display = "none";
-
       row.after(container);
+
+      if (entry.item_cost == 0) {
+        document.getElementById(`p-itemcost-${entry.invoice_entry_id}`).style.display = "none";
+      }
+      if (quantity == 0 || quantity == NaN) {
+        document.getElementById(`p-quantityrecived-${entry.invoice_entry_id}`).style.display =
+          "none";
+      }
+      if (entry.total_cost == 0) {
+        document.getElementById(`p-totalcost-${entry.invoice_entry_id}`).style.display = "none";
+      }
+      if (entry.discount_cost == 0) {
+        document.getElementById(`p-actuallypaid-${entry.invoice_entry_id}`).style.display = "none";
+      }
     })
     .catch((err) => {
       return;

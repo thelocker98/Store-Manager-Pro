@@ -80,15 +80,6 @@
                 "
             >
                 <div>
-                    <button
-                        style="margin-right: 20px"
-                        onclick="openAdditemPopup()"
-                        id="addItemButton"
-                        class="addItem"
-                    >
-                        Add Item
-                    </button>
-
                     <button style="margin-right: 20px" onclick="openUploadPopup()">
                         Add Invoice PDF
                     </button>
@@ -150,7 +141,7 @@
                     border-radius: 10px;
                     border: 2px solid gray;
                     background-color: lightgoldenrodyellow;
-                    width: 375px;
+                    width: 550px;
                     height: 200px;
                     display: flex;
                     align-items: center;
@@ -172,6 +163,17 @@
                 title="file icons"
                 >File icons created by Good Ware - Flaticon</a
             >
+
+            <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px">
+                <label for="markupAmount" style="margin: 0">Markup Percentage:</label>
+                <input id="markupAmount" placeholder="45" style="width: 25px" />
+                <p style="margin: 0">%</p>
+            </div>
+
+            <h2 style="margin-bottom: 0px; padding-bottom: 0px" id="notification-header">Jobs:</h2>
+
+            <div id="notification-container" class="notification-container"></div>
+
             <p id="uploadMessage"></p>
         </div>
 

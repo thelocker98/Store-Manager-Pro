@@ -61,11 +61,13 @@ func RegisterRoutes(r *gin.Engine) {
 		api.DELETE("/listentrys/:entryid", DeleteEntryFromList) // Delete Entry From A existing List
 
 		// Invoices
-		api.GET("/invoices/d/:departmentid", GetInvoices) // Get All Invoices with their name, Id, date
-		api.GET("/invoices/:invoiceid", GetInvoiceById)   // Get Invoice Using its ID
-		api.POST("/invoices", AddInvoice)                 // Add a new Invoice
-		api.PUT("/invoices/:invoiceid", UpdateInvoice)    // Update a Invoice name
-		api.DELETE("/invoices/:invoiceid", DeleteInvoice) // Delete a Invoice
+		api.GET("/invoices/d/:departmentid", GetInvoices)                      // Get All Invoices with their name, Id, date
+		api.GET("/invoices/:invoiceid", GetInvoiceById)                        // Get Invoice Using its ID
+		api.POST("/invoices", AddInvoice)                                      // Add a new Invoice
+		api.PUT("/invoices/:invoiceid", UpdateInvoice)                         // Update a Invoice name
+		api.DELETE("/invoices/:invoiceid", DeleteInvoice)                      // Delete a Invoice
+		api.GET("/invoices/notification/:invoiceid", GetInvoiceNotifications)  // Get OCR notifications for invoices
+		api.DELETE("invoices/notification/:fileid", DeleteInvoiceNotification) // Deleteds Invoice notification
 
 		// Invoice Files
 		api.POST("/invoices/file/:invoiceid", InvoiceFile) // Add a new Invoice

@@ -1,0 +1,200 @@
+package db
+
+import (
+	"strings"
+
+	"gitea.locker98.com/locker98/Store-Manager-Pro/models"
+)
+
+func CreateOCREntry(invoiceID int, filePath string) (int, error) {
+	query := `
+	INSERT INTO ocr_files (invoice_id, filepath, status )
+	VALUES (?, ?, ?);
+	`
+	result, err := DB.Exec(query,
+		invoiceID,
+		filePath,
+		models.Pending,
+	)
+
+	if err != nil {
+		return 0, err
+	}
+
+	// Get the auto-generated ID
+	fileID, err := result.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return int(fileID), nil
+}
+
+func GetOCREntryById(file_id int) (models.OCREntry, error) {
+	query := `
+	SELECT
+		file_id,
+		invoice_id,
+		filepath,
+		status,
+		entries_added,
+		entries_failed,
+		error_message,
+		started_at,
+		completed_at,
+		created_at
+	FROM ocr_files
+	WHERE file_id = ?
+`
+
+	var entry models.OCREntry
+	err := DB.QueryRow(query, file_id).Scan(
+		&entry.FileID,
+		&entry.InvoiceID,
+		&entry.FilePath,
+		&entry.Status,
+		&entry.EntriesAdded,
+		&entry.EntriesFailed,
+		&entry.ErrorMessage,
+		&entry.StartedAt,
+		&entry.CompletedAt,
+		&entry.CreatedAt,
+	)
+
+	if err != nil {
+		return entry, err
+	}
+
+	return entry, nil
+}
+
+func GetOCREntrysByInvoiceID(invoiceID int) ([]models.OCREntry, error) {
+	query := `
+		SELECT
+			file_id,
+			invoice_id,
+			filepath,
+			status,
+			entries_added,
+			entries_failed,
+			error_message,
+			started_at,
+			completed_at,
+			created_at
+		FROM ocr_files
+		WHERE
+			invoice_id = ?
+		ORDER BY created_at DESC;
+		`
+
+	rows, err := DB.Query(query, invoiceID)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var entrys []models.OCREntry
+	for rows.Next() {
+		var entry models.OCREntry
+		err := rows.Scan(
+			&entry.FileID,
+			&entry.InvoiceID,
+			&entry.FilePath,
+			&entry.Status,
+			&entry.EntriesAdded,
+			&entry.EntriesFailed,
+			&entry.ErrorMessage,
+			&entry.StartedAt,
+			&entry.CompletedAt,
+			&entry.CreatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		// Get the last part after the last underscore
+		parts := strings.Split(entry.FilePath, "_")
+		entry.FilePath = parts[len(parts)-1]
+		entrys = append(entrys, entry)
+	}
+	return entrys, nil
+}
+
+func DeleteOCREntryById(file_id int, force bool) error {
+	var err error
+	if force {
+		_, err = DB.Exec(`DELETE FROM ocr_files WHERE file_id = ?;`, file_id)
+	} else {
+		_, err = DB.Exec(`DELETE FROM ocr_files WHERE file_id = ? and status != 1;`, file_id)
+	}
+	return err
+}
+
+func GetUnfinishedEntrys() ([]models.OCREntry, error) {
+	query := `
+		SELECT
+			file_id,
+			invoice_id,
+			filepath,
+			status,
+			entries_added,
+			entries_failed,
+			error_message,
+			started_at,
+			completed_at,
+			created_at
+		FROM ocr_files
+		WHERE
+			status IN (?, ?);
+		`
+
+	rows, err := DB.Query(query, models.Pending, models.Processing)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var entrys []models.OCREntry
+	for rows.Next() {
+		var entry models.OCREntry
+		err := rows.Scan(
+			&entry.FileID,
+			&entry.InvoiceID,
+			&entry.FilePath,
+			&entry.Status,
+			&entry.EntriesAdded,
+			&entry.EntriesFailed,
+			&entry.ErrorMessage,
+			&entry.StartedAt,
+			&entry.CompletedAt,
+			&entry.CreatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		entrys = append(entrys, entry)
+	}
+	return entrys, nil
+}
+
+func MarkAsProccessing(fileId int) error {
+	query := `
+	UPDATE ocr_files
+	SET status = ?, started_at = CURRENT_TIMESTAMP
+	WHERE file_id = ?;
+	`
+	_, err := DB.Exec(query, models.Processing, fileId)
+	return err
+}
+
+func MarkAsFinished(fileId int, status models.OCRStatus, successfulEntrys int, failedEntrys int, errorMessage string) error {
+	query := `
+	UPDATE ocr_files
+	SET status = ?, entries_added = ?, entries_failed = ?, error_message = ?, completed_at = CURRENT_TIMESTAMP
+	WHERE file_id = ?;
+	`
+	_, err := DB.Exec(query, status, successfulEntrys, failedEntrys, errorMessage, fileId)
+	return err
+}

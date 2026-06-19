@@ -193,7 +193,7 @@
     padding: 10px;
     z-index: 100;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    min-width: 500px;
+    min-width: 600px;
     min-height: 300px; /* Optional: give it some height */
 }
 .uploadDrag {
@@ -221,10 +221,103 @@
 }
 
 .errorMessage {
-    font-size: 12px;
+    font-size: 15px;
     color: red;
 }
 .successMessage {
-    font-size: 12px;
+    font-size: 15px;
     color: green;
+}
+
+.delete-notification-btn {
+    position: absolute !important;
+    top: 5px !important;
+    right: 5px !important;
+    background: #dc3545 !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 50% !important;
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
+    cursor: pointer !important;
+    display: none !important; /* Hidden by default */
+    align-items: center !important;
+    justify-content: center !important;
+    transition: background 0.2s !important;
+    line-height: 1 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    z-index: 10 !important;
+}
+
+.notification-card:hover .delete-notification-btn {
+    display: flex !important;
+}
+
+.notification-delete-btn:hover {
+    background: #c82333 !important;
+    transform: scale(1.1) !important;
+}
+
+.notification-container {
+    width: 550px;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 5px;
+}
+
+.notification-card {
+    padding: 10px;
+    border-radius: 10px;
+    background-color: lightyellow;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.notification-card:hover {
+    transform: translateX(8px);
+}
+.card-header {
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+    margin: 5px;
+    padding-right: 30px;
+}
+
+.card-row {
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+    margin: 5px;
+}
+
+.card-row p {
+    font-size: 16px;
+    padding: 5px 60px 5px 20px;
+    margin: 0px;
+}
+
+.status-badge {
+    color: black;
+    width: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    padding: 2px;
+    margin: 0px;
+}
+
+h3,
+p {
+    margin: 0px;
+    padding: 0px;
 }

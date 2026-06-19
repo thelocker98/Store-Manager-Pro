@@ -4,7 +4,6 @@ import (
 	"log"
 	"net/url"
 	"os"
-	"path/filepath"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -13,25 +12,32 @@ import (
 	"fyne.io/fyne/v2/widget"
 	"gitea.locker98.com/locker98/Store-Manager-Pro/db"
 	"gitea.locker98.com/locker98/Store-Manager-Pro/devices"
+	"gitea.locker98.com/locker98/Store-Manager-Pro/ocr"
 	"gitea.locker98.com/locker98/Store-Manager-Pro/routes"
 	"gitea.locker98.com/locker98/Store-Manager-Pro/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
-func main() {
-	appData, err := os.UserConfigDir()
-	if err != nil {
-		panic(err)
-	}
-	appDir := filepath.Join(appData, "StoreManagerPro")
-	err = os.MkdirAll(appDir, 0755)
-	if err != nil {
-		panic(err)
-	}
+var InvoiceFilePath = ""
 
+func main() {
 	// Setup DB
+	appDir, _ := utils.SetupFolders()
 	db.InitDB(appDir)
+
+	// Find Unfinished OCR Jobs
+	unfinishedEntrys, err := db.GetUnfinishedEntrys()
+	if err != nil {
+		panic(err)
+	}
+	// Remove Unfinished Jobs from DB
+	for _, entry := range unfinishedEntrys {
+		db.DeleteOCREntryById(entry.FileID, true)
+		if err != nil {
+			panic(err)
+		}
+	}
 
 	// Configure Web Server
 	r := gin.Default()
@@ -43,6 +49,9 @@ func main() {
 
 	// Start device drivers
 	go devices.Devices()
+
+	// Start OCR Jobs
+	go ocr.StartOCRWorker()
 
 	// Start Server on Port 8080
 	go func() {

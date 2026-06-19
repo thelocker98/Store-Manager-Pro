@@ -177,4 +177,26 @@ func createTables() {
 	if err != nil {
 		panic(err)
 	}
+
+	// OCR Table
+	query = `
+		CREATE TABLE IF NOT EXISTS ocr_files (
+		    file_id          INTEGER PRIMARY KEY AUTOINCREMENT,
+		    invoice_id       INTEGER NOT NULL,
+		    filepath         TEXT NOT NULL UNIQUE,
+		    status           INTEGER DEFAULT 0,
+		    entries_added    INTEGER DEFAULT 0,
+		    entries_failed   INTEGER DEFAULT 0,
+		    error_message    TEXT DEFAULT '',
+		    started_at       DATETIME,
+		    completed_at     DATETIME,
+		    created_at       DATETIME DEFAULT CURRENT_TIMESTAMP,
+		    FOREIGN KEY (invoice_id) REFERENCES invoices(invoice_id) ON DELETE CASCADE
+		);
+	`
+
+	_, err = DB.Exec(query)
+	if err != nil {
+		panic(err)
+	}
 }
