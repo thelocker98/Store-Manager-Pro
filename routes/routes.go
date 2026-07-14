@@ -40,10 +40,10 @@ func RegisterRoutes(r *gin.Engine) {
 		api.DELETE("/vendors/:id", DeleteVendor) // Delete an vendor
 
 		// Locations
-		api.GET("/locations/:departmentid", GetLocations) // List all locations
-		api.POST("/locations", AddLocation)               // Add a new location
-		api.PUT("/locations/:id", UpdateLocation)         // Update an location
-		api.DELETE("/locations/:id", DeleteLocation)      // Delete an location
+		api.GET("/locations/", GetLocations)         // List all locations
+		api.POST("/locations", AddLocation)          // Add a new location
+		api.PUT("/locations/:id", UpdateLocation)    // Update an location
+		api.DELETE("/locations/:id", DeleteLocation) // Delete an location
 
 		// Lists
 		api.GET("/lists/d/:departmentid", GetLists)           // Get All Lists with their name, id, date
@@ -54,11 +54,11 @@ func RegisterRoutes(r *gin.Engine) {
 		api.DELETE("/lists/:listid", DeleteList)              // Delete a List
 
 		// List Entrys
-		api.GET("/listentrys/:listid", GetListEntrys)           // Get All Entrys in a List id, list_id, item_id
-		api.GET("/listentry/:entryid", GetListEntryById)        // Get All Entrys in a List id, list_id, item_id
-		api.POST("/listentrys/:listid", AddEntryToList)         // Add a new Entry to an existing List
-		api.PUT("/listentrys/:entryid", UpdateEntryInList)      // Update Entry in an existing List
-		api.DELETE("/listentrys/:entryid", DeleteEntryFromList) // Delete Entry From A existing List
+		api.GET("/listentrys/:listid", GetListEntrys)          // Get All Entrys in a List id, list_id, item_id
+		api.GET("/listentry/:entryid", GetListEntryById)       // Get All Entrys in a List id, list_id, item_id
+		api.POST("/listentry/:listid", AddEntryToList)         // Add a new Entry to an existing List
+		api.PUT("/listentry/:entryid", UpdateEntryInList)      // Update Entry in an existing List
+		api.DELETE("/listentry/:entryid", DeleteEntryFromList) // Delete Entry From A existing List
 
 		// Invoices
 		api.GET("/invoices/d/:departmentid", GetInvoices)                      // Get All Invoices with their name, Id, date

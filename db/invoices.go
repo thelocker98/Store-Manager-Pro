@@ -89,7 +89,7 @@ func GetInvoiceById(InvoiceID int) (models.Invoice, error) {
 
 func AddInvoice(invoice models.Invoice) error {
 	query := `
-	INSERT INTO lists (invoice_name, invoice_type, department_id)
+	INSERT INTO invoices (invoice_name, invoice_type, department_id)
 	VALUES (?, ?, ?);
 	`
 	_, err := DB.Exec(query, invoice.InvoiceName, invoice.InvoiceType, invoice.DepartmentID)

@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -30,12 +31,12 @@ func GetListById(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "invalid list id"})
 		return
 	}
-	items, err := db.GetListById(id)
+	lists, err := db.GetListById(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "no list found"})
 		return
 	}
-	c.JSON(http.StatusOK, items)
+	c.JSON(http.StatusOK, lists)
 }
 
 func GetNumberOfItemsList(c *gin.Context) {
@@ -57,6 +58,7 @@ func AddList(c *gin.Context) {
 	var list models.List
 	if err := c.ShouldBindJSON(&list); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		fmt.Println(err.Error())
 		return
 	}
 
@@ -151,13 +153,13 @@ func AddEntryToList(c *gin.Context) {
 	}
 	listEntry.ListID = listID
 
-	err = db.AddEntryToList(listEntry)
+	entryId, err := db.AddEntryToList(listEntry)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "List entry added"})
+	c.JSON(http.StatusCreated, gin.H{"message": "List entry added", "entry_id": entryId})
 }
 
 // UpdateEntryInList deletes an entry from a list by ID

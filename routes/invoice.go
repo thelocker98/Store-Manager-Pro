@@ -46,6 +46,8 @@ func AddInvoice(c *gin.Context) {
 		return
 	}
 
+	invoice.InvoiceType = "D&B Grocery"
+
 	if err := db.AddInvoice(invoice); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

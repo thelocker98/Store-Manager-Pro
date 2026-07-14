@@ -56,7 +56,6 @@ type Vendor struct {
 type Location struct {
 	LocationID        int    `json:"location_id"`
 	LocationName      string `json:"location_name"`
-	DepartmentID      int    `json:"department_id"`
 	LocationItemCount int    `json:"location_item_count"`
 }
 

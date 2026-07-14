@@ -117,7 +117,7 @@ function loadLocations(DepartmentID) {
     department_id = DepartmentID;
   }
 
-  return axios.get("/api/locations/" + String(department_id)).then((res) => {
+  return axios.get("/api/locations").then((res) => {
     const select = document.getElementById("popup_items_locationselector");
     select.innerHTML = "";
 

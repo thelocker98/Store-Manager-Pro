@@ -1,6 +1,6 @@
 // Load all Locations
 function loadLocations() {
-  axios.get("/api/locations/" + String(GlobalDepartment)).then((res) => {
+  axios.get("/api/locations").then((res) => {
     const tbody = document.querySelector("#locationsTable tbody");
     tbody.innerHTML = "";
 
@@ -44,8 +44,7 @@ function addLocation(e) {
     })
     .catch((err) => {
       document.getElementById("locationaddError").style.display = "block";
-      document.getElementById("locationaddError").textContent =
-        "Error Processing Your Request";
+      document.getElementById("locationaddError").textContent = "Error Processing Your Request";
     });
 }
 
@@ -66,8 +65,7 @@ function deleteLocation(id) {
           document.getElementById("locationinfoError").textContent =
             "Some items still reference this location";
         } else {
-          document.getElementById("locationinfoError").textContent =
-            "Could Not Delete Location";
+          document.getElementById("locationinfoError").textContent = "Could Not Delete Location";
         }
       });
   }
@@ -79,14 +77,13 @@ loadLocations();
 // Open the edit popup and fill fields
 function editLocation(id) {
   axios
-    .get("/api/locations/" + String(GlobalDepartment))
+    .get("/api/locations")
     .then((res) => {
       const location = res.data.find((i) => i.location_id === id);
       if (!location) return;
 
       document.getElementById("editLocationId").value = location.location_id;
-      document.getElementById("editLocationName").value =
-        location.location_name;
+      document.getElementById("editLocationName").value = location.location_name;
       document.getElementById("locationDeleteButton").onclick = () => {
         deleteLocation(location.location_id);
       };
@@ -96,8 +93,7 @@ function editLocation(id) {
     })
     .catch((err) => {
       document.getElementById("locationinfoError").style.display = "block";
-      document.getElementById("locationinfoError").textContent =
-        "Error Processing Your Request";
+      document.getElementById("locationinfoError").textContent = "Error Processing Your Request";
     });
 }
 
@@ -126,7 +122,6 @@ function submitLocationEdit(e) {
     })
     .catch((err) => {
       document.getElementById("locationinfoError").style.display = "block";
-      document.getElementById("locationinfoError").textContent =
-        "Error Processing Your Request";
+      document.getElementById("locationinfoError").textContent = "Error Processing Your Request";
     });
 }

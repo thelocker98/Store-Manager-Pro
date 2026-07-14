@@ -34,9 +34,7 @@ function moveDepartment(id) {
     loadDepartmentChangerSelector(item.department_id);
 
     // Create a listener for the new department selector
-    const newDepartmentSelector = document.getElementById(
-      "newDepartmentSelector",
-    );
+    const newDepartmentSelector = document.getElementById("newDepartmentSelector");
     newDepartmentSelector.addEventListener("change", (e) => {
       loadLocationsForDepartment(e.target.value);
     });
@@ -46,11 +44,9 @@ function moveDepartment(id) {
     document.getElementById("infoDeleteBtn").style.display = "none";
     document.getElementById("infoEditBtn").style.display = "none";
 
-    document.getElementById("infoChangeDepartmenBtn").style.display =
-      "inline-block";
+    document.getElementById("infoChangeDepartmenBtn").style.display = "inline-block";
     document.getElementById("infoChangeDepartmenBtn").textContent = "Back";
-    document.getElementById("infoChangeDepartmenBtn").onclick = () =>
-      openInfo(item.item_id);
+    document.getElementById("infoChangeDepartmenBtn").onclick = () => openInfo(item.item_id);
 
     // Location Selector and Submit Button
     document.getElementById("newLocationdiv").style.display = "none";
@@ -99,11 +95,10 @@ function loadDepartmentChangerSelector(departmentID) {
 function loadLocationsForDepartment(departmentID) {
   // Show Location Selector and Submit Button
   document.getElementById("newLocationdiv").style.display = "flex";
-  document.getElementById("submitDepartmentChange").style.display =
-    "inline-block";
+  document.getElementById("submitDepartmentChange").style.display = "inline-block";
 
   // Get Data for locations
-  return axios.get("/api/locations/" + String(departmentID)).then((res) => {
+  return axios.get("/api/locations").then((res) => {
     const select = document.getElementById("newLocationSelector");
     select.innerHTML = "";
 
@@ -134,14 +129,8 @@ function loadLocationsForDepartment(departmentID) {
 
 function submitDepartmentChange(itemID) {
   const itemsEntry = {
-    location_id: parseInt(
-      document.getElementById("newLocationSelector").value,
-      10,
-    ),
-    department_id: parseInt(
-      document.getElementById("newDepartmentSelector").value,
-      10,
-    ),
+    location_id: parseInt(document.getElementById("newLocationSelector").value, 10),
+    department_id: parseInt(document.getElementById("newDepartmentSelector").value, 10),
   };
 
   axios
@@ -153,7 +142,6 @@ function submitDepartmentChange(itemID) {
     .catch((err) => {
       document.getElementById("departmentError").style.display = "block";
 
-      document.getElementById("departmentError").textContent =
-        "Error Processing Your Request";
+      document.getElementById("departmentError").textContent = "Error Processing Your Request";
     });
 }

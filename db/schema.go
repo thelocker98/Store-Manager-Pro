@@ -23,7 +23,7 @@ func createTables() {
 		soldout_at DATETIME,
 		deleted BOOL DEFAULT FALSE,
 		FOREIGN KEY(vendor_id) REFERENCES vendors(vendor_id),
-        FOREIGN KEY (department_id, location_id) REFERENCES locations(department_id, location_id),
+        FOREIGN KEY(location_id) REFERENCES locations(location_id),
 		FOREIGN KEY(department_id) REFERENCES departments(department_id)
 	);
 	`
@@ -83,10 +83,7 @@ func createTables() {
 	query = `
 	CREATE TABLE IF NOT EXISTS locations (
 		location_id INTEGER PRIMARY KEY AUTOINCREMENT,
-		location_name TEXT NOT NULL UNIQUE,
-		department_id INTEGER NOT NULL,
-		UNIQUE (department_id, location_id),
-		FOREIGN KEY(department_id) REFERENCES departments(department_id)
+		location_name TEXT NOT NULL UNIQUE
 	);
 	`
 	_, err = DB.Exec(query)

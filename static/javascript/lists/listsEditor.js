@@ -220,7 +220,7 @@ function resetSearchList() {
 function addToList(item_id) {
   // add item to list Database
   axios
-    .post(`/api/listentrys/${ListID}`, { item_id: item_id })
+    .post(`/api/listentry/${ListID}`, { item_id: item_id })
     .then(() => {
       searchListItems();
       loadList();
@@ -241,7 +241,7 @@ function deincrementListEntry(entryID) {
       }
 
       axios
-        .put(`/api/listentrys/${entryID}`, data)
+        .put(`/api/listentry/${entryID}`, data)
         .then((res) => {
           searchListItems();
           loadList();
@@ -262,7 +262,7 @@ function incrementListEntry(entryID) {
       data = res.data;
       data.list_count++;
       axios
-        .put(`/api/listentrys/${entryID}`, data)
+        .put(`/api/listentry/${entryID}`, data)
         .then((res) => {
           searchListItems();
           loadList();
@@ -278,7 +278,7 @@ function incrementListEntry(entryID) {
 
 function deleteListEntry(entryID) {
   axios
-    .delete(`/api/listentrys/${entryID}`)
+    .delete(`/api/listentry/${entryID}`)
     .then((res) => {
       searchListItems();
       loadList();

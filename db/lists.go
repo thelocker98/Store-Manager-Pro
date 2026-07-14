@@ -58,9 +58,11 @@ func GetListById(listID int) (models.List, error) {
 		l.list_name,
 		l.department_id,
 		d.department_name,
+		COALESCE(COUNT(ld.list_count), 0) AS total_items,
 		l.created_at
 	FROM lists l
 	JOIN departments d ON l.department_id = d.department_id
+	LEFT JOIN list_data ld ON l.list_id = ld.list_id
 	WHERE l.list_id = ?;
 	`
 
@@ -70,6 +72,7 @@ func GetListById(listID int) (models.List, error) {
 		&list.ListName,
 		&list.DepartmentID,
 		&list.DepartmentName,
+		&list.TotalCount,
 		&list.CreatedAt,
 	)
 
@@ -242,13 +245,14 @@ func GetListEntryById(listID int) (models.ListEntryAll, error) {
 	return list, err
 }
 
-func AddEntryToList(listEntry models.ListEntry) error {
+func AddEntryToList(listEntry models.ListEntry) (int64, error) {
 	query := `
 	INSERT INTO list_data (list_id,  item_id, list_count)
 	VALUES (?, ?, 1);
 	`
-	_, err := DB.Exec(query, listEntry.ListID, listEntry.ItemID)
-	return err
+	result, err := DB.Exec(query, listEntry.ListID, listEntry.ItemID)
+	lastID, err := result.LastInsertId()
+	return lastID, err
 }
 
 func UpdateEntryInList(entryID int, listEntry models.ListEntry) error {

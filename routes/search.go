@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -32,6 +33,9 @@ func SearchItems(c *gin.Context) {
 	}
 
 	items, err := db.SearchItems(searchTerm, listID, page, pageSize, showDeletedStr, vendorID, locationID, departmentID, limitToList, orderBy)
+
+	fmt.Println(items)
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

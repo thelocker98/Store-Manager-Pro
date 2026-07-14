@@ -203,13 +203,23 @@ func GetItemById(id int) (models.InventoryAll, error) {
 }
 
 func UpdateItem(id int, item models.Inventory) error {
-	query := `
-	UPDATE inventory
-	SET vendor_id = ?, location_id = ?, upc = ?, invoice_number = ?, brand = ?, name = ?, description = ?, price = ?, weighed = ?, count = ?, deleted = ?, arrived_at = ?, soldout_at = ?
-	WHERE id = ?;
-	`
-	_, err := DB.Exec(query, item.VendorID, item.LocationID, item.UPC, item.InvoiceNumber, item.Brand, item.Name, item.Description, item.Price, item.Weighed, item.Count, item.Deleted, item.ArrivedAt, item.SoldOutAt, id)
-	return err
+	if item.DepartmentID == 0 {
+		query := `
+		UPDATE inventory
+		SET vendor_id = ?, location_id = ?, upc = ?, invoice_number = ?, brand = ?, name = ?, description = ?, price = ?, weighed = ?, count = ?, deleted = ?, arrived_at = ?, soldout_at = ?
+		WHERE id = ?;
+		`
+		_, err := DB.Exec(query, item.VendorID, item.LocationID, item.UPC, item.InvoiceNumber, item.Brand, item.Name, item.Description, item.Price, item.Weighed, item.Count, item.Deleted, item.ArrivedAt, item.SoldOutAt, id)
+		return err
+	} else {
+		query := `
+		UPDATE inventory
+		SET department_id = ?, vendor_id = ?, location_id = ?, upc = ?, invoice_number = ?, brand = ?, name = ?, description = ?, price = ?, weighed = ?, count = ?, deleted = ?, arrived_at = ?, soldout_at = ?
+		WHERE id = ?;
+		`
+		_, err := DB.Exec(query, item.DepartmentID, item.VendorID, item.LocationID, item.UPC, item.InvoiceNumber, item.Brand, item.Name, item.Description, item.Price, item.Weighed, item.Count, item.Deleted, item.ArrivedAt, item.SoldOutAt, id)
+		return err
+	}
 }
 
 func UpdateItemDepartment(id int, item models.Inventory) error {

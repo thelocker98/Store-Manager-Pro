@@ -67,7 +67,7 @@ function removeFilter(filterKey) {
 async function loadFiltersDropdown() {
   const [vendorsRes, locationsRes, listsRes] = await Promise.all([
     axios.get("/api/vendors"),
-    axios.get("/api/locations/" + String(GlobalDepartment)),
+    axios.get("/api/locations"),
     axios.get("/api/lists/d/" + String(GlobalDepartment)),
   ]);
 
