@@ -16,7 +16,6 @@ func RegisterRoutes(r *gin.Engine) {
 	r.GET("/lists/:listid", LoadListEditor)          // List Entry Page
 	r.GET("/invoices", LoadInvoices)                 // Invoice Page
 	r.GET("/invoices/:invoiceid", LoadInvoiceEditor) // Invoice Entry Page
-	r.GET("/barcode", LoadBarcode)                   // Barcode Page
 	r.GET("/export", LoadExport)                     // Export Page
 
 	// API group
@@ -89,9 +88,6 @@ func RegisterRoutes(r *gin.Engine) {
 		// Search
 		api.GET("/search/:q", SearchItems)
 		api.GET("/search/invoice/:q", SearchInvoice)
-
-		// Barcode Websocket
-		api.GET("/ws", BarcodeReaderWS)
 
 		// Export
 		api.GET("/export/csv", ExportInventoryCSV)

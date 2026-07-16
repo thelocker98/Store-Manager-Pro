@@ -12,7 +12,6 @@
         <script src="/static/javascript/departments.js"></script>
         <script src="/static/javascript/lists/listsEditor.js"></script>
         <script src="/static/javascript/lists/print.js"></script>
-        <script src="/static/javascript/lists/barcode.js"></script>
         <script src="/static/javascript/mainpage/filter.js"></script>
     </head>
 
@@ -20,10 +19,7 @@
         <header class="app-header">
             <div class="header-left">
                 <span class="logo">Store Manager Pro</span>
-                <select
-                    id="departmentPageSelector"
-                    class="departmentSelector"
-                ></select>
+                <select id="departmentPageSelector" class="departmentSelector"></select>
             </div>
 
             <nav class="header-nav">
@@ -32,10 +28,7 @@
         </header>
 
         <main class="app-container">
-            <div
-                class="page-header"
-                style="display: flex; justify-content: space-between"
-            >
+            <div class="page-header" style="display: flex; justify-content: space-between">
                 <div style="display: flex; align-items: center; gap: 10px">
                     <h2 id="listName" style="user-select: none"></h2>
                     <input
@@ -78,28 +71,15 @@
                     "
                 >
                     <div class="filter-dropdown">
-                        <button
-                            class="filter-dropdown-toggle"
-                            style="margin-right: 20px"
-                        >
+                        <button class="filter-dropdown-toggle" style="margin-right: 20px">
                             Filters
                         </button>
-                        <div
-                            id="filter-dropdown-menu"
-                            class="filter-dropdown-menu"
-                        >
-                            <h2 style="text-align: center; margin: 5px">
-                                Filters
-                            </h2>
+                        <div id="filter-dropdown-menu" class="filter-dropdown-menu">
+                            <h2 style="text-align: center; margin: 5px">Filters</h2>
                             <div class="filterOptions">
                                 <span>Sort By</span>
-                                <select
-                                    id="orderBySelector"
-                                    class="filterSelector"
-                                >
-                                    <option value="date">
-                                        Sort by Arrived Date
-                                    </option>
+                                <select id="orderBySelector" class="filterSelector">
+                                    <option value="date">Sort by Arrived Date</option>
                                     <option value="upc">Sort by UPC</option>
                                     <option value="name">Sort by Name</option>
                                 </select>
@@ -107,26 +87,17 @@
 
                             <div class="filterOptions">
                                 <span>Location</span>
-                                <select
-                                    id="locationSelector"
-                                    class="filterSelector"
-                                ></select>
+                                <select id="locationSelector" class="filterSelector"></select>
                             </div>
 
                             <div class="filterOptions">
                                 <span>Vendor</span>
-                                <select
-                                    id="vendorSelector"
-                                    class="filterSelector"
-                                ></select>
+                                <select id="vendorSelector" class="filterSelector"></select>
                             </div>
 
                             <div class="filterOptions">
                                 <span>List</span>
-                                <select
-                                    id="listSelector"
-                                    class="filterSelector"
-                                ></select>
+                                <select id="listSelector" class="filterSelector"></select>
                             </div>
 
                             <div class="filterOptions">
@@ -146,19 +117,12 @@
                     <div style="display: flex; gap: 8px; flex: 1; min-width: 0">
                         <div
                             id="filterSection"
-                            style="
-                                display: flex;
-                                flex-wrap: wrap;
-                                gap: 6px;
-                                align-items: center;
-                            "
+                            style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center"
                         ></div>
                     </div>
 
                     <div class="search">
-                        <span
-                            class="material-symbol searchActions"
-                            onclick="searchListItems()"
+                        <span class="material-symbol searchActions" onclick="searchListItems()"
                             >&#xE8B6;</span
                         >
                         <input
@@ -211,9 +175,7 @@
                 id="headsUpContainer"
                 style="display: none; justify-content: center; font-size: 18px"
             >
-                <p id="noResultsText">
-                    Search and Add and item to make it appear here:
-                </p>
+                <p id="noResultsText">Search and Add and item to make it appear here:</p>
             </div>
         </main>
         <script>

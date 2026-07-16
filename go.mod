@@ -7,7 +7,6 @@ require (
 	fyne.io/fyne/v2 v2.7.2
 	github.com/gen2brain/go-fitz v1.24.15
 	github.com/gin-gonic/gin v1.11.0
-	github.com/gorilla/websocket v1.5.3
 	github.com/mattn/go-sqlite3 v1.14.32
 	github.com/otiai10/gosseract/v2 v2.4.1
 	go.bug.st/serial v1.6.4

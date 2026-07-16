@@ -111,7 +111,6 @@ function loadVendors() {
 
 // Populate Location selector
 function loadLocations(DepartmentID) {
-  console.log(DepartmentID);
   var department_id = GlobalDepartment;
   if (DepartmentID != 0 && DepartmentID != undefined) {
     department_id = DepartmentID;

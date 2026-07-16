@@ -45,7 +45,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   if (pageDepartmentSelector) {
     pageDepartmentSelector.addEventListener("change", () => {
       updateDepartment();
-      console.log("Department Changed");
     });
   }
 

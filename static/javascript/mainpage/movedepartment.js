@@ -81,7 +81,6 @@ function loadDepartmentChangerSelector(departmentID) {
     }
 
     // Select Default
-    console.log(id);
     if (count == 1) {
       document.getElementById("newDepartmentSelector").value = id;
       loadLocationsForDepartment(id);
