@@ -1,12 +1,37 @@
 services:
   web:
-    build: .
+    image: storemanagerpro:latest
     container_name: storemanagerpro-server
     restart: always
+
     volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
+      - ./data:/data
     ports:
       - "1555:8080"
     environment:
-      - TZ=America/New_York # Set your desired timezone
+      - TZ=America/New_York
+      - GIN_MODE=release
+      - DATA_PATH=/data
+      - DB_TYPE=sqlite
+  #     - DB_TYPE=postgres
+  #     - DB_HOST=db
+  #     - DB_PORT=5432
+  #     - DB_USER=storemanager
+  #     - DB_NAME=storemanager
+  #     - DB_PASSWORD=changeme
+  #  depends_on:
+  #     - db
+
+  # db:
+  #   image: postgres:17
+  #   container_name: storemanagerpro-postgres
+  #   restart: always
+  #   environment:
+  #     - POSTGRES_USER=storemanager
+  #     - POSTGRES_DB=storemanager
+  #     - POSTGRES_PASSWORD=changeme
+  #     - TZ=America/New_York
+  #   volumes:
+  #     - ./postgres_data:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"

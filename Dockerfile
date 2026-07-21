@@ -10,9 +10,7 @@ RUN apt-get install -y \
     libtesseract-dev \
     libleptonica-dev \
     libmupdf-dev \
-    tesseract-ocr \
-    tesseract-ocr-eng \
-    && rm -rf /var/lib/apt/lists/*
+    tesseract-ocr
 
 ENV CGO_ENABLED=1
 ENV TESSDATA_PREFIX=/usr/share/tesseract-ocr/5/tessdata/
@@ -24,21 +22,24 @@ RUN go build -o StoreManagerProServer main.go
 
 
 # Final stage
-FROM debian:bookworm-slim
+FROM ubuntu:latest
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update
+RUN apt-get install -y \
     sqlite3 \
     libsqlite3-0 \
-    libtesseract5 \
-    liblept5 \
-    tesseract-ocr \
-    tesseract-ocr-eng \
-    && rm -rf /var/lib/apt/lists/*
+    libtesseract-dev \
+    libleptonica-dev \
+    tesseract-ocr-eng
 
 WORKDIR /srv
 
 COPY --from=builder /srv/StoreManagerProServer /srv/StoreManagerProServer
+COPY --from=builder /srv/static /srv/static
 COPY --from=builder /srv/templates /srv/templates
+
+ENV GIN_MODE=release
+ENV DATA_PATH=/data
 
 EXPOSE 8080
 

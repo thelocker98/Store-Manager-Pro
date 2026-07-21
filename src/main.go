@@ -14,9 +14,20 @@ import (
 var InvoiceFilePath = ""
 
 func main() {
+	// ENV vars
+	mode := os.Getenv("GIN_MODE")
+	appDirEnv := os.Getenv("DATA_PATH")
+	if mode == "" {
+		mode = gin.DebugMode
+	}
+	gin.SetMode(mode)
+
 	// Setup DB
 	appDir, _ := utils.SetupFolders()
-	db.InitDB(appDir)
+	if appDirEnv == "" {
+		appDirEnv = appDir
+	}
+	db.InitDB(appDirEnv)
 
 	// Find Unfinished OCR Jobs
 	unfinishedEntrys, err := db.GetUnfinishedEntrys()
