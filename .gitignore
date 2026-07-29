@@ -30,3 +30,4 @@ go.work.sum
 store.db
 Store-Manager-Pro
 data
+postgres_data

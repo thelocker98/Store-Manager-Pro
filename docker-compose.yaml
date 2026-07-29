@@ -1,13 +1,13 @@
 services:
   web:
-    image: storemanagerpro:latest
+    image: gitea.locker98.com/locker98/store-manager-pro:latest
     container_name: storemanagerpro-server
     restart: always
 
     volumes:
       - ./data:/data
     ports:
-      - "1555:8080"
+      - "1556:8080"
     environment:
       - TZ=America/New_York
       - GIN_MODE=release
