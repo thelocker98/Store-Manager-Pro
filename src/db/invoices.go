@@ -69,7 +69,7 @@ func GetInvoiceById(InvoiceID int) (models.Invoice, error) {
 	FROM invoices v
 	LEFT JOIN  invoice_data vd ON v.invoice_id = vd.invoice_id
 	JOIN departments d ON v.department_id = d.department_id
-	WHERE v.invoice_id= ?;
+	WHERE v.invoice_id= $1;
 	`
 
 	var invoice models.Invoice
@@ -93,7 +93,7 @@ func GetInvoiceById(InvoiceID int) (models.Invoice, error) {
 func AddInvoice(invoice models.Invoice) error {
 	query := `
 	INSERT INTO invoices (invoice_name, invoice_type, department_id)
-	VALUES (?, ?, ?);
+	VALUES ($1, $2, $3);
 	`
 	_, err := DB.Exec(query, invoice.InvoiceName, invoice.InvoiceType, invoice.DepartmentID)
 	return err
@@ -102,19 +102,19 @@ func AddInvoice(invoice models.Invoice) error {
 func UpdateInvoice(invoiceID int, invoice models.Invoice) error {
 	query := `
 	UPDATE invoices
-	SET invoice_name = ?
-	WHERE invoice_id = ?;
+	SET invoice_name = $1
+	WHERE invoice_id = $2;
 	`
 	_, err := DB.Exec(query, invoice.InvoiceName, invoiceID)
 	return err
 }
 
 func DeleteInvoice(invoiceID int) error {
-	_, err := DB.Exec(`DELETE FROM invoice_data WHERE invoice_id = ?;`, invoiceID)
+	_, err := DB.Exec(`DELETE FROM invoice_data WHERE invoice_id = $1;`, invoiceID)
 	if err != nil {
 		return err
 	}
-	_, err = DB.Exec(`DELETE FROM invoices WHERE invoice_id = ?;`, invoiceID)
+	_, err = DB.Exec(`DELETE FROM invoices WHERE invoice_id = $1;`, invoiceID)
 	return err
 }
 
@@ -141,9 +141,9 @@ func GetInvoiceEntrys(invoiceID int, page int, pageSize int) ([]models.InvoiceEn
 		id.true_cost,
 		COUNT(*) OVER() AS total_items
 	FROM invoice_data id
-	WHERE id.invoice_id = ?
+	WHERE id.invoice_id = $1
 	ORDER BY id.qty DESC
-	LIMIT ? OFFSET ?;
+	LIMIT $2 OFFSET $3;
 	`
 
 	rows, err := DB.Query(query, invoiceID, pageSize, offset)
@@ -181,7 +181,7 @@ func CountAllInvoiceEntrys(invoiceId int) (int, error) {
 	query := `
 	SELECT COUNT(invoice_data_id)
 	FROM invoice_data
-	WHERE invoice_id = ?;
+	WHERE invoice_id = $1;
 	`
 
 	var count int
@@ -208,7 +208,7 @@ func GetInvoiceEntryById(invoiceID int) (models.InvoiceEntry, error) {
 		id.discount_cost,
 		id.true_cost
 	FROM invoice_data id
-	WHERE id.invoice_data_id = ?;
+	WHERE id.invoice_data_id = $1;
 	`
 
 	var invoiceEntry models.InvoiceEntry
@@ -242,7 +242,7 @@ func AddEntryToInvoice(invoiceEntry models.InvoiceEntry) error {
         discount_cost,
         true_cost
 )
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);
 	`
 	_, err := DB.Exec(query,
 		invoiceEntry.InvoiceID,
@@ -263,15 +263,15 @@ func UpdateEntryInInvoice(entryID int, invoiceEntry models.InvoiceEntry) error {
 	query := `
 	UPDATE invoice_data
 	SET
-     	rawtext = ?,
-      	upc = ?,
-       	details = ?,
-        qty = ?,
-        item_cost = ?,
-        total_cost = ?,
-        discount_cost = ?,
-        true_cost = ?
-    WHERE invoice_data_id = ?;
+     	rawtext = $1,
+      	upc = $2,
+       	details = $3,
+        qty = $4,
+        item_cost = $5,
+        total_cost = $6,
+        discount_cost = $7,
+        true_cost = $8
+    WHERE invoice_data_id = $9;
 	`
 	_, err := DB.Exec(query,
 		invoiceEntry.RawText,
@@ -289,6 +289,6 @@ func UpdateEntryInInvoice(entryID int, invoiceEntry models.InvoiceEntry) error {
 }
 
 func DeleteEntryFromInvoice(invoiceEntryID int) error {
-	_, err := DB.Exec(`DELETE FROM invoice_data WHERE invoice_data_id = ?;`, invoiceEntryID)
+	_, err := DB.Exec(`DELETE FROM invoice_data WHERE invoice_data_id = $1;`, invoiceEntryID)
 	return err
 }

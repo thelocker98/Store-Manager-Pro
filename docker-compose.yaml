@@ -3,35 +3,33 @@ services:
     image: gitea.locker98.com/locker98/store-manager-pro:latest
     container_name: storemanagerpro-server
     restart: always
-
-    volumes:
-      - ./data:/data
+    depends_on:
+       - db
     ports:
       - "1556:8080"
     environment:
       - TZ=America/New_York
       - GIN_MODE=release
       - DATA_PATH=/data
-      - DB_TYPE=sqlite
-  #     - DB_TYPE=postgres
-  #     - DB_HOST=db
-  #     - DB_PORT=5432
-  #     - DB_USER=storemanager
-  #     - DB_NAME=storemanager
-  #     - DB_PASSWORD=changeme
-  #  depends_on:
-  #     - db
+      - DB_TYPE=postgres
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=storemanager
+      - DB_NAME=storemanager
+      - DB_PASSWORD=changeme
+    volumes:
+      - ./data:/data
 
-  # db:
-  #   image: postgres:17
-  #   container_name: storemanagerpro-postgres
-  #   restart: always
-  #   environment:
-  #     - POSTGRES_USER=storemanager
-  #     - POSTGRES_DB=storemanager
-  #     - POSTGRES_PASSWORD=changeme
-  #     - TZ=America/New_York
-  #   volumes:
-  #     - ./postgres_data:/var/lib/postgresql/data
-  #   ports:
-  #     - "5432:5432"
+  db:
+     image: postgres:17
+     container_name: storemanagerpro-postgres
+     restart: always
+     environment:
+       - POSTGRES_USER=storemanager
+       - POSTGRES_DB=storemanager
+       - POSTGRES_PASSWORD=changeme
+       - TZ=America/New_York
+     ports:
+       - "5432:5432"
+     volumes:
+       - ./postgres_data:/var/lib/postgresql/data

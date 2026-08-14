@@ -10,7 +10,7 @@ import (
 func AddItem(item models.Inventory) error {
 	query := `
 	INSERT INTO inventory (vendor_id, location_id, department_id, upc, invoice_number, name, brand, description, price, weighed, count)
-	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);
 	`
 	_, err := DB.Exec(query, item.VendorID, item.LocationID, item.DepartmentID, item.UPC, item.InvoiceNumber, item.Name, item.Brand, item.Description, item.Price, item.Weighed, item.Count)
 	return err
@@ -57,7 +57,7 @@ func GetAllItems(page int, pageSize int, showDeleted bool, vendor int, location 
 
 	query += ` WHERE `
 	if !showDeleted {
-		query += `i.deleted = 0 AND `
+		query += `i.deleted = FALSE AND `
 	}
 	if vendor != 0 {
 		query += `i.vendor_id = ` + fmt.Sprint(vendor) + ` AND `
@@ -85,7 +85,7 @@ func GetAllItems(page int, pageSize int, showDeleted bool, vendor int, location 
 	default:
 	}
 
-	query += ` LIMIT ? OFFSET ?;`
+	query += ` LIMIT $1 OFFSET $2;`
 
 	rows, err := DB.Query(query, pageSize, offset)
 
@@ -132,7 +132,7 @@ func CountAllItems(countDeleted bool) (int, error) {
 	FROM inventory
 	`
 	if !countDeleted {
-		query += " WHERE deleted = 0;"
+		query += " WHERE deleted = FALSE;"
 	}
 
 	var count int
@@ -170,7 +170,7 @@ func GetItemById(id int) (models.InventoryAll, error) {
 	JOIN vendors v ON i.vendor_id = v.vendor_id
 	JOIN locations l ON i.location_id = l.location_id
 	JOIN departments d ON i.department_id = d.department_id
-	WHERE i.id = ?;
+	WHERE i.id = $1;
 	`
 
 	var item models.InventoryAll
@@ -206,16 +206,16 @@ func UpdateItem(id int, item models.Inventory) error {
 	if item.DepartmentID == 0 {
 		query := `
 		UPDATE inventory
-		SET vendor_id = ?, location_id = ?, upc = ?, invoice_number = ?, brand = ?, name = ?, description = ?, price = ?, weighed = ?, count = ?, deleted = ?, arrived_at = ?, soldout_at = ?
-		WHERE id = ?;
+		SET vendor_id = $1, location_id = $2, upc = $3, invoice_number = $4, brand = $5, name = $6, description = $7, price = $8, weighed = $9, count = $10, deleted = $11, arrived_at = $12, soldout_at = $13
+		WHERE id = $14;
 		`
 		_, err := DB.Exec(query, item.VendorID, item.LocationID, item.UPC, item.InvoiceNumber, item.Brand, item.Name, item.Description, item.Price, item.Weighed, item.Count, item.Deleted, item.ArrivedAt, item.SoldOutAt, id)
 		return err
 	} else {
 		query := `
 		UPDATE inventory
-		SET department_id = ?, vendor_id = ?, location_id = ?, upc = ?, invoice_number = ?, brand = ?, name = ?, description = ?, price = ?, weighed = ?, count = ?, deleted = ?, arrived_at = ?, soldout_at = ?
-		WHERE id = ?;
+		SET department_id = $1, vendor_id = $2, location_id = $3, upc = $4, invoice_number = $5, brand = $6, name = $7, description = $8, price = $9, weighed = $10, count = $11, deleted = $12, arrived_at = $13, soldout_at = $14
+		WHERE id = $15;
 		`
 		_, err := DB.Exec(query, item.DepartmentID, item.VendorID, item.LocationID, item.UPC, item.InvoiceNumber, item.Brand, item.Name, item.Description, item.Price, item.Weighed, item.Count, item.Deleted, item.ArrivedAt, item.SoldOutAt, id)
 		return err
@@ -226,8 +226,8 @@ func UpdateItemDepartment(id int, item models.Inventory) error {
 	fmt.Println(id, item)
 	query := `
 	UPDATE inventory
-	SET location_id = ?, department_id = ?
-	WHERE id = ?;
+	SET location_id = $1, department_id = $2
+	WHERE id = $3;
 	`
 	_, err := DB.Exec(query, item.LocationID, item.DepartmentID, id)
 	return err
@@ -237,7 +237,7 @@ func DeleteItem(id int) error {
 	query := `
 	UPDATE inventory
 	SET deleted = true, soldout_at = CURRENT_TIMESTAMP
-	WHERE id = ?;
+	WHERE id = $1;
 	`
 	_, err := DB.Exec(query, id)
 	return err
@@ -247,13 +247,13 @@ func RestoreItem(id int) error {
 	query := `
 	UPDATE inventory
 	SET deleted = false, soldout_at = NULL
-	WHERE id = ?;
+	WHERE id = $1;
 	`
 	_, err := DB.Exec(query, id)
 	return err
 }
 
 func DeleteItemPermanent(id int) error {
-	_, err := DB.Exec(`DELETE FROM inventory WHERE id = ?;`, id)
+	_, err := DB.Exec(`DELETE FROM inventory WHERE id = $1;`, id)
 	return err
 }

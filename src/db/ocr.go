@@ -9,25 +9,22 @@ import (
 func CreateOCREntry(invoiceID int, filePath string) (int, error) {
 	query := `
 	INSERT INTO ocr_files (invoice_id, filepath, status )
-	VALUES (?, ?, ?);
+	VALUES ($1, $2, $3)
+	RETURNING file_id;
 	`
-	result, err := DB.Exec(query,
+
+	var fileID int
+	err := DB.QueryRow(query,
 		invoiceID,
 		filePath,
 		models.Pending,
-	)
+	).Scan(&fileID)
 
 	if err != nil {
 		return 0, err
 	}
 
-	// Get the auto-generated ID
-	fileID, err := result.LastInsertId()
-	if err != nil {
-		return 0, err
-	}
-
-	return int(fileID), nil
+	return fileID, nil
 }
 
 func GetOCREntryById(file_id int) (models.OCREntry, error) {
@@ -44,7 +41,7 @@ func GetOCREntryById(file_id int) (models.OCREntry, error) {
 		completed_at,
 		created_at
 	FROM ocr_files
-	WHERE file_id = ?
+	WHERE file_id = $1
 `
 
 	var entry models.OCREntry
@@ -83,7 +80,7 @@ func GetOCREntrysByInvoiceID(invoiceID int) ([]models.OCREntry, error) {
 			created_at
 		FROM ocr_files
 		WHERE
-			invoice_id = ?
+			invoice_id = $1
 		ORDER BY created_at DESC;
 		`
 
@@ -124,9 +121,9 @@ func GetOCREntrysByInvoiceID(invoiceID int) ([]models.OCREntry, error) {
 func DeleteOCREntryById(file_id int, force bool) error {
 	var err error
 	if force {
-		_, err = DB.Exec(`DELETE FROM ocr_files WHERE file_id = ?;`, file_id)
+		_, err = DB.Exec(`DELETE FROM ocr_files WHERE file_id = $1;`, file_id)
 	} else {
-		_, err = DB.Exec(`DELETE FROM ocr_files WHERE file_id = ? and status != 1;`, file_id)
+		_, err = DB.Exec(`DELETE FROM ocr_files WHERE file_id = $1 and status != 1;`, file_id)
 	}
 	return err
 }
@@ -146,7 +143,7 @@ func GetUnfinishedEntrys() ([]models.OCREntry, error) {
 			created_at
 		FROM ocr_files
 		WHERE
-			status IN (?, ?);
+			status IN ($1, $2);
 		`
 
 	rows, err := DB.Query(query, models.Pending, models.Processing)
@@ -182,8 +179,8 @@ func GetUnfinishedEntrys() ([]models.OCREntry, error) {
 func MarkAsProccessing(fileId int) error {
 	query := `
 	UPDATE ocr_files
-	SET status = ?, started_at = CURRENT_TIMESTAMP
-	WHERE file_id = ?;
+	SET status = $1, started_at = CURRENT_TIMESTAMP
+	WHERE file_id = $2;
 	`
 	_, err := DB.Exec(query, models.Processing, fileId)
 	return err
@@ -192,8 +189,8 @@ func MarkAsProccessing(fileId int) error {
 func MarkAsFinished(fileId int, status models.OCRStatus, successfulEntrys int, failedEntrys int, errorMessage string) error {
 	query := `
 	UPDATE ocr_files
-	SET status = ?, entries_added = ?, entries_failed = ?, error_message = ?, completed_at = CURRENT_TIMESTAMP
-	WHERE file_id = ?;
+	SET status = $1, entries_added = $2, entries_failed = $3, error_message = $4, completed_at = CURRENT_TIMESTAMP
+	WHERE file_id = $5;
 	`
 	_, err := DB.Exec(query, status, successfulEntrys, failedEntrys, errorMessage, fileId)
 	return err

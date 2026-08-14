@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"gitea.locker98.com/locker98/Store-Manager-Pro/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -94,5 +95,9 @@ func RegisterRoutes(r *gin.Engine) {
 		api.GET("/export/pdf", ExportInventoryPDF)
 		api.GET("/export/list/:listid", ExportListPDF)
 
+		// Version
+		api.GET("/version", func(c *gin.Context) {
+			c.JSON(200, gin.H{"version": utils.Version, "commit": utils.Commit})
+		})
 	}
 }

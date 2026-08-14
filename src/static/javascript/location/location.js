@@ -6,12 +6,6 @@ function loadLocations() {
 
     if (!Array.isArray(res.data)) return;
 
-    if (GlobalDepartment == 0) {
-      document.getElementById("addLocationForm").style.display = "none";
-    } else {
-      document.getElementById("addLocationForm").style.display = "block";
-    }
-
     res.data.forEach((locations) => {
       tbody.innerHTML += `
           <tr onclick="editLocation(${locations.location_id})" class="avalible">

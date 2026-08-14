@@ -5,6 +5,10 @@ import (
 	"path/filepath"
 )
 
+// Version data
+var Version = "0.0.0"
+var Commit = "dev"
+
 var DBFolderPath string
 var InvoiceFolderPath string
 

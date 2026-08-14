@@ -63,7 +63,7 @@ func GetListById(listID int) (models.List, error) {
 	FROM lists l
 	JOIN departments d ON l.department_id = d.department_id
 	LEFT JOIN list_data ld ON l.list_id = ld.list_id
-	WHERE l.list_id = ?;
+	WHERE l.list_id = $1;
 	`
 
 	var list models.List
@@ -87,7 +87,7 @@ func GetNumberOfItemsList(listID int) (int, error) {
 	query := `
 		SELECT SUM(list_count) AS total_items
 		FROM list_data
-		WHERE list_id = ?;
+		WHERE list_id = $1;
 	`
 
 	var totalCount int
@@ -105,7 +105,7 @@ func GetNumberOfItemsList(listID int) (int, error) {
 func AddList(list models.List) error {
 	query := `
 	INSERT INTO lists (list_name, department_id)
-	VALUES (?, ?);
+	VALUES ($1, $2);
 	`
 	_, err := DB.Exec(query, list.ListName, list.DepartmentID)
 	return err
@@ -114,15 +114,15 @@ func AddList(list models.List) error {
 func UpdateList(listID int, list models.List) error {
 	query := `
 	UPDATE lists
-	SET list_name = ?
-	WHERE list_id = ?;
+	SET list_name = $1
+	WHERE list_id = $2;
 	`
 	_, err := DB.Exec(query, list.ListName, listID)
 	return err
 }
 
 func DeleteList(listID int) error {
-	_, err := DB.Exec(`DELETE FROM lists WHERE list_id = ?;`, listID)
+	_, err := DB.Exec(`DELETE FROM lists WHERE list_id = $1;`, listID)
 	return err
 }
 
@@ -151,7 +151,7 @@ func GetListEntrys(listID int) ([]models.ListEntryAll, error) {
 	JOIN inventory i on ld.item_id = i.id
 	JOIN vendors v ON i.vendor_id = v.vendor_id
 	JOIN locations l ON i.location_id = l.location_id
-	WHERE ld.list_id = ?
+	WHERE ld.list_id = $1
 	ORDER BY l.location_name ASC, ld.list_entry_id DESC;
 	`
 
@@ -217,7 +217,7 @@ func GetListEntryById(listID int) (models.ListEntryAll, error) {
 	JOIN inventory i on ld.item_id = i.id
 	JOIN vendors v ON i.vendor_id = v.vendor_id
 	JOIN locations l ON i.location_id = l.location_id
-	WHERE ld.list_entry_id = ?;
+	WHERE ld.list_entry_id = $1;
 	`
 
 	var list models.ListEntryAll
@@ -248,24 +248,25 @@ func GetListEntryById(listID int) (models.ListEntryAll, error) {
 func AddEntryToList(listEntry models.ListEntry) (int64, error) {
 	query := `
 	INSERT INTO list_data (list_id,  item_id, list_count)
-	VALUES (?, ?, 1);
+	VALUES ($1, $2, 1)
+	RETURNING list_entry_id;
 	`
-	result, err := DB.Exec(query, listEntry.ListID, listEntry.ItemID)
-	lastID, err := result.LastInsertId()
+	var lastID int64
+	err := DB.QueryRow(query, listEntry.ListID, listEntry.ItemID).Scan(&lastID)
 	return lastID, err
 }
 
 func UpdateEntryInList(entryID int, listEntry models.ListEntry) error {
 	query := `
 	UPDATE list_data
-	SET list_count = ?
-	WHERE list_entry_id = ?;
+	SET list_count = $1
+	WHERE list_entry_id = $2;
 	`
 	_, err := DB.Exec(query, listEntry.ListCount, entryID)
 	return err
 }
 
 func DeleteEntryFromList(listEntryID int) error {
-	_, err := DB.Exec(`DELETE FROM list_data WHERE list_entry_id = ?;`, listEntryID)
+	_, err := DB.Exec(`DELETE FROM list_data WHERE list_entry_id = $1;`, listEntryID)
 	return err
 }

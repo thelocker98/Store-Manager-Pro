@@ -9,7 +9,7 @@ import (
 func AddDepartmentEntry(department models.Department) error {
 	query := `
 	INSERT INTO departments (department_name)
-	VALUES (?)
+	VALUES ($1)
 	`
 	_, err := DB.Exec(query, department.DepartmentName)
 	return err
@@ -44,7 +44,7 @@ func GetAllDepartments() ([]models.Department, error) {
 }
 
 func DeleteDepartmentEntry(id int) error {
-	s, err := DB.Exec(`DELETE FROM departments WHERE department_id = ?`, id)
+	s, err := DB.Exec(`DELETE FROM departments WHERE department_id = $1`, id)
 	if err != nil {
 		return err
 	}
@@ -57,8 +57,8 @@ func DeleteDepartmentEntry(id int) error {
 func UpdateDepartmentEntry(department models.Department) error {
 	query := `
 	UPDATE departments
-	SET department_name = ?
-	WHERE department_id = ?
+	SET department_name = $1
+	WHERE department_id = $2
 	`
 	s, err := DB.Exec(query, department.DepartmentName, department.DepartmentID)
 	if err != nil {

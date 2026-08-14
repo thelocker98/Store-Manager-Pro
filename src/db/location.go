@@ -9,7 +9,7 @@ import (
 func AddLocationEntry(location models.Location) error {
 	query := `
 	INSERT INTO locations (location_name)
-	VALUES (?)
+	VALUES ($1)
 	`
 	_, err := DB.Exec(query, location.LocationName)
 	return err
@@ -45,7 +45,7 @@ func GetAllLocations() ([]models.Location, error) {
 }
 
 func DeleteLocationEntry(id int) error {
-	s, err := DB.Exec(`DELETE FROM locations WHERE location_id = ?`, id)
+	s, err := DB.Exec(`DELETE FROM locations WHERE location_id = $1`, id)
 	if err != nil {
 		return err
 	}
@@ -58,8 +58,8 @@ func DeleteLocationEntry(id int) error {
 func UpdateLocationEntry(location models.Location) error {
 	query := `
 	UPDATE locations
-	SET location_name = ?
-	WHERE location_id = ?
+	SET location_name = $1
+	WHERE location_id = $2
 	`
 	s, err := DB.Exec(query, location.LocationName, location.LocationID)
 	if err != nil {

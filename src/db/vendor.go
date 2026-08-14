@@ -9,7 +9,7 @@ import (
 func AddVendorEntry(vendor models.Vendor) error {
 	query := `
 	INSERT INTO vendors (vendor_name)
-	VALUES (?)
+	VALUES ($1)
 	`
 	_, err := DB.Exec(query, vendor.VendorName)
 	return err
@@ -44,7 +44,7 @@ func GetAllVendors() ([]models.Vendor, error) {
 }
 
 func DeleteVendorEntry(id int) error {
-	s, err := DB.Exec(`DELETE FROM vendors WHERE vendor_id = ?`, id)
+	s, err := DB.Exec(`DELETE FROM vendors WHERE vendor_id = $1`, id)
 	if err != nil {
 		return err
 	}
@@ -57,8 +57,8 @@ func DeleteVendorEntry(id int) error {
 func UpdateVendorEntry(vendor models.Vendor) error {
 	query := `
 	UPDATE vendors
-	SET vendor_name = ?
-	WHERE vendor_id = ?
+	SET vendor_name = $1
+	WHERE vendor_id = $2
 	`
 	s, err := DB.Exec(query, vendor.VendorName, vendor.VendorID)
 	if err != nil {

@@ -44,18 +44,18 @@ func SearchItems(search string, list_id int, page int, pageSize int, showdeleted
 		FROM inventory i
 		JOIN vendors v ON i.vendor_id = v.vendor_id
 		JOIN locations l on l.location_id = i.location_id
-		LEFT JOIN list_data ld ON i.id = ld.item_id AND ld.list_id = ?
+		LEFT JOIN list_data ld ON i.id = ld.item_id AND ld.list_id = $1
 		WHERE
-			(LOWER(i.name)        LIKE ?
-		 OR LOWER(i.brand)       LIKE ?
-		 OR LOWER(i.description) LIKE ?
-		 OR LOWER(v.vendor_name) LIKE ?
-		 OR LOWER(i.upc) LIKE ?
-	     OR LOWER(i.invoice_number) LIKE ?)
+			(LOWER(i.name)        LIKE $2
+		 OR LOWER(i.brand)       LIKE $3
+		 OR LOWER(i.description) LIKE $4
+		 OR LOWER(v.vendor_name) LIKE $5
+		 OR LOWER(i.upc) LIKE $6
+	     OR LOWER(i.invoice_number) LIKE $7)
 	`
 	// Don't show deleted items
 	if !showdeleted {
-		query += ` AND i.deleted = 0
+		query += ` AND i.deleted = FALSE
 			`
 	}
 	if vendor != 0 {
@@ -82,7 +82,7 @@ func SearchItems(search string, list_id int, page int, pageSize int, showdeleted
 	default:
 	}
 
-	query += ` LIMIT ? OFFSET ?;`
+	query += ` LIMIT $8 OFFSET $9;`
 
 	rows, err := DB.Query(query, list_id, search, search, search, search, search, search, pageSize, offset)
 
@@ -152,13 +152,13 @@ func SearchInvoice(search string, invoice_id int, page int, pageSize int) ([]mod
 
 		FROM invoice_data id
 		WHERE
-			invoice_id = ? AND (
-				LOWER(id.rawtext)        LIKE ?
-				OR LOWER(id.upc)       LIKE ?
-				OR LOWER(id.details) LIKE ?
+			invoice_id = $1 AND (
+				LOWER(id.rawtext)        LIKE $2
+				OR LOWER(id.upc)       LIKE $3
+				OR LOWER(id.details) LIKE $4
 			)
 		ORDER BY id.qty DESC
-		LIMIT ? OFFSET ?;
+		LIMIT $5 OFFSET $6;
 	`
 
 	rows, err := DB.Query(query, invoice_id, search, search, search, pageSize, offset)
