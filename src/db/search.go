@@ -182,7 +182,7 @@ func SearchInvoice(search string, invoice_id int, page int, pageSize int) ([]mod
 			&i.TotalCost,
 			&i.DiscountCost,
 			&i.TrueCost,
-			&i.Count,
+			&i.EntryCount,
 		); err != nil {
 			return nil, err
 		}

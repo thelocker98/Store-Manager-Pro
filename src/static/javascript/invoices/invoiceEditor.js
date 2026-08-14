@@ -68,7 +68,7 @@ async function loadInvoice() {
     row.onclick = () => openInvoiceEntryEdit(entry.invoice_entry_id);
   });
 
-  return entrys[0]?.count ?? 0;
+  return entrys[0]?.number_of_entrys ?? 0;
 }
 
 function invoiceEdit() {

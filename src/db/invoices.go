@@ -14,7 +14,7 @@ func GetInvoices(departmentid int) ([]models.Invoice, error) {
 		v.invoice_type,
 		v.department_id,
 		d.department_name,
-		COALESCE(COUNT(vd.qty), 0) AS total_items,
+		COALESCE(COUNT(vd.qty), 0) AS total_count,
 		v.created_at
 	FROM invoices v
 	LEFT JOIN  invoice_data vd ON v.invoice_id = vd.invoice_id
@@ -64,8 +64,10 @@ func GetInvoiceById(InvoiceID int) (models.Invoice, error) {
 		v.invoice_type,
 		v.department_id,
 		d.department_name,
+		COALESCE(COUNT(vd.qty), 0) AS total_count,
 		v.created_at
 	FROM invoices v
+	LEFT JOIN  invoice_data vd ON v.invoice_id = vd.invoice_id
 	JOIN departments d ON v.department_id = d.department_id
 	WHERE v.invoice_id= ?;
 	`
@@ -77,6 +79,7 @@ func GetInvoiceById(InvoiceID int) (models.Invoice, error) {
 		&invoice.InvoiceType,
 		&invoice.DepartmentID,
 		&invoice.DepartmentName,
+		&invoice.TotalCount,
 		&invoice.CreatedAt,
 	)
 
@@ -142,7 +145,7 @@ func GetInvoiceEntrys(invoiceID int, page int, pageSize int) ([]models.InvoiceEn
 	ORDER BY id.qty DESC
 	LIMIT ? OFFSET ?;
 	`
-	fmt.Println(pageSize, offset)
+
 	rows, err := DB.Query(query, invoiceID, pageSize, offset)
 
 	if err != nil {
@@ -164,7 +167,7 @@ func GetInvoiceEntrys(invoiceID int, page int, pageSize int) ([]models.InvoiceEn
 			&i.TotalCost,
 			&i.DiscountCost,
 			&i.TrueCost,
-			&i.Count,
+			&i.EntryCount,
 		)
 		if err != nil {
 			return nil, err

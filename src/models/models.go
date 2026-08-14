@@ -118,11 +118,11 @@ type InvoiceEntry struct {
 	UPC           string  `json:"upc"`
 	Detail        string  `json:"details"`
 	QTY           int     `json:"qty"`
-	ItemCost      float64 `json:"item_cost"`
-	TotalCost     float64 `json:"total_cost"`
-	DiscountCost  float64 `json:"discount_cost"`
-	TrueCost      float64 `json:"true_cost"`
-	Count         int     `json:"count"`
+	ItemCost      float64 `json:"item_cost"`     // Cost of Item from retailer like Walmart
+	TotalCost     float64 `json:"total_cost"`    // Total cost of all items in the row from retailer like Walmart
+	DiscountCost  float64 `json:"discount_cost"` // Total price paid for the row by the store to distributor
+	TrueCost      float64 `json:"true_cost"`     // Price to sell item for in the store
+	EntryCount    int     `json:"number_of_entrys"`
 }
 
 type OCREntry struct {
