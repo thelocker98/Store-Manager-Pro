@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	_ "github.com/lib/pq"
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/pressly/goose/v3"
 )
 
@@ -21,24 +21,7 @@ func InitDB(path string) {
 	dbType := os.Getenv("DB_TYPE")
 
 	switch dbType {
-	case "postgres", "":
-		host := os.Getenv("DB_HOST")
-		port := os.Getenv("DB_PORT")
-		user := os.Getenv("DB_USER")
-		pass := os.Getenv("DB_PASSWORD")
-		dbname := os.Getenv("DB_NAME")
-
-		connString := `postgres://` + user + `:` + pass + `@` + host + `:` + port + `/` + dbname + `?sslmode=disable`
-
-		DB, err = sql.Open("postgres", connString)
-		if err != nil {
-			panic(err)
-		}
-
-		DB.SetMaxOpenConns(10)
-		DB.SetMaxIdleConns(5)
-
-	case "sqlite":
+	case "sqlite", "":
 		databaseFilePath := filepath.Join(path, "store.db")
 
 		DB, err = sql.Open("sqlite3", databaseFilePath)
@@ -48,6 +31,10 @@ func InitDB(path string) {
 
 		DB.SetMaxOpenConns(1)
 		DB.SetMaxIdleConns(1)
+
+		if err := goose.SetDialect("sqlite"); err != nil {
+			panic(err)
+		}
 
 	default:
 		panic("unsupported DB_TYPE: " + dbType)
@@ -59,10 +46,6 @@ func InitDB(path string) {
 
 	// Run Migrations
 	goose.SetBaseFS(migrations)
-
-	if err := goose.SetDialect("postgres"); err != nil {
-		panic(err)
-	}
 
 	if err := goose.Up(DB, "migrations"); err != nil {
 		panic(err)

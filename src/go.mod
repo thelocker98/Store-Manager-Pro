@@ -6,7 +6,9 @@ require (
 	codeberg.org/go-pdf/fpdf v0.11.1
 	github.com/gen2brain/go-fitz v1.24.15
 	github.com/gin-gonic/gin v1.11.0
+	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.12.3
+	github.com/mattn/go-sqlite3 v1.14.52
 	github.com/otiai10/gosseract/v2 v2.4.1
 	github.com/pressly/goose/v3 v3.27.3
 )

@@ -9,12 +9,15 @@ import (
 	"gitea.locker98.com/locker98/Store-Manager-Pro/utils"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 var InvoiceFilePath = ""
 
 func main() {
 	// ENV vars
+	_ = godotenv.Load()
+
 	mode := os.Getenv("GIN_MODE")
 	appDirEnv := os.Getenv("DATA_PATH")
 	if mode == "" {
@@ -34,6 +37,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	// Remove Unfinished Jobs from DB
 	for _, entry := range unfinishedEntrys {
 		db.DeleteOCREntryById(entry.FileID, true)
@@ -59,5 +63,4 @@ func main() {
 			os.Exit(0)
 		}
 	}()
-
 }

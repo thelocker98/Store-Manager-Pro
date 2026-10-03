@@ -1,107 +1,120 @@
 -- +goose Up
-CREATE TABLE departments (
-    department_id serial PRIMARY KEY,
-    department_name text NOT NULL UNIQUE
-);
-INSERT INTO departments (department_name)
-	VALUES ('N/A')
-	ON CONFLICT (department_name) DO NOTHING;
+PRAGMA foreign_keys = ON;
 
-
-CREATE TABLE vendors (
-    vendor_id serial PRIMARY KEY,
-    vendor_name text NOT NULL UNIQUE
-);
-INSERT INTO vendors (vendor_name)
-	VALUES ('N/A')
-	ON CONFLICT (vendor_name) DO NOTHING;
-
-
-
-CREATE TABLE locations (
-    location_id serial PRIMARY KEY,
-    location_name text NOT NULL UNIQUE
-);
-INSERT INTO locations (location_name)
-	VALUES ('N/A')
-	ON CONFLICT (location_name) DO NOTHING;
-
-
-CREATE TABLE inventory (
-    id serial PRIMARY KEY,
-    vendor_id integer NOT NULL DEFAULT 1 REFERENCES vendors(vendor_id),
-    location_id integer NOT NULL DEFAULT 1 REFERENCES locations(location_id),
-    department_id integer NOT NULL REFERENCES departments(department_id),
-    upc text NOT NULL,
-    invoice_number text NOT NULL,
-    name text NOT NULL,
-    brand text NOT NULL,
-    description text NOT NULL,
-    price double precision NOT NULL,
-    weighed boolean NOT NULL,
-    count integer NOT NULL,
-    arrived_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-    soldout_at timestamp without time zone,
-    deleted boolean NOT NULL DEFAULT false
+CREATE TABLE IF NOT EXISTS inventory (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	vendor_id INTEGER DEFAULT 1,
+	location_id INTEGER DEFAULT 1,
+	department_id INTEGER NOT NULL,
+	upc TEXT,
+	invoice_number TEXT,
+	name TEXT,
+	brand TEXT,
+	description TEXT,
+	price REAL NOT NULL,
+	weighed BOOL NOT NULL,
+	count INTEGER,
+	arrived_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+	soldout_at DATETIME,
+	deleted BOOL DEFAULT FALSE,
+	FOREIGN KEY(vendor_id) REFERENCES vendors(vendor_id),
+    FOREIGN KEY(location_id) REFERENCES locations(location_id),
+	FOREIGN KEY(department_id) REFERENCES departments(department_id)
 );
 
-CREATE TABLE invoices (
-    invoice_id serial PRIMARY KEY,
-    invoice_name text NOT NULL UNIQUE,
-    invoice_type text NOT NULL,
-    department_id integer NOT NULL REFERENCES departments(department_id),
-    created_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS vendors (
+	vendor_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	vendor_name TEXT NOT NULL UNIQUE
 );
 
-CREATE TABLE invoice_data (
-    invoice_data_id serial PRIMARY KEY,
-    invoice_id integer NOT NULL REFERENCES invoices(invoice_id) ON DELETE CASCADE,
-    rawtext text NOT NULL,
-    upc text NOT NULL,
-    details text NOT NULL,
-    qty integer NOT NULL,
-    item_cost double precision NOT NULL,
-    total_cost double precision NOT NULL,
-    discount_cost double precision NOT NULL,
-    true_cost double precision NOT NULL,
-    UNIQUE (invoice_data_id, invoice_id)
+INSERT OR IGNORE INTO vendors (vendor_id, vendor_name)
+VALUES (1, 'N/A');
+
+CREATE TABLE IF NOT EXISTS departments (
+	department_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	department_name TEXT NOT NULL UNIQUE
 );
 
-CREATE TABLE lists (
-    list_id serial PRIMARY KEY,
-    list_name text NOT NULL UNIQUE,
-    department_id integer NOT NULL REFERENCES departments(department_id),
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+INSERT OR IGNORE INTO departments (department_id, department_name)
+VALUES (1, 'N/A');
+
+
+CREATE TABLE IF NOT EXISTS locations (
+	location_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	location_name TEXT NOT NULL UNIQUE
 );
 
-CREATE TABLE list_data (
-    list_entry_id serial PRIMARY KEY,
-    list_id integer NOT NULL REFERENCES lists(list_id) ON DELETE CASCADE,
-    item_id integer NOT NULL REFERENCES inventory(id),
-    list_count integer NOT NULL,
-    UNIQUE (list_id, item_id)
+INSERT OR IGNORE INTO locations (location_id, location_name)
+VALUES (1, 'N/A');
+
+
+CREATE TABLE IF NOT EXISTS lists (
+	list_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	list_name TEXT NOT NULL UNIQUE,
+	department_id INTEGER NOT NULL,
+	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY(department_id) REFERENCES departments(department_id)
 );
 
-CREATE TABLE ocr_files (
-    file_id serial PRIMARY KEY,
-    invoice_id integer NOT NULL REFERENCES invoices(invoice_id) ON DELETE CASCADE,
-    filepath text NOT NULL UNIQUE,
-    status integer NOT NULL DEFAULT 0,
-    entries_added integer NOT NULL DEFAULT 0,
-    entries_failed integer NOT NULL DEFAULT 0,
-    error_message text NOT NULL DEFAULT '',
-    started_at timestamp without time zone,
-    completed_at timestamp without time zone,
-    created_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS list_data (
+	list_entry_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	list_id INTEGER,
+	item_id INTEGER,
+	list_count INTEGER NOT NULL,
+	FOREIGN KEY(list_id) REFERENCES lists(list_id) ON DELETE CASCADE,
+	FOREIGN KEY(item_id) REFERENCES inventory(id),
+	UNIQUE (list_id, item_id)
+);
+
+
+CREATE TABLE IF NOT EXISTS invoices (
+	invoice_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	invoice_name TEXT NOT NULL UNIQUE,
+	invoice_type TEXT NOT NULL,
+	department_id INTEGER NOT NULL,
+	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY(department_id) REFERENCES departments(department_id)
+);
+
+
+CREATE TABLE IF NOT EXISTS invoice_data (
+	invoice_data_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	invoice_id INTEGER NOT NULL,
+	rawtext STRING NOT NULL,
+	upc STRING,
+	details STRING,
+	qty INTEGER,
+	item_cost FLOAT,
+	total_cost FLOAT,
+	discount_cost FLOAT,
+	true_cost FLOAT,
+	FOREIGN KEY(invoice_id) REFERENCES invoices(invoice_id) ON DELETE CASCADE,
+	UNIQUE (invoice_data_id, invoice_id)
+);
+
+
+CREATE TABLE IF NOT EXISTS ocr_files (
+    file_id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    invoice_id       INTEGER NOT NULL,
+    filepath         TEXT NOT NULL UNIQUE,
+    status           INTEGER DEFAULT 0,
+    entries_added    INTEGER DEFAULT 0,
+    entries_failed   INTEGER DEFAULT 0,
+    error_message    TEXT DEFAULT '',
+    started_at       DATETIME,
+    completed_at     DATETIME,
+    created_at       DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (invoice_id) REFERENCES invoices(invoice_id) ON DELETE CASCADE
 );
 
 -- +goose Down
-DROP TABLE ocr_files;
-DROP TABLE list_data;
-DROP TABLE lists;
-DROP TABLE invoice_data;
-DROP TABLE invoices;
-DROP TABLE inventory;
-DROP TABLE locations;
-DROP TABLE vendors;
-DROP TABLE departments;
+
+DROP TABLE IF EXISTS ocr_files;
+DROP TABLE IF EXISTS invoice_data;
+DROP TABLE IF EXISTS invoices;
+DROP TABLE IF EXISTS list_data;
+DROP TABLE IF EXISTS lists;
+DROP TABLE IF EXISTS inventory;
+DROP TABLE IF EXISTS locations;
+DROP TABLE IF EXISTS departments;
+DROP TABLE IF EXISTS vendors;
