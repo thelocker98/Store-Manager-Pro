@@ -138,26 +138,26 @@ func SearchInvoice(search string, invoice_id int, page int, pageSize int) ([]mod
 
 	query := `
 		SELECT
-			id.invoice_data_id,
-			id.invoice_id,
-			id.rawtext,
-			id.upc,
-			id.details,
-			id.qty,
-			id.item_cost,
-			id.total_cost,
-			id.discount_cost,
-			id.true_cost,
+			inv.invoice_data_id,
+			inv.invoice_id,
+			inv.rawtext,
+			inv.upc,
+			inv.details,
+			inv.qty,
+			inv.item_cost,
+			inv.total_cost,
+			inv.discount_cost,
+			inv.true_cost,
 			COUNT(*) OVER() AS total_items
 
-		FROM invoice_data id
+		FROM invoice_data inv
 		WHERE
 			invoice_id = $1 AND (
-				LOWER(id.rawtext)        LIKE $2
-				OR LOWER(id.upc)       LIKE $3
-				OR LOWER(id.details) LIKE $4
+				LOWER(inv.rawtext)        LIKE LOWER($2)
+				OR LOWER(inv.upc)       LIKE LOWER($3)
+				OR LOWER(inv.details) LIKE LOWER($4)
 			)
-		ORDER BY id.qty DESC
+		ORDER BY inv.qty DESC
 		LIMIT $5 OFFSET $6;
 	`
 
